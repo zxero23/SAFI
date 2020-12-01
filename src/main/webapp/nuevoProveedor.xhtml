@@ -1,0 +1,258 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <ol class="progress progress--large">
+                <li class="is-active" data-step="1">
+                    #{msg.informacion}
+                </li>
+                <li class="progress__last" data-step="2">
+                    #{msg.domicilios}
+                </li>
+                <li class="progress__last" data-step="3">
+                    #{msg.integrantes}
+                </li>
+                <li data-step="4" class="progress__last">
+                    #{msg.representantes}
+                </li>
+                <li class="progress__last" data-step="5">
+                    #{msg.habilitacionesImpuestos} 
+                </li>
+            </ol>
+            <h:form id="formNuevoProveedor" title=" ">
+                <ace:panel id="nuevoProveedor" header="#{msg.newProveedor} - #{msg.informacion}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.cuit}:" />
+                            </td>
+                            <td align="left">
+                                <div style="display: flex;">
+                                    <ace:textEntry id="cuit" value="#{proveedorManagedBean.cuit}"
+                                                   label="#{msg.cuit}"
+                                                   required="true" 
+                                                   disabled="#{proveedorManagedBean.cuitValidado}"
+                                                   maxlength="11" style="width: 356px;">
+                                        <ace:ajax execute="@this" render="@this combrobarMsg" event="valueChange" /> 
+                                    </ace:textEntry> 
+                                    <ace:pushButton id="comprobar"  p:title="#{msg.comprobarCuit}" actionListener="#{proveedorManagedBean.comprobarCuit}" immediate="true"  >
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                        <ace:ajax execute="@form" resetValues="true" render="@all" listener="#{proveedorManagedBean.cuitListener}" event="action" />
+                                    </ace:pushButton>
+                                </div>
+                            </td>
+                            <td align="left">
+                                <ace:message id="combrobarMsg"  for="comprobar"   />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.apellidoNombreRazonSocial}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="apellidoNombreRazonSocial" value="#{proveedorManagedBean.apellidoNombreRazonSocial}"
+                                               label="#{msg.apellidoNombreRazonSocial}"
+                                               required="true"
+                                               maxlength="254" 
+                                               validator="#{proveedorManagedBean.validatorEspaciosEnBlanco}">
+                                    <ace:ajax render="@this apellidoNombreRazonSocial apellidoNombreRazonSocialMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="apellidoNombreRazonSocialMsg" for="apellidoNombreRazonSocial"  /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.nombreFantasia}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="nombreFantasia" value="#{proveedorManagedBean.nombreFantasia}"
+                                               label="#{msg.nombreFantasia}"
+                                               maxlength="254">
+                                    <ace:ajax render="@this nombreFantasia nombreFantasiaMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="nombreFantasiaMsg" for="nombreFantasia"  /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.tipoPersona}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="tipoPersona" value="#{proveedorManagedBean.tipoPersona}"
+                                               label="#{msg.tipoPersona}"
+                                               disabled="true"
+                                               required="true"
+                                               maxlength="254">
+                                    <ace:ajax render="@this tipoPersona tipoPersonaMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="tipoPersonaMsg" for="tipoPersona"  /> 
+                            </td>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <td align="left" colspan="2">
+                                <h:outputLabel value="#{msg.mensajeDomicilioElectronico}" />
+                            </td>
+                            <td align="left"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.email}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="email" value="#{proveedorManagedBean.email}" placeholder="xxxxx@xxx.xxx" validator="#{proveedorManagedBean.emailValido}" label="#{msg.email}" type="email" required="true" maxlength="254">
+                                    <ace:ajax render="@this email emailMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="emailMsg" for="email"  /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.repetirEmail}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="repetirEmail" placeholder="xxxxx@xxx.xxx" validator="#{proveedorManagedBean.repetirEmail}" label="#{msg.repetirEmail}" type="email" required="true" maxlength="254">
+                                    <ace:ajax render="@this repetirEmail repetirEmailMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="repetirEmailMsg" for="repetirEmail"  /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" colspan="2">
+                                <h:outputLabel value="#{msg.mensajeDomicilioElectronico2}" />
+                            </td>
+                            <td align="left"></td>
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.emailAlternativo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="emailAlternativo" value="#{proveedorManagedBean.emailAlternativo}" placeholder="xxxxx@xxx.xxx, xxxxx@xxx.xxx, xxxxx@xxx.xxx"   label="#{msg.emailAlternativo}" type="email" required="false" maxlength="254">
+                                    <ace:ajax render="@this emailAlternativo emailAlternativoMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="emailAlternativoMsg" for="emailAlternativo"  /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.telefonos}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="telefono" value="#{proveedorManagedBean.telefono}" label="#{msg.telefonos}" type="number" required="true" maxlength="254">
+                                    <ace:ajax render="@this telefono telefonoMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="telefonoMsg" for="telefono"  /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.telefonoAlternativo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="telefonoAlternativo" value="#{proveedorManagedBean.telefonoAlternativo}" label="#{msg.telefonoAlternativo}" type="number" required="false" maxlength="254">
+                                    <ace:ajax render="@this telefonoAlternativo telefonoAlternativoMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="telefonoAlternativoMsg" for="telefonoAlternativo"  /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.confActividadEconomica}:"/>
+                            </td>
+                            <td align="left">
+                                <ul class="listaActividades">
+                                    <ui:repeat id="repeatActividadesEconomicas" value="#{proveedorManagedBean.lstActividadEconomica}" var="items">
+                                        <li><h:outputText id="cell"  value="#{items.cod} - #{items.nombre} "/> </li>
+                                    </ui:repeat>
+                                </ul>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.fechaInicioActividades}:" />
+                            </td>
+                            <td align="left">
+                                <ace:maskedEntry id="fechaInicioActividades" label="#{msg.fechaInicioActividades}"
+                                                 value="#{proveedorManagedBean.fechaInicioActividades}"
+                                                 mask="99/99/9999"
+                                                 required="true">
+                                    <ace:ajax execute="@this" render="@this fechaInicioActividades fechaInicioActividadesMsg" event="blur"></ace:ajax>
+                                    <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                </ace:maskedEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="fechaInicioActividadesMsg" for="fechaInicioActividades"  /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.datosInteres}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textAreaEntry id="datosInteres"
+                                                   value="#{proveedorManagedBean.datosInteres}"
+                                                   label="#{msg.datosInteres}"
+                                                   placeholder="#{msg.informacionPertinente}"
+                                                   maxlength="#{msg.maxLength}"
+                                                   rows="4">
+                                    <ace:ajax render="@this datosInteres datosInteresMsg" event="blur"/>                                
+                                </ace:textAreaEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="datosInteresMsg" for="datosInteres"  /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="3" class="panel-buttons">
+                                    <ace:pushButton id="continuar" value="#{msg.continuar}" action="nuevoProveedorPaso1" disabled="#{proveedorManagedBean.continuar}">
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </ace:pushButton>
+                                    <ace:pushButton id="cancel" action="proveedorConf" actionListener="#{proveedorManagedBean.limpiar()}" immediate="true">
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                        </tr>                        
+                    </table>
+                </ace:panel>
+                <ace:submitMonitor id="submitMonitorNuevoProveedor"
+                                   for="comprobar"
+                                   blockUI="@all"
+                                   autoCenter="true"
+                                   transient="true"
+                                   activeLabel="#{msg.espere}"
+                                   networkErrorLabel="#{msg.errorConexion}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

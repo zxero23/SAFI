@@ -145,6 +145,19 @@
                         </tr>
                         <tr>
                             <td align="right">
+                                <h:outputLabel value="#{msg.servicio}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu
+                                    id="servicio"
+                                    value="#{organismoManagedBean.idServicio}">
+                                    <f:selectItem   itemValue="0"  itemLabel="#{msg.ninguno}"/>
+                                    <f:selectItems value="#{organismoManagedBean.serviciosDisponiblesActual}" />
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
                             </td>
                             <td align="left">
                                 <h:panelGrid id="buttonGrid" columns="3" class="panel-buttons">

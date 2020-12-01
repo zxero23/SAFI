@@ -91,7 +91,7 @@
                                 <h:outputLabel value="(*) #{msg.numeroCuenta}:" />
                             </td>
                             <td align="left">
-                                <ace:textEntry id="numero" label="#{msg.numeroCuenta}" maxlength="#{msg.maxLength}" value="#{cuentaBancariaManagedBean.numero}" validator="#{cuentaBancariaManagedBean.validarCuentaBancaria}"  type="number" required="true">
+                                <ace:textEntry id="numero" label="#{msg.numeroCuenta}" maxlength="#{msg.maxLength}" value="#{cuentaBancariaManagedBean.numero}" validator="#{cuentaBancariaManagedBean.validarCuentaBancaria}" type="number" required="true">
                                     <ace:ajax execute="@this" render="@this numero numeroMsg" event="blur"/>                                
                                 </ace:textEntry>
                             </td>
@@ -114,10 +114,10 @@
                         </tr>
                         <tr>
                             <td align="right">
-                                <h:outputLabel value="(*) #{msg.alias}:" />
+                                <h:outputLabel value="#{msg.alias}:" />
                             </td>
                             <td align="left">
-                                <ace:textEntry id="alias" label="#{msg.alias}" maxlength="#{msg.maxLength}" value="#{cuentaBancariaManagedBean.alias}" required="true">
+                                <ace:textEntry id="alias" label="#{msg.alias}" maxlength="#{msg.maxLength}" value="#{cuentaBancariaManagedBean.alias}">
                                     <ace:ajax execute="@this" render="@this alias aliasMsg" event="blur"/>                                
                                 </ace:textEntry>
                             </td>

@@ -87,8 +87,10 @@
                                                              valueChangeListener="#{movimientoManagedBean.ordenChange}">
                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
                                         <f:selectItems value="#{movimientoManagedBean.selectItemsTipoOrdenGasto}" /> 
-                                        <ace:ajax execute="@this" render="@all" event="blur" listener="#{movimientoManagedBean.actualizarTipoFondo()}"/> 
+                                       
                                         <ace:ajax execute="@this" render="@all" event="valueChange"  listener="#{movimientoManagedBean.actualizarTipoFondo()}"/> 
+                                        
+                                        
                                     </ace:simpleSelectOneMenu>
                                 </td>
                                 <td align="left">
@@ -106,7 +108,7 @@
                                                              >  
                                         <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
                                         <f:selectItems value="#{movimientoManagedBean.selectItemsTipoFondo}" /> 
-                                        <ace:ajax execute="@this" render="@all" event="blur" listener="#{movimientoManagedBean.actualizarTipoImputacion()}"/>
+                                       
                                         <ace:ajax execute="@this" render="@all" event="valueChange" listener="#{movimientoManagedBean.actualizarTipoImputacion()}"/> 
                                     </ace:simpleSelectOneMenu>
                                 </td>
@@ -124,9 +126,8 @@
                                                              required="true"
                                                              valueChangeListener="#{movimientoManagedBean.ordenChange}">
                                         <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>    
-                                        <f:selectItems value="#{movimientoManagedBean.selectItemsTipoImputacion}" /> 
-                                        <ace:ajax execute="@this" render="@all" event="blur" /> 
-                                        <ace:ajax execute="@this" render="@all"   /> 
+                                        <f:selectItems value="#{movimientoManagedBean.selectItemsTipoImputacion}" />                                       
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" listener="#{movimientoManagedBean.saldoEnNegativo()}"/> 
                                     </ace:simpleSelectOneMenu>
                                 </td>
                                 <td align="left">
@@ -141,7 +142,7 @@
                                     <ace:textEntry id="nroOrden" label="#{msg.nroOrden}" value="#{movimientoManagedBean.numeroOrden}"
                                                    type="number"
                                                    p:onkeydown="javascript: return event.keyCode==69 ? false: true">
-                                        <ace:ajax execute="@this" render="@all"  /> 
+                                       
                                         <ace:ajax execute="@this"  render="@all" event="blur"/>                                
                                     </ace:textEntry>
                                 </td>
@@ -158,7 +159,7 @@
                                                    value="#{movimientoManagedBean.numeroPedidoFondo}"
                                                    type="number"
                                                    p:onkeydown="javascript: return event.keyCode==69 ? false: true">
-                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                     
                                         <ace:ajax render="@this nroPedidoFondo nroPedidoFondoMsg" event="blur"/>                                
                                     </ace:textEntry>
                                 </td>
@@ -174,7 +175,7 @@
                                     <ace:textEntry id="nroEntregaFondo" label="#{msg.nroEntregaFondo}" value="#{movimientoManagedBean.numeroEntregaFondo}"
                                                    type="number"
                                                    p:onkeydown="javascript: return event.keyCode==69 ? false: true">
-                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                       
                                         <ace:ajax render="@this nroEntregaFondo nroEntregaFondoMsg" event="blur"/>                                
                                     </ace:textEntry>
                                 </td>
@@ -199,7 +200,7 @@
                                                              required="true">
                                         <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
                                         <f:selectItems value="#{movimientoManagedBean.selectItemsCodigoExpediente}" />
-                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                      
                                         <ace:ajax execute="@this" render="@this slcCodigoExpediente slcCodigoExpedienteMsg" event="blur"/>  
                                     </ace:comboBox>
                                 </td>
@@ -217,7 +218,7 @@
                                                    required="true"
                                                    type="number"
                                                    p:onkeydown="javascript: return event.keyCode==69 ? false: true">
-                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                      
                                         <ace:ajax render="@this numero numeroMsg" event="blur"/>                                
                                     </ace:textEntry>
                                 </td>
@@ -237,7 +238,7 @@
                                                    p:onkeydown="javascript: return event.keyCode==69 ? false: true"     
                                                    placeholder="#{msg.ejemplo}"
                                                    required="true">
-                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                     
                                         <ace:ajax execute="@this" render="@this anio anioMsg" event="blur"></ace:ajax>                         
                                     </ace:textEntry>
                                 </td>
@@ -261,7 +262,7 @@
                                                    maxlength="10"
                                                    type="number"
                                                    p:onkeydown="javascript: return event.keyCode==69 ? false: true">
-                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                    
                                         <ace:ajax render="@this nroComprobante nroComprobanteMsg" event="blur"/>                                
                                     </ace:textEntry>
                                 </td>
@@ -279,7 +280,7 @@
                                                      validator="#{movimientoManagedBean.validarFechaComprobante}"
                                                      mask="99/99/9999"
                                                      required="true">
-                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                     
                                         <ace:ajax render="@this fechaComprobante fechaComprobanteMsg" event="blur"/>
                                         <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/> 
                                     </ace:maskedEntry>
@@ -297,7 +298,7 @@
                                                    value="#{movimientoManagedBean.descripcion}"
                                                    maxlength="#{msg.maxLength}"
                                                    required="true">
-                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                      
                                         <ace:ajax render="@this descripcion descripcionMsg" event="blur"/>                                
                                     </ace:textEntry>
                                 </td>
@@ -316,7 +317,8 @@
                                                    required="true"
                                                    type="number"
                                                    p:onkeydown="javascript: return event.keyCode==69 ? false: true">                                        
-                                        <ace:ajax render="importeMsg" event="blur"/>                                
+                                        <ace:ajax render="importeMsg" event="blur"/>  
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" listener="#{movimientoManagedBean.saldoEnNegativo()}"/>
                                     </ace:textEntry>
                                 </td>
                                 <td align="left">
@@ -347,10 +349,11 @@
                                 <td align="right">
                                 </td>
                                 <td align="left">
-                                    <h:panelGrid id="buttonGrid" columns="3" >
+                                    <h:panelGrid id="buttonGrid" columns="5" rendered="#{movimientoManagedBean.cuentaEnNegativo}">
                                         <ace:pushButton id="save" action="#{movimientoManagedBean.crear()}" >
                                             <i class="fa fa-floppy-o"></i>
                                             #{msg.save}
+                                         <ace:ajax execute="@none" render="@none" onComplete="ice.ace.instance('#{confirmDialogMovimiento.clientId}').show();return false;" />
                                         </ace:pushButton>
                                         <ace:pushButton id="saveCreate" action="#{movimientoManagedBean.crearOtro()}" >
                                             <span class="icon-stack">
@@ -358,8 +361,68 @@
                                                 <i class="fa fa-plus icon-stack-1x right_align"></i>
                                             </span>
                                             #{msg.saveCreate}
+                                            <ace:ajax execute="@none" render="@none" onComplete="ice.ace.instance('#{confirmDialogMovimientoGuardarOtro.clientId}').show();return false;" />
                                         </ace:pushButton>
-                                        <ace:pushButton id="cancel"  action="movimientoConf" immediate="true" actionListener="#{movimientoManagedBean.limpiar()}" >
+                                                <ace:confirmationDialog id="confirmDialogMovimiento" binding="#{confirmDialogMovimiento}" 
+                                                            message="#{msg.msgNuevoMovimiento}"
+                                                            header="#{msg.confirmMovimiento}"
+                                                            modal="true"                                                            
+                                                            width="300"
+                                                            height="155"                                                           
+                                                            position="center">
+                                                    <center>
+                                                            <h:panelGrid columns="2" class="panel-confirm-buttons" >
+
+                                                                        <ace:pushButton id="yes" value="#{msg.yes}" p:onclick="ice.ace.instance('#{confirmDialogMovimiento.clientId}').hide();" 
+                                                                                        action="#{movimientoManagedBean.crear()}">
+                                                                            <f:param name="id" value="#{item.id}" />
+                                                                            <f:ajax execute="@this" render="@all"/>
+                                                                        </ace:pushButton>
+                                                                        <ace:pushButton id="no" value="#{msg.no}" p:onclick="ice.ace.instance('#{confirmDialogMovimiento.clientId}').hide();"
+                                                                                        actionListener="#{movimientoManagedBean.focusImporte()}">
+                                                                            <f:ajax execute="@this" render="@all" />
+                                                                        </ace:pushButton>
+
+                                                            </h:panelGrid>
+                                                    </center>
+                                                </ace:confirmationDialog>
+                                                <ace:confirmationDialog id="confirmDialogMovimientoGuardarOtro" binding="#{confirmDialogMovimientoGuardarOtro}" 
+                                                            message="#{msg.msgNuevoMovimiento}"
+                                                            header="#{msg.confirmMovimiento}"
+                                                            modal="true"                                                            
+                                                            width="300"
+                                                            height="155"                                                           
+                                                            position="center">
+                                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                                        <ace:pushButton id="yes3" value="#{msg.yes}" p:onclick="ice.ace.instance('#{confirmDialogMovimientoGuardarOtro.clientId}').hide();" 
+                                                                        action="#{movimientoManagedBean.crearOtro()}">
+                                                            <f:param name="id" value="#{item.id}" />
+                                                            <f:ajax execute="@this" render="@all"/>
+                                                        </ace:pushButton>
+                                                        <ace:pushButton id="no3" value="#{msg.no}" p:onclick="ice.ace.instance('#{confirmDialogMovimientoGuardarOtro.clientId}').hide();"
+                                                                        actionListener="#{movimientoManagedBean.focusImporte()}">
+                                                            <f:ajax execute="@this" render="@all"/>
+                                                        </ace:pushButton>
+                                                    </h:panelGrid>
+                                                </ace:confirmationDialog>                                                
+                                            <ace:pushButton id="cancel"  action="movimientoConf" immediate="true" actionListener="#{movimientoManagedBean.limpiar()}" >
+                                            <i class="fa fa-ban"></i>
+                                            #{msg.cancel}
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                    <h:panelGrid id="buttonGrid2" columns="3" rendered="#{!movimientoManagedBean.cuentaEnNegativo}" >
+                                        <ace:pushButton id="save2" action="#{movimientoManagedBean.crear()}" >
+                                            <i class="fa fa-floppy-o"></i>
+                                            #{msg.save}
+                                        </ace:pushButton>
+                                        <ace:pushButton id="saveCreate2" action="#{movimientoManagedBean.crearOtro()}" >
+                                            <span class="icon-stack">
+                                                <i class="fa fa-floppy-o icon-stack-3x"></i>
+                                                <i class="fa fa-plus icon-stack-1x right_align"></i>
+                                            </span>
+                                            #{msg.saveCreate}
+                                        </ace:pushButton>
+                                        <ace:pushButton id="cancel2"  action="movimientoConf" immediate="true" actionListener="#{movimientoManagedBean.limpiar()}" >
                                             <i class="fa fa-ban"></i>
                                             #{msg.cancel}
                                         </ace:pushButton>
@@ -379,6 +442,9 @@
                             document.getElementById("formNuevoMovimiento:slcTipoImputacion_input").selectedIndex = "1";
                         }
                     }
+                     function setCursor() {                                 
+                                document.getElementById("formNuevoMovimiento:importe_input").select();
+                            }
                     
                 </script>
                 <ace:submitMonitor id="submitMonitorNuevoMovimiento"

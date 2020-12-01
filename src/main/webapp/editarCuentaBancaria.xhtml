@@ -9,7 +9,33 @@
         <ui:define name="content">
             <h:form id="formEditarAgente" title=" ">
                 <ace:panel id="editarAgente" header="#{msg.editCuentaBancaria}">
-                    <table border="0" cellspacing="5" class="panel-buttons">                        
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.ejercicio}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="ejercicio" label="#{msg.ejercicio}" maxlength="#{msg.maxLength}" value="#{cuentaBancariaManagedBean.nombreEjercicio}" disabled="true">
+                                                                   
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.servicio}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="servicio" label="#{msg.servicio}" maxlength="#{msg.maxLength}" value="#{cuentaBancariaManagedBean.nombreServicio}" disabled="true">
+                                                                   
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                
+                            </td>
+                        </tr>
                        <tr>
                             <td align="right">
                                 <h:outputLabel value="(*) #{msg.banco}:" />
@@ -60,7 +86,7 @@
                                 <h:outputLabel value="(*) #{msg.numeroCuenta}:" />
                             </td>
                             <td align="left">
-                                <ace:textEntry id="numero" label="numero"  value="#{cuentaBancariaManagedBean.numero}" maxlength="#{msg.maxLength}" type="number" required="true">
+                                <ace:textEntry id="numero" label="numero"  value="#{cuentaBancariaManagedBean.numero}" validator="#{cuentaBancariaManagedBean.validarEdicionCuentaBancaria}" maxlength="#{msg.maxLength}" type="number" required="true">
                                     <ace:ajax render="@this numero numeroMsg" event="blur"/>                                
                                 </ace:textEntry>
                             </td>
@@ -83,10 +109,10 @@
                         </tr>
                         <tr>
                             <td align="right">
-                                <h:outputLabel value="(*) #{msg.alias}:" />
+                                <h:outputLabel value="#{msg.alias}:" />
                             </td>
                             <td align="left">
-                                <ace:textEntry id="alias" label="alias" maxlength="#{msg.maxLength}" value="#{cuentaBancariaManagedBean.alias}" required="true">
+                                <ace:textEntry id="alias" label="alias" maxlength="#{msg.maxLength}" value="#{cuentaBancariaManagedBean.alias}" >
                                     <ace:ajax render="@this alias aliasMsg" event="blur"/>                                
                                 </ace:textEntry>
                             </td>

@@ -10,7 +10,24 @@
             <h:form id="formAdministracion">
                 <div  class="login-panel-padre">
                     <div class="login-panel-hijo">
-                       
+                        <ui:fragment rendered="#{webManagedBean.mostrarCartel}" >
+                            <div>
+                                <h1 style="
+                                    color: red;
+                                    background-color: #f0d1d0;
+                                    border: solid 1px #e96d66;
+                                    padding-top: 15px;
+                                    padding-bottom: 15px;
+                                    text-align: center;
+                                    margin-bottom: -10px;
+                                    "> <i class="fa fa-exclamation-triangle" style="
+                                      color: #000000;
+                                      " aria-hidden="true"></i> ENTORNO DE PRUEBAS <i class="fa fa-exclamation-triangle" style="
+                                      color: #000000;
+                                      " aria-hidden="true"></i></h1>
+                                <h2> </h2>
+                            </div>
+                        </ui:fragment>
                         <div class="titulo-principal">#{msg.bienvenido}</div>
                         <div class="contenedor">
                             <div class="contenedor-izquierdo">
