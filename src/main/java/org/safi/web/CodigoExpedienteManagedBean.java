@@ -1,7 +1,6 @@
 package org.safi.web;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,15 +16,12 @@ import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpServletRequest;
 import org.icefaces.ace.model.table.LazyDataModel;
 import org.icefaces.ace.model.table.SortCriteria;
-import org.safi.entity.Usuario;
 import org.safi.entity.CodigoExpediente;
 import org.safi.entity.Ejercicio;
 import org.safi.entity.Servicio;
 import org.safi.facade.CodigoExpedienteFacadeLocal;
 import org.safi.facade.EjercicioFacadeLocal;
 import org.safi.facade.ServicioFacadeLocal;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

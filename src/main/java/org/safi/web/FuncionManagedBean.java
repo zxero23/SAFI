@@ -23,8 +23,6 @@ import org.safi.facade.TipoAcumuladorFacadeLocal;
 import org.safi.facade.TipoFondoFacadeLocal;
 import org.safi.facade.TipoImputacionFacadeLocal;
 import org.safi.facade.TipoOrdenGastoFacadeLocal;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

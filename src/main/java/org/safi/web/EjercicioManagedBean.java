@@ -25,7 +25,6 @@ import org.icefaces.ace.model.table.SortCriteria;
 import org.safi.entity.Ejercicio;
 import org.safi.entity.EstadoEjercicio;
 import org.safi.entity.Usuario;
-import org.safi.entity.CuentaBancaria;
 import org.safi.entity.Servicio;
 import org.safi.enums.AccionEnum;
 import org.safi.facade.AuditoriaFacadeLocal;
@@ -34,8 +33,6 @@ import org.safi.facade.EjercicioFacadeLocal;
 import org.safi.facade.EstadoEjercicioFacadeLocal;
 import org.safi.facade.ServicioFacadeLocal;
 import org.safi.utilidad.Utilidad;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

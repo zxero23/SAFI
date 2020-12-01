@@ -64,8 +64,6 @@ import org.safi.utilidad.ReporteJava;
 import org.safi.utilidad.SAFIReporteJava;
 import org.safi.utilidad.Recurso;
 import org.safi.utilidad.Utilidad;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *
