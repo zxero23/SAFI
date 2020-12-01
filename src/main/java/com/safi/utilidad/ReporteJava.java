@@ -14,6 +14,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -27,10 +28,10 @@ import net.sf.jasperreports.engine.util.JRLoader;
  */
 public class ReporteJava {
 
-    private JasperPrint masterPrint = null;
+   private JasperPrint masterPrint = null;
     private static java.net.URL url = null;
     private static JasperReport masterReport = null;
-    private static final Map<String, Object> parametros = new HashMap();
+    private static final Map parametros = new HashMap();
     private static Connection conexion;
 
     public ReporteJava() {
@@ -261,7 +262,7 @@ public class ReporteJava {
      * @throws net.sf.jasperreports.engine.JRException
      *
      */
-    public JasperPrint reporteEjecucionRecursosPeriodo(String reporte, Long idEjercicio, Long idServicio, Long idOrganismo, Date fechaInicioAnio, Date fechaDesde, Date fechaHasta) throws Exception, JRException {
+    public JasperPrint reporteEjecucionRecursosPeriodo(String reporte, Long idEjercicio, Long idServicio, Long idOrganismo, Date fechaInicioAnio, Date fechaDesde, Date fechaHasta, boolean pagination) throws Exception, JRException {
         try {
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup("jdbc/safi");
@@ -275,6 +276,7 @@ public class ReporteJava {
             parametros.put("fechaHasta", fechaHasta);
             parametros.put("escudo", getClass().getResource("/org/safi/reporte/escudo.jpg").getPath());
             masterReport = (JasperReport) JRLoader.loadObject(url);
+            parametros.put(JRParameter.IS_IGNORE_PAGINATION, pagination);
             masterPrint = JasperFillManager.fillReport(masterReport, parametros, conexion);
         } catch (NamingException | SQLException | JRException e) {
             System.err.println(e.getMessage() + " - " + e.getCause().toString());
@@ -284,25 +286,23 @@ public class ReporteJava {
         return masterPrint;
     }
 
-    public JasperPrint reporteEjecucionRecursosDiario(String reporte, Long idEjercicio, Long idServicio, Long idOrganismo, Date fecha) throws Exception, JRException {
-
+    public JasperPrint reporteEjecucionRecursosDiario(String reporte, Long idEjercicio, Long idServicio, Long idOrganismo, Date fecha, boolean pagination) throws Exception, JRException {
         try {
-
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup("jdbc/safi");
             conexion = dataSource.getConnection();
             url = this.getClass().getResource("/org/safi/reporte/" + reporte + ".jasper");
-
             parametros.put("idEjercicio", idEjercicio);
             parametros.put("idServicio", idServicio);
             parametros.put("idOrganismo", idOrganismo);
             parametros.put("fecha", fecha);
             parametros.put("escudo", getClass().getResource("/org/safi/reporte/escudo.jpg").getPath());
             masterReport = (JasperReport) JRLoader.loadObject(url);
+            parametros.put(JRParameter.IS_IGNORE_PAGINATION, pagination);
             masterPrint = JasperFillManager.fillReport(masterReport, parametros, conexion);
-        } catch (Exception e) {
+        } catch (NamingException | SQLException | JRException e) {
             System.err.println(e.getMessage() + " - " + e.getCause().toString());
-            //throw new Exception(e.getMessage());
+            throw new Exception(e.getMessage());
         }
         conexion.close();
         return masterPrint;
@@ -321,7 +321,7 @@ public class ReporteJava {
      * @throws net.sf.jasperreports.engine.JRException
      *
      */
-    public JasperPrint reporteMovimientosRecursos(String reporte, Long idEjercicio, Long idServicio, Date fechaDesde, Date fechaHasta) throws Exception, JRException {
+    public JasperPrint reporteMovimientosRecursos(String reporte, Long idEjercicio, Long idServicio, Date fechaDesde, Date fechaHasta, boolean pagination) throws Exception, JRException {
         try {
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup("jdbc/safi");
@@ -333,6 +333,7 @@ public class ReporteJava {
             parametros.put("fechaHasta", fechaHasta);
             parametros.put("escudo", getClass().getResource("/org/safi/reporte/escudo.jpg").getPath());
             masterReport = (JasperReport) JRLoader.loadObject(url);
+            parametros.put(JRParameter.IS_IGNORE_PAGINATION, pagination);
             masterPrint = JasperFillManager.fillReport(masterReport, parametros, conexion);
         } catch (NamingException | SQLException | JRException e) {
             System.err.println(e.getMessage() + " - " + e.getCause().toString());
@@ -354,7 +355,7 @@ public class ReporteJava {
      * @throws java.lang.Exception
      * @throws net.sf.jasperreports.engine.JRException
      */
-    public JasperPrint reporteBase(String reporte, Long idServicio, Long idEjercicio, Long idCuentaBancaria, Date fechaDesde, Date fechaHasta) throws Exception, JRException {
+    public JasperPrint reporteBase(String reporte, Long idServicio, Long idEjercicio, Long idCuentaBancaria, Date fechaDesde, Date fechaHasta, boolean pagination) throws Exception, JRException {
         try {
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup("jdbc/safi");
@@ -367,6 +368,7 @@ public class ReporteJava {
             parametros.put("fechaHasta", fechaHasta);
             parametros.put("escudo", getClass().getResource("/org/safi/reporte/escudo.jpg").getPath());
             masterReport = (JasperReport) JRLoader.loadObject(url);
+            parametros.put(JRParameter.IS_IGNORE_PAGINATION, pagination);
             masterPrint = JasperFillManager.fillReport(masterReport, parametros, conexion);
         } catch (NamingException | SQLException | JRException e) {
             System.err.println(e.getMessage() + " - " + e.getCause().toString());
@@ -376,7 +378,7 @@ public class ReporteJava {
         return masterPrint;
     }
 
-    public JasperPrint reporteModificacionRecursos(String reporte, Long idServicio, Long idEjercicio, Date fechaDesde, Date fechaHasta, Long idOrganismo) throws Exception, JRException {
+    public JasperPrint reporteModificacionRecursos(String reporte, Long idServicio, Long idEjercicio, Date fechaDesde, Date fechaHasta, Long idOrganismo, boolean pagination) throws Exception, JRException {
         try {
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup("jdbc/safi");
@@ -389,6 +391,7 @@ public class ReporteJava {
             parametros.put("fechaHasta", fechaHasta);
             parametros.put("escudo", getClass().getResource("/org/safi/reporte/escudo.jpg").getPath());
             masterReport = (JasperReport) JRLoader.loadObject(url);
+            parametros.put(JRParameter.IS_IGNORE_PAGINATION, pagination);
             masterPrint = JasperFillManager.fillReport(masterReport, parametros, conexion);
         } catch (NamingException | SQLException | JRException e) {
             System.err.println(e.getMessage() + " - " + e.getCause().toString());
@@ -398,36 +401,32 @@ public class ReporteJava {
         return masterPrint;
     }
 
-    public JasperPrint reporteFecha(String reporte, Long idServicio, Long idEjercicio, Long idCuentaBancaria, Date fecha) throws Exception, JRException {
+    public JasperPrint reporteFecha(String reporte, Long idServicio, Long idEjercicio, Long idCuentaBancaria, Date fecha, boolean pagination) throws Exception, JRException {
         try {
-
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup("jdbc/safi");
-            conexion = dataSource.getConnection();            
+            conexion = dataSource.getConnection();
             url = this.getClass().getResource("/org/safi/reporte/" + reporte + ".jasper");
             parametros.put("idServicio", idServicio);
             parametros.put("idEjercicio", idEjercicio);
             parametros.put("idCuenta", idCuentaBancaria);
             parametros.put("fecha", fecha);
             parametros.put("escudo", getClass().getResource("/org/safi/reporte/escudo.jpg").getPath());
-
             masterReport = (JasperReport) JRLoader.loadObject(url);
-
+            parametros.put(JRParameter.IS_IGNORE_PAGINATION, pagination);
             masterPrint = JasperFillManager.fillReport(masterReport, parametros, conexion);
-
-        } catch (Exception e) {
+        } catch (NamingException | SQLException | JRException e) {
             System.err.println(e.getMessage() + " - " + e.getCause().toString());
-
+            throw new Exception(e.getMessage());
         }
         conexion.close();
         return masterPrint;
     }
 
-    public JasperPrint reporteLibroBanco(String reporte, Long idServicio, Long idEjercicio, Long idCuentaBancaria, Date fechaDesde, Date fechaHasta, Long nroPedidoFondo) throws Exception, JRException {
+    public JasperPrint reporteLibroBanco(String reporte, Long idServicio, Long idEjercicio, Long idCuentaBancaria, Date fechaDesde, Date fechaHasta, Long nroPedidoFondo, boolean pagination) throws Exception, JRException {
         try {
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup("jdbc/safi");
-            System.out.println(dataSource.getConnection().getSchema());
             conexion = dataSource.getConnection();
             url = this.getClass().getResource("/org/safi/reporte/" + reporte + ".jasper");
             parametros.put("idServicio", idServicio);
@@ -438,6 +437,7 @@ public class ReporteJava {
             parametros.put("nroPedidoFondo", nroPedidoFondo);
             parametros.put("escudo", getClass().getResource("/org/safi/reporte/escudo.jpg").getPath());
             masterReport = (JasperReport) JRLoader.loadObject(url);
+            parametros.put(JRParameter.IS_IGNORE_PAGINATION, pagination);
             masterPrint = JasperFillManager.fillReport(masterReport, parametros, conexion);
         } catch (NamingException | SQLException | JRException e) {
             System.err.println(e.getMessage() + " - " + e.getCause().toString());
@@ -479,7 +479,7 @@ public class ReporteJava {
      * @throws Exception
      * @throws JRException
      */
-    public JasperPrint reporteModificacion(Long idHistorialProveedor, String texto) throws Exception, JRException {
+    public JasperPrint reporteModificacion(Long idHistorialProveedor, String texto, boolean pagination) throws Exception, JRException {
         try {
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup("jdbc/safi");
@@ -489,6 +489,7 @@ public class ReporteJava {
             parametros.put("historial", idHistorialProveedor);
             parametros.put("texto", texto);
             masterReport = (JasperReport) JRLoader.loadObject(url);
+            parametros.put(JRParameter.IS_IGNORE_PAGINATION, pagination);
             masterPrint = JasperFillManager.fillReport(masterReport, parametros, conexion);
         } catch (NamingException | SQLException | JRException e) {
             System.err.println(e.getMessage() + " - " + e.getCause().toString());
