@@ -5,11 +5,11 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javafx.scene.control.ComboBox;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -49,8 +49,6 @@ import org.safi.facade.ServicioFacadeLocal;
 import org.safi.facade.TipoClasificadorRecursoPropioFacadeLocal;
 import org.safi.facade.TipoMonedaFacadeLocal;
 import org.safi.utilidad.Utilidad;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

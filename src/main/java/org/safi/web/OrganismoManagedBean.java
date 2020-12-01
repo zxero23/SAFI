@@ -1,13 +1,9 @@
 package org.safi.web;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -20,18 +16,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
 
 import org.icefaces.ace.model.table.LazyDataModel;
 import org.icefaces.ace.model.table.SortCriteria;
 import org.safi.entity.ClasificadorOrganismo;
 import org.safi.facade.OrganismoFacadeLocal;
 import org.safi.facade.ServicioFacadeLocal;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 import org.safi.entity.Organismo;
 import org.safi.entity.Servicio;
 import org.safi.facade.ClasificadorOrganismoFacadeLocal;

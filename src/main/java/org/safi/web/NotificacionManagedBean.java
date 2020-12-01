@@ -18,8 +18,6 @@ import org.safi.entity.Usuario;
 import org.safi.entity.Notificacion;
 import org.safi.entity.Servicio;
 import org.safi.facade.NotificacionFacadeLocal;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  * @author Doroñuk Gustavo

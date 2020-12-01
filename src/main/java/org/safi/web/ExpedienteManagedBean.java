@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +28,6 @@ import org.safi.entity.CuentaBancaria;
 import org.safi.entity.Ejercicio;
 import org.safi.entity.Expediente;
 import org.safi.entity.Movimiento;
-import org.safi.entity.RecursoPropio;
 import org.safi.entity.Servicio;
 import org.safi.enums.AccionEnum;
 import org.safi.enums.TipoServicioEnum;
@@ -43,9 +40,6 @@ import org.safi.facade.ServicioFacadeLocal;
 import org.safi.utilidad.ReporteJava;
 import org.safi.utilidad.SAFIReporteJava;
 import org.safi.utilidad.Recurso;
-import org.safi.utilidad.Utilidad;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

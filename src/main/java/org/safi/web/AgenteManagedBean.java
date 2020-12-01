@@ -14,8 +14,6 @@ import org.icefaces.ace.model.table.LazyDataModel;
 import org.icefaces.ace.model.table.SortCriteria;
 import org.safi.entity.Agente;
 import org.safi.facade.AgenteFacadeLocal;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

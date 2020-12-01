@@ -19,8 +19,6 @@ import org.icefaces.ace.model.table.SortCriteria;
 import org.safi.entity.EstadoCuentaBancaria;
 import org.safi.facade.AuditoriaFacadeLocal;
 import org.safi.facade.EstadoCuentaBancariaFacadeLocal;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *
