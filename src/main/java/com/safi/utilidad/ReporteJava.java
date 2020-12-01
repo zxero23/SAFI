@@ -403,8 +403,7 @@ public class ReporteJava {
 
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup("jdbc/safi");
-            conexion = dataSource.getConnection();
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            conexion = dataSource.getConnection();            
             url = this.getClass().getResource("/org/safi/reporte/" + reporte + ".jasper");
             parametros.put("idServicio", idServicio);
             parametros.put("idEjercicio", idEjercicio);
