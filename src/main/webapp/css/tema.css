@@ -11596,7 +11596,9 @@ table.planilla thead th,table.planilla thead td{
     bottom: 0;
     left: 0;
 }
-
+.ui-panel{
+    margin-bottom: 50px !important;
+}
 .footer-layout{
     position: fixed;
     width: 100%;
@@ -11848,26 +11850,7 @@ table.planilla thead th,table.planilla thead td{
     font-size: 25.6px;
     margin-right: 108px;
 }
-/*.form-register .steps li a .title .step-icon { 
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    -o-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    background: #ccc;
-    margin: 0 auto;
-    position: relative;
-    outline: none;
-    -o-outline: none;
-    -ms-outline: none;
-    -moz-outline: none;
-    -webkit-outline: none;
-    color: #fff;
-    font-size: 25.6px;
-    margin-right: 108px;
-}*/
+
 .form-register .steps li a .step-icon i {
     position: absolute;
     top: 50%;
@@ -12540,21 +12523,7 @@ h1 {
 .container-fluid .ui-combobox-list {
     height: 250px;
 }
-/* Estilo de los combobox END */
 
-/* Estilo de los números
-Estaba borrado y no se veían ni funcionaban las flechitas del entero
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type=number] {
-    -moz-appearance:textfield;
-}
-
-/* Estilo de los números */
 
 .panel-message .fa-check-circle-o{
     color: green;
@@ -12869,4 +12838,27 @@ li.ui-widget.wijmo-wijmenu-item.ui-state-default.ui-corner-all {
     border: solid 1px #e96d66;
     padding: 5px;
     text-align: center;
+}
+
+
+
+.notificacion{
+    color:white;
+}
+
+
+.jGrowl-notification {  /*colores de la notificacion*/ 
+                        background-color: #fff !important;
+                        color: #0272b3  !important ;
+                        
+                        width: 300px!important ;
+                        font-size:14px !important ;
+                        padding:20px 40px!important ;
+                        
+}
+
+
+div.jGrowl div.jGrowl-notification, div.jGrowl div.jGrowl-closer {
+    background-color: #fff !important;
+    
 }

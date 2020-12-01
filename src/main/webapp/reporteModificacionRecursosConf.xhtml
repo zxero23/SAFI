@@ -136,9 +136,13 @@
                             <td align="right"></td>
                             <td align="left">
                                 <h:panelGrid id="buttonGrid" columns="3" >
-                                    <ace:pushButton id="generarReporte" action="#{reporteManagedBean.verificarReporteModificacionRecursos()}">
-                                        <i class="fa fa-file-text"></i>
-                                        #{msg.generarReporte}
+                                    <ace:pushButton id="generarReportePdf" action="#{reporteManagedBean.verificarReporteModificacionRecursos(false)}" >
+                                        <i class="fa fa-file-text" ></i>
+                                        #{msg.generarReportePdf}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="generarReporteExcel" action="#{reporteManagedBean.verificarReporteModificacionRecursos(true)}" >
+                                        <i class="fa fa-file-text" ></i>
+                                        #{msg.generarReporteXls}
                                     </ace:pushButton>
                                 </h:panelGrid>
                             </td>

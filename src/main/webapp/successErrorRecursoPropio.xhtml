@@ -7,7 +7,7 @@
     <ui:composition template="./layout.xhtml">
         <ui:define name="content">
             <h:form id="formSuccessErrorRecursoPropio" title=" ">
-                <ace:panel header="#{recursoPropioManagedBean.title}">
+                <ace:panel id="panelSuccessErrorRecursoPropio" header="#{recursoPropioManagedBean.title}">
                     <table border="0" cellspacing="5" class="panel-message">
                         <tr>
                             <td align="right">
@@ -25,7 +25,13 @@
                             #{msg.volver}
                         </ace:pushButton> 
                     </div>
-                </ace:panel>                
+                </ace:panel>
+                <ace:submitMonitor id="submitMonitorPage"
+                                   for=":formSuccessErrorRecursoPropio:panelSuccessErrorRecursoPropio"
+                                   blockUI="@all"
+                                   autoCenter="true"
+                                   styleClass="submonitor"
+                                   />                  
             </h:form>
         </ui:define>
     </ui:composition>

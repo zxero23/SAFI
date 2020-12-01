@@ -125,7 +125,7 @@
                             </h:panelGrid>
                         </div>
                     </ace:panel>
-                    
+
                     <ace:dataTable id="dataTableCuentaBancaria" value="#{cuentaBancariaManagedBean.listElements}" page="#{cuentaBancariaManagedBean.page}" var="item" 
                                    lazy="true"
                                    rows="10"
@@ -169,14 +169,18 @@
                                 </h:outputText>
                             </div>                            
                         </ace:column>
-                        <ace:column id="cuentaBancaria" headerText="#{msg.action}" class="panelAcciones3Botones" >
-                            <h:panelGrid id="panelBotones" columns="3">
+                        <ace:column id="cuentaBancaria" headerText="#{msg.action}" class="panelAcciones4Botones" >
+                            <h:panelGrid id="panelBotones" columns="4">
                                 <ace:pushButton id="detalle"  action="detalleCuentaBancaria" p:title="#{msg.detalle}" actionListener="#{cuentaBancariaManagedBean.verDetalle}" rendered="#{cuentaBancariaManagedBean.detalle}">
                                     <span class="fa fa-search-plus" aria-hidden="true" />    
                                     <f:param name="id" value="#{item.id}"/>
                                 </ace:pushButton>
                                 <ace:pushButton id="editar"  action="editarCuentaBancaria" p:title="#{msg.editar}" actionListener="#{cuentaBancariaManagedBean.prepararParaEditar()}" rendered="#{cuentaBancariaManagedBean.modificacion}">
                                     <span class="fa fa-pencil" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="clonar"  action="clonarCuentaBancaria" p:title="#{msg.clonar}" actionListener="#{cuentaBancariaManagedBean.prepararParaClonar()}" rendered="#{cuentaBancariaManagedBean.clonar}">
+                                    <span class="fa fa-copy" aria-hidden="true" />  
                                     <f:param name="id" value="#{item.id}"/>
                                 </ace:pushButton>
                                 <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{cuentaBancariaManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogCuentaBancaria.clientId}').show();return false;">
@@ -200,16 +204,16 @@
                                     </h:panelGrid>
                                 </ace:confirmationDialog>
                             </h:panelGrid>
-                             
+
                         </ace:column>                    
                     </ace:dataTable>
                 </ace:panel>
                 <ace:submitMonitor id="submitMonitorPage"
-                                           for=":formCuentaBancaria:CuentaBancariaPanelActualizar "
-                                           blockUI="@all"
-                                           autoCenter="true"
-                                           styleClass="submonitor"
-                                           />
+                                   for=":formCuentaBancaria:CuentaBancariaPanelActualizar "
+                                   blockUI="@all"
+                                   autoCenter="true"
+                                   styleClass="submonitor"
+                                   />
             </h:form>
         </ui:define>
     </ui:composition>

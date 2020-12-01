@@ -117,9 +117,13 @@
                             <td align="right"></td>
                             <td align="left">
                                 <h:panelGrid id="buttonGrid" columns="3" >
-                                    <ace:pushButton id="generarReporte" action="#{reporteManagedBean.verificarReporteRango('documentosPendientesRendicion')}" >
+                                    <ace:pushButton id="generarReportePdf" action="#{reporteManagedBean.verificarReporteRango('documentosPendientesRendicion',false)}" >
                                         <i class="fa fa-file-text" ></i>
-                                        #{msg.generarReporte}
+                                        #{msg.generarReportePdf}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="generarReporteExcel" action="#{reporteManagedBean.verificarReporteRango('documentosPendientesRendicion',true)}" >
+                                        <i class="fa fa-file-text" ></i>
+                                        #{msg.generarReporteXls}
                                     </ace:pushButton>
                                 </h:panelGrid>
                             </td>
