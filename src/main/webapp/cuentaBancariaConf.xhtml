@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formCuentaBancaria" title=" ">
+                <ace:panel id="CuentaBancariaPanelActualizar" header="#{msg.confCuentaBancaria}">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="cuentaBancariaConf" actionListener="#{cuentaBancariaManagedBean.actualizar}" value="#{msg.confCuentaBancaria}"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{cuentaBancariaManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevaCuentaBancaria" value="#{msg.newCuentaBancaria}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="CuentaBancariaPanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true"  >
+                        <table border="0" cellspacing="5" class="table-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.ejercicio}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcEjercicio" value="#{cuentaBancariaManagedBean.idEjercicioBsq}" label="#{msg.ejercicio}">
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.todos}"/>
+                                        <f:selectItems value="#{cuentaBancariaManagedBean.selectItemsEjercicioBsq}" />
+                                        <ace:ajax execute="@this" render="@this slcEjercicio selectServicio" event="valueChange"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>                            
+                            </tr>
+                            <ui:fragment rendered="#{movimientoManagedBean.servicio==null}">
+                                <tr>
+                                    <td align="right">
+                                        <h:outputLabel value="#{msg.servicio}:" />
+                                    </td>
+                                    <td align="left">
+                                        <ace:simpleSelectOneMenu id="selectServicio" label="#{msg.servicio}" value="#{cuentaBancariaManagedBean.idServicioBsq}" >         
+                                            <f:selectItem   itemValue="0" noSelectionOption="true" itemLabel="#{msg.todos}"/>
+                                            <f:selectItems value="#{cuentaBancariaManagedBean.selectItemsServicio}" />
+                                        </ace:simpleSelectOneMenu>
+                                    </td>
+                                    <td align="left">
+
+                                    </td>
+                                </tr>  
+                            </ui:fragment>
+
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.banco}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectBanco" label="#{msg.banco}" value="#{cuentaBancariaManagedBean.idBancoBsq}" >  
+                                        <f:selectItem   itemValue="0" noSelectionOption="true" itemLabel="#{msg.todos}"/>
+                                        <f:selectItems value="#{cuentaBancariaManagedBean.selectItemsBanco}" />
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+
+                                </td>
+                            </tr>                         
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.numeroCuenta}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="numeroCuenta" value="#{cuentaBancariaManagedBean.numeroBsq}" type="number"/>
+                                </td>
+                                <td align="left">
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.descri}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="descrip" value="#{cuentaBancariaManagedBean.descripcionBsq}" />
+                                </td>
+                                <td align="left">
+
+                                </td>
+                            </tr>  
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.estadoCuenta}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectEstadoCuenta" label="#{msg.estadoCuenta}" value="#{cuentaBancariaManagedBean.idEstadoCuentaBsq}" >  
+                                        <f:selectItem   itemValue="0" noSelectionOption="true" itemLabel="#{msg.todos}"/>
+                                        <f:selectItems value="#{cuentaBancariaManagedBean.selectItemsEstadoCuenta}" />
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.saldoCero}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectSaldoCero" label="#{msg.saldoCero}" value="#{cuentaBancariaManagedBean.saldoCero}" >  
+                                        <f:selectItem itemValue="0" itemLabel="#{msg.elegir}"/>
+                                        <f:selectItem itemValue="1" itemLabel="SÍ"/>
+                                        <f:selectItem itemValue="2" itemLabel="NO"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                </td>
+                            </tr>
+                        </table>    
+                        <div align="right" >
+                            <h:panelGrid columns="2" >
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{cuentaBancariaManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{cuentaBancariaManagedBean.actualizar}">
+                                    <ace:ajax render="@all" />
+                                </ace:pushButton>
+                            </h:panelGrid>
+                        </div>
+                    </ace:panel>
+                    
+                    <ace:dataTable id="dataTableCuentaBancaria" value="#{cuentaBancariaManagedBean.listElements}" page="#{cuentaBancariaManagedBean.page}" var="item" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport} "
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="ejercicio" headerText="#{msg.ejercicio}">
+                            <div class="panel-column-data-center">
+                                <h:outputText id="cellEjercicio" value="#{item.ejercicio.anio}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="servicio" headerText="#{msg.servicio}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellServicio" value="#{item.servicio.codigo} - #{item.servicio.abreviatura}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="numero" headerText="#{msg.numero}">
+                            <div align="center">
+                                <h:outputText id="cellNumero" value="#{item.numero}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="descripcion" headerText="#{msg.descri}">
+                            <div align="center">
+                                <h:outputText id="cellDescripcion" value="#{item.descripcion}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="fechaAlta" headerText="#{msg.fechaAlta}">
+                            <div align="center">
+                                <h:outputText id="cellFechaAlta" value="#{item.fechaAlta}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="saldo" headerText="#{msg.saldo}">
+                            <div align="center">
+                                <h:outputText id="cellSaldo" value="#{item.saldo}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" locale="es_AR" type="currency"/>
+                                </h:outputText>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="cuentaBancaria" headerText="#{msg.action}" class="panelAcciones3Botones" >
+                            <h:panelGrid id="panelBotones" columns="3">
+                                <ace:pushButton id="detalle"  action="detalleCuentaBancaria" p:title="#{msg.detalle}" actionListener="#{cuentaBancariaManagedBean.verDetalle}" rendered="#{cuentaBancariaManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />    
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar"  action="editarCuentaBancaria" p:title="#{msg.editar}" actionListener="#{cuentaBancariaManagedBean.prepararParaEditar()}" rendered="#{cuentaBancariaManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{cuentaBancariaManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogCuentaBancaria.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" /> 
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogCuentaBancaria" binding="#{confirmDialogCuentaBancaria}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogCuentaBancaria.clientId}').hide();" actionListener="#{cuentaBancariaManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogCuentaBancaria.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                             
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+                <ace:submitMonitor id="submitMonitorPage"
+                                           for=":formCuentaBancaria:CuentaBancariaPanelActualizar "
+                                           blockUI="@all"
+                                           autoCenter="true"
+                                           styleClass="submonitor"
+                                           />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

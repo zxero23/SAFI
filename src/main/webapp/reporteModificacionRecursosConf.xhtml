@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formModificacionRecurso" title=" ">
+                <ace:panel id="ejecucionRecursoPanel" header="#{msg.reporteModificacionRecursos}" >
+                    <table border="0" cellspacing="5">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value= "(*) #{msg.ejercicio}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slcEjercicio" label="#{msg.ejercicio}"
+                                                         value="#{reporteManagedBean.idEjercicio}"
+                                                         required="true">
+                                    <f:selectItem  noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                    <f:selectItems value="#{reporteManagedBean.selectItemsEjercicio}" /> 
+                                    <ace:ajax render="@this slcEjercicioMsg slcServicio slcMes" event="valueChange"/> 
+                                    <ace:ajax render="@this slcEjercicioMsg slcServicio slcMes" event="blur" /> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slcEjercicioMsg" for="slcEjercicio" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.servicio}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="servicio"
+                                               value="#{reporteManagedBean.codigoServicio} - #{reporteManagedBean.abreviaturaServicio}"
+                                               rendered="#{reporteManagedBean.mostrarSoloUnServicio}"
+                                               disabled="true"/>
+                                <ace:simpleSelectOneMenu id="slcServicio" label="#{msg.servicio}"
+                                                         value="#{reporteManagedBean.idServicio}"
+                                                         rendered="#{not reporteManagedBean.mostrarSoloUnServicio}"
+                                                         required="true">
+                                    <f:selectItem  itemValue="0" itemLabel="#{msg.todos}"/> 
+                                    <f:selectItems value="#{reporteManagedBean.selectItemsServicio}"/>
+                                    <ace:ajax render="@this slcServicioMsg slcOrganismo" event="valueChange"/>
+                                    <ace:ajax render="@this slcServicioMsg slcOrganismo" event="blur"/>
+                                </ace:simpleSelectOneMenu>
+                            </td>   
+                            <td align="left">
+                                <ace:message id="slcServicioMsg" for="slcServicio" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.organismo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slcOrganismo" label="#{msg.organismo}"
+                                                         value="#{reporteManagedBean.idOrganismo}"
+                                                         required="true">
+                                    <f:selectItem  noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                    <f:selectItem  itemValue="0" noSelectionOption="false" itemLabel="#{msg.todos}"/>
+                                    <f:selectItems value="#{reporteManagedBean.selectItemsOrganismo}"/>
+                                    <ace:ajax render="@this slcOrganismoMsg"
+                                              event="valueChange"                                              
+                                              execute="@this"/>
+                                    <ace:ajax render="@this slcOrganismoMsg"
+                                              event="blur"                                              
+                                              execute="@this"/>
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slcOrganismoMsg" for="slcOrganismo" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.fechaDesde}:" 
+                                               rendered="#{not reporteManagedBean.perteneceHTC}"/>
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="fechaDesde" label="#{msg.fechaDesde}"
+                                               value="#{reporteManagedBean.fechaDesde}"
+                                               rendered="#{not reporteManagedBean.perteneceHTC}"
+                                               required="true">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                    <ace:ajax render="@this fechaDesdeError" event="blur"/>
+                                    <ace:ajax render="@this fechaDesdeError" event="valueChange"/>
+
+                                </ace:textEntry>
+                            </td>
+                            <td>
+                                <ace:message id="fechaDesdeError" for="fechaDesde" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.fechaHasta}:"
+                                               rendered="#{not reporteManagedBean.perteneceHTC}"/>
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="fechaHasta" label="#{msg.fechaHasta}"
+                                               value="#{reporteManagedBean.fechaHasta}"
+                                               rendered="#{not reporteManagedBean.perteneceHTC}"
+                                               required="true">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                    <ace:ajax render="@this fechaHastaError" event="blur"/>
+                                    <ace:ajax render="@this fechaHastaError" event="valueChange"/>
+                                </ace:textEntry>
+                            </td>
+                            <td>
+                                <ace:message id="fechaHastaError" for="fechaHasta" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.mes}:"
+                                               rendered="#{reporteManagedBean.perteneceHTC}"/>
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slcMes"
+                                                         value="#{reporteManagedBean.mes}"                                                             
+                                                         label="#{msg.mes}"
+                                                         rendered="#{reporteManagedBean.perteneceHTC}"
+                                                         required="true">
+                                    <f:selectItems id="itemMes" value="#{reporteManagedBean.selectItemsMeses}" />
+                                    <ace:ajax render="@this mesError" event="blur"/>
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td>
+                                <ace:message  id="mesError" for="slcMes" initEffect="slide" changeEffect="fade"/>                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right"></td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="3" >
+                                    <ace:pushButton id="generarReporte" action="#{reporteManagedBean.verificarReporteModificacionRecursos()}">
+                                        <i class="fa fa-file-text"></i>
+                                        #{msg.generarReporte}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                        </tr>
+                    </table>
+                </ace:panel>
+                <ace:submitMonitor id="submitMonitorModificacionRecurso"
+                                   for="formModificacionRecurso"
+                                   blockUI="@all"
+                                   autoCenter="true"
+                                   activeLabel="#{msg.espere}"
+                                   networkErrorLabel="#{msg.errorConexion}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

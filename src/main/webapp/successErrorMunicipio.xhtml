@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formSuccessErrorMunicipio" title=" ">
+                <ace:panel header="#{municipioManagedBean.title}">
+                    <table border="0" cellspacing="5" class="panel-message">
+                        <tr>
+                            <td align="right">
+                                <span class="#{municipioManagedBean.images}"></span> 
+                            </td>
+                            <td align="left">
+                                <h:outputLabel value="#{municipioManagedBean.msgSuccessError}" class="msg-exito" rendered="#{municipioManagedBean.esCorrecto}"/>
+                                <h:outputLabel value="#{municipioManagedBean.msgSuccessError}" class="msg-error" rendered="#{!municipioManagedBean.esCorrecto}"/>
+                            </td>                            
+                        </tr> 
+                    </table>                    
+                    <div align="center"> 
+                        <ace:pushButton id="volver" action="municipioConf" actionListener="#{municipioManagedBean.limpiar()}" >
+                            <i class="fa fa-arrow-circle-left"></i>
+                            #{msg.volver}
+                        </ace:pushButton> 
+                    </div>
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formFuncion" title=" ">
+                <ace:panel id="funcionPanelPrincipal" header="#{msg.confFuncion}">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="funcionConf" actionListener="#{funcionManagedBean.actualizar}" value="#{msg.confFuncion}"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{funcionManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevaFuncion" value="#{msg.newFuncion}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="funcionPanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true"  class="panel-buttons">
+                        <table border="0" cellspacing="5" class="table-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.tipoOrden}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slctTipoOrdenGasto" value="#{funcionManagedBean.idTipoOrdenGastoBsq}" label="#{msg.tipoOrdeGasto}">
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                        <f:selectItems value="#{funcionManagedBean.selectItemsTipoOrdenGasto}" /> 
+                                        <ace:ajax render="@this slctTipoOrdenGasto slctTipoOrdenGastoMsg" event="blur"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>                                
+                            </tr>                        
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.tipoFondo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slctTipoFondo" value="#{funcionManagedBean.idTipoFondoBsq}" label="#{msg.tipoFondo}">
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                        <f:selectItems value="#{funcionManagedBean.selectItemsTipoFondo}" /> 
+                                        <ace:ajax render="@this slctTipoFondo slctTipoFondoMsg" event="blur"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>                                
+                            </tr>                        
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.tipoImputacion}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slctTipoImputacion" value="#{funcionManagedBean.idTipoImputacionBsq}" label="#{msg.tipoImputacion}">
+                                        <f:selectItem  itemValue="0"  noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                        <f:selectItems value="#{funcionManagedBean.selectItemsTipoImputacion}" /> 
+                                        <ace:ajax render="@this slctTipoImputacion slctTipoImputacionMsg" event="blur"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>                            
+                            </tr>                        
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.tipoAcumulador}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slctTipoAcumulador" value="#{funcionManagedBean.idTipoAcumuladorBsq}" label="#{msg.tipoAcumulador}">
+                                        <f:selectItem  itemValue="0"  noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                        <f:selectItems value="#{funcionManagedBean.selectItemsTipoAcumulador}" /> 
+                                        <ace:ajax render="@this slctTipoAcumulador slctTipoAcumuladornMsg" event="blur"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>                            
+                            </tr>                          
+                        </table>    
+                        <div align="right" >
+                            <h:panelGrid columns="2" >
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{funcionManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{funcionManagedBean.actualizar}"/>
+                            </h:panelGrid>
+                        </div>
+                    </ace:panel>
+                    <ace:dataTable id="funcionPanelDataTable"
+                                   value="#{funcionManagedBean.listElements}" var="item" page="#{funcionManagedBean.page}"
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">                        
+                        <ace:column id="ordenGasto" headerText="#{msg.tipoOrden}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellOrdenGasto" value="#{item.tipoOrdenGasto.id} - #{item.tipoOrdenGasto.nombre}"/>
+                            </div>                            
+                        </ace:column>                        
+                        <ace:column id="fondo" headerText="#{msg.tipoFondo}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellFondo" value="#{item.tipoFondo.id} - #{item.tipoFondo.nombre}"/>
+                            </div>                            
+                        </ace:column>                        
+                        <ace:column id="imputacion" headerText="#{msg.tipoImputacion}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellImputacion" value="#{item.tipoImputacion.id} - #{item.tipoImputacion.nombre}"/>
+                            </div>                            
+                        </ace:column>                        
+                        <ace:column id="acumulador" headerText="#{msg.tipoAcumulador}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellAcumulador" value="#{item.tipoAcumulador.id} - #{item.tipoAcumulador.nombre}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="operacion" headerText="#{msg.tipoOperacion}">
+                            <center>
+                                <h:outputText id="cellOperacion" value="#{item.tipoOperacion == 1?'SUMA':'RESTA'}"/>
+                            </center>                            
+                        </ace:column>                        
+                        <ace:column id="accion" headerText="#{msg.confAction}" class="panelAcciones" >
+                            <h:panelGrid  columns="3"> 
+                                <ace:pushButton id="detalle"  action="detalleFuncion" p:title="#{msg.detalle}" actionListener="#{funcionManagedBean.verDetalle}" rendered="#{tipoImputacionManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />    
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar"  action="editarFuncion" p:title="#{msg.editar}" actionListener="#{funcionManagedBean.prepararParaEditar()}" rendered="#{funcionManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{funcionManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogFuncion.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" /> 
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogFuncion" binding="#{confirmDialogFuncion}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogFuncion.clientId}').hide();" actionListener="#{funcionManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogFuncion.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

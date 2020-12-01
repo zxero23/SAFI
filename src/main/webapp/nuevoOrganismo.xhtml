@@ -1,0 +1,164 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formNuevoOrganismo" title=" ">
+                <ace:panel id="nuevoOrganismo" header="#{msg.newOrganismo}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.organismoPadre}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu
+                                    id="organismo"
+                                    value="#{organismoManagedBean.idOrganismoPadre}">
+                                    <f:selectItem   itemValue="-1"  itemLabel="#{msg.ninguno}"/>
+                                    <f:selectItems value="#{organismoManagedBean.selectItems}" />
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="organismoError" for="organismo" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.clasificadorOrganismo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu
+                                    id="clasificador"
+                                    value="#{organismoManagedBean.idClasificadorOrganismo}"
+                                    label="#{msg.clasificadorOrganismo}"
+                                    required="true">
+                                    <f:selectItem   itemValue="0"  itemLabel="#{msg.ninguno}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{organismoManagedBean.selectItemsClasificadorOrganismo}" />
+                                    <ace:ajax render="@this clasificadorError" event="blur"/>
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="clasificadorError" for="clasificador" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.codigoOrganismo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry
+                                    id="codigo"
+                                    value="#{organismoManagedBean.codigoOrganismo}"
+                                    type="number"
+                                    label="#{msg.codigoOrganismo}"
+                                    required="true" 
+                                    maxlength="#{msg.maxLength}"
+                                    validator="#{organismoManagedBean.validarCodigo}">
+                                    <ace:ajax render="@this codigoError" event="blur"/>
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="codigoError" for="codigo" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.nombre}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry
+                                    id="nombre"
+                                    value="#{organismoManagedBean.nombre}"
+                                    label="#{msg.nombre}"
+                                    required="true" 
+                                    maxlength="#{msg.maxLength}"
+                                    styleClass="ancho">
+                                    <ace:ajax render="@this nombreError" event="blur"/>
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="nombreError" for="nombre" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.direccion}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry
+                                    id="direccion"
+                                    value="#{organismoManagedBean.direccion}"
+                                    label="#{msg.direccion}"
+                                    maxlength="#{msg.maxLength}"
+                                    styleClass="ancho">
+                                    <ace:ajax render="@this direccionError" event="blur"/>
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="direccionError" for="direccion" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.telefonos}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry
+                                    id="telefonos"
+                                    value="#{organismoManagedBean.telefonos}"
+                                    label="#{msg.telefonos}"
+                                    maxlength="#{msg.maxLength}"
+                                    styleClass="ancho"
+                                    validatorMessage="#{msg.ingresoSoloNumero}">
+                                    <f:validateRegex pattern="\d*(.\d+)?"/>
+                                    <ace:ajax render="@this telefonosError" event="blur"/>
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="telefonosError" for="telefonos" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.correoOficial}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry
+                                    id="correoOficial"
+                                    value="#{organismoManagedBean.correoOficial}"
+                                    validator="#{organismoManagedBean.emailValido}"
+                                    label="#{msg.correoOficial}"
+                                    maxlength="#{msg.maxLength}"
+                                    required="true" 
+                                    type="email">
+                                    <ace:ajax render="@this correoOficialError" event="blur"/>
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="correoOficialError" for="correoOficial" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="3" class="panel-buttons">
+                                    <ace:pushButton id="save" value="#{msg.save}" action="#{organismoManagedBean.crear()}"/>
+                                    <ace:pushButton id="saveCreate" value="#{msg.saveCreate}" action="#{organismoManagedBean.crearOtro()}"/>
+                                    <ace:pushButton id="cancel" value="#{msg.cancel}" action="organismoConf" immediate="true" actionListener="#{organismoManagedBean.limpiar()}"/>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

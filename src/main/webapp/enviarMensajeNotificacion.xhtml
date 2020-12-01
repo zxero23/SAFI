@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formEnviarMensajeNotificacion" title=" ">              
+                <ace:panel id="panelEnviarMensajeNotificacion" header="#{msg.enviarNotificacion}">                    
+                    <ace:textAreaEntry id="mensaje"
+                                       required="true"
+                                       placeholder="#{msg.escribaMensaje}"
+                                       value="#{notificacionManagedBean.mensaje}"
+                                       style="width: 700px; height: 150px;"
+                                       disabled="#{not notificacionManagedBean.alta}"
+                                       label="#{msg.mensaje}"
+                                       maxlength="#{msg.maxLength}"
+                                       validator="#{notificacionManagedBean.validatorEspaciosEnBlanco}">
+                    </ace:textAreaEntry>
+                    <br></br>
+                    <h:panelGrid id="buttonGrid" columns="2" >                        
+                        <ace:pushButton id="save" action="#{notificacionManagedBean.crear()}" disabled="#{not notificacionManagedBean.alta}">                            
+                            <i class="fa fa-floppy-o"></i>
+                            #{msg.save}                            
+                        </ace:pushButton>                        
+                        <ace:pushButton id="cancel" action="notificacionConf" immediate="true" actionListener="#{notificacionManagedBean.limpiar()}">                            
+                            <i class="fa fa-ban"></i>
+                            #{msg.cancel}                            
+                        </ace:pushButton>                        
+                    </h:panelGrid>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

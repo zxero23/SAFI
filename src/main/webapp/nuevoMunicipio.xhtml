@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formNuevoMunicipio" title=" ">
+                <ace:panel id="nuevoMunicipio" header="#{msg.newMunicipio}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.provincia}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="selectProvincia" label="#{msg.provincia}"
+                                                         value="#{municipioManagedBean.idProvincia}"
+                                                         required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}" /> 
+                                    <f:selectItems value="#{municipioManagedBean.selectItemsProvincia}" /> 
+                                    <ace:ajax render="@this selectProvincia selectProvinciaMsg selectDeptoNew " event="valueChange"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="selectProvinciaMsg" for="selectProvincia" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.departamento}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="selectDeptoNew" label="#{msg.departamento}" 
+                                                         value="#{municipioManagedBean.idDepartamento}"
+                                                         required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}" /> 
+                                    <f:selectItems value="#{municipioManagedBean.selectItems}" /> 
+                                    <ace:ajax render="@this selectDeptoNew selectDeptoNewMsg" event="blur"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="selectDeptoNewMsg" for="selectDeptoNew" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>  
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.codigoPostal}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="codPostal" label="#{msg.codigoPostal}"
+                                               value="#{municipioManagedBean.codigoPostal}"
+                                               maxlength="#{msg.maxLength}"
+                                               required="true">
+                                    <ace:ajax render="@this codPostal codPostalMsg" event="blur"/>                                
+                                </ace:textEntry> 
+                            </td>
+                            <td align="left">
+                                <ace:message id="codPostalMsg" for="codPostal" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.nombre}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="nombre" label="#{msg.nombre}"
+                                               value="#{municipioManagedBean.nombre}"
+                                               maxlength="#{msg.maxLength}"
+                                               required="true">
+                                    <ace:ajax render="@this nombre nombreMsg" event="blur"/>                                
+                                </ace:textEntry> 
+                            </td>
+                            <td align="left">
+                                <ace:message id="nombreMsg" for="nombre" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="3" >
+                                    <ace:pushButton id="save"  action="#{municipioManagedBean.crear()}" >
+                                        <i class="fa fa-floppy-o"></i>
+                                        #{msg.save}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="saveCreate" action="#{municipioManagedBean.crearOtro()}" >                                        
+                                        <span class="icon-stack">
+                                            <i class="fa fa-floppy-o icon-stack-3x"></i>
+                                            <i class="fa fa-plus icon-stack-1x right_align"></i>
+                                        </span>
+                                        #{msg.saveCreate}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="cancel"  action="municipioConf" immediate="true" actionListener="#{municipioManagedBean.limpiar()}" >                                        
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr> 
+                    </table>
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">    
+    <ui:composition>
+        <div class="topbar">
+            <div class="topbar-main">
+                <a href="#" id="menu-button" class="menu-button">
+                    <span class="fa fa-bars"></span>
+                </a>
+                <a href="#">
+                    <img src="images/contaduria-general-blanco.png" class="logo" alt=""/>
+                </a>
+                <a href="#" id="user-display"  class="dropdown" >
+                    <span class="username">#{webManagedBean.usuario.apellidoNombre}</span>
+                    <ui:fragment rendered="#{not empty webManagedBean.servicio}"><span class="userrole" >#{webManagedBean.servicio.codigo} - #{webManagedBean.servicio.descripcion}</span></ui:fragment>
+                    <span class="userrole">#{webManagedBean.nombreGrupo}</span>
+                    <img  id="imagen" src="#{facesContext.externalContext.requestContextPath}/FotoPerfil/#{webManagedBean.usuario.foto}" type="application/jpg" alt="" />
+                </a>
+                <h:form id="formMenucito" >
+                    <ul id="topbar-menu" class="fadeInDown animated">
+                        <li>
+                            <h:commandLink p:title="#{msg.cambiarContraUsuario}" action="configuracionConf" rendered="#{!webManagedBean.usuario.updatedPassword}" actionListener="#{usuarioManagedBean.prepararParaEditarContraseña(webManagedBean.usuario.id)}" immediate="true" >
+                                <i class="topbar-icon fa fa-fw fa-users"></i>
+                                <span class="topbar-item-name fuenteMayu">#{msg.usuarioContraseña}</span>
+                            </h:commandLink>
+                        </li>
+                        <li>
+                            <h:commandLink  id="fotoPerfil" p:title="#{msg.perfil}" action="editarPerfil" rendered="#{!webManagedBean.usuario.updatedPassword}" actionListener="#{webManagedBean.prepararParaEditarPerfil(webManagedBean.usuario.id)}" immediate="true" >
+                                <i class="topbar-icon fa fa-fw fa-cog"></i>
+                                <span class="topbar-item-name fuenteMayu">#{msg.fotoPerfil}</span>
+                                <f:ajax execute="@this imagen" render="@all"/>
+                            </h:commandLink>
+                        </li>
+                        <li>
+                            <h:commandLink p:title="#{msg.logout}" action="index" immediate="true"  actionListener="#{webManagedBean.logout()}" >
+                                <i class="topbar-icon fa fa-fw fa-lock"></i>
+                                <span class="topbar-item-name fuenteMayu">#{msg.logout}</span>
+                            </h:commandLink>
+                        </li>
+                    </ul>
+                </h:form>
+            </div>
+            <div id="menu-wrapper" class="layout-menu-wrapper">
+                <div class="nano">
+                    <div class="nano-content sidebar-scroll-content" >
+                        <div class="layout-menu-container">
+                            <h:form id="formNav" style="width: 100%">
+                                <ul class="layout-menu" >
+                                    <ace:menuBar autoSubmenuDisplay="true"   style="width: 98%; border: none;">
+                                        <c:forEach items="#{webManagedBean.menus}" var="item" >
+                                            <ace:submenu id="subMenu" label="#{item.nombre}" icon="#{item.icon}" p:data-toggle="collapse" p:data-target="#navbar-main" action="${item.getLink()}" >
+                                                <c:forEach items="#{item.menus}" var="subItem">
+                                                    <ace:submenu icon="#{subItem.icon}" label="#{subItem.nombre}"  action="${subItem.getLink()}" >
+                                                        <c:forEach items="#{subItem.menus}" var="subSubItem">
+                                                            <ace:submenu label="#{subSubItem.nombre}" action="${subSubItem.getLink()}">
+                                                            </ace:submenu>
+                                                        </c:forEach>
+                                                    </ace:submenu>
+                                                </c:forEach>
+                                            </ace:submenu>
+                                        </c:forEach>
+                                    </ace:menuBar>
+                                </ul>
+                            </h:form>
+                            <ace:submitMonitor for="formNav" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script  type="text/javascript" >
+            (function ($) {
+                $(".menu-button").toggle(function () {
+                    $(this).attr("class", "fadeInDown animated");
+                }, function () {
+                    $(this).attr("class", "menu-button-active");
+                });
+                $(".menu-button").toggle(function () {
+                    $(".layout-menu-wrapper").attr("class", "layout-menu-wrapper");
+                }, function () {
+                    $(".layout-menu-wrapper").attr("class", "layout-menu-wrapper layout-menu-wrapper-active");
+                });
+                $(".dropdown").toggle(function () {
+                    $("#topbar-menu").attr("class", "fadeInDown animated");
+                }, function () {
+                    $("#topbar-menu").attr("class", "fadeInDown animated topbar-menu-visible");
+                });
+            })(ice.ace.jq);
+        </script>
+    </ui:composition>
+</html>

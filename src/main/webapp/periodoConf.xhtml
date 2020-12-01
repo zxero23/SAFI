@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formPeriodo" title=" ">
+                <ace:panel id="periodoPanelPrincipal" header="#{msg.confPeriodo}" class="panel-buttons">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="periodoConf" actionListener="#{periodoManagedBean.actualizar}" value="#{msg.confPeriodo}"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{periodoManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoPeriodo" value="#{msg.newPeriodo}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="periodoPanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true"  class="panel-buttons">
+                        <table border="0" cellspacing="5" class="panel-buttons">
+                            <tr>
+                                <td align="right" class="td-label">
+                                    <h:outputLabel value="#{msg.fechaDesde}:" />
+                                </td>
+                                <td align="left" class="td-input">
+                                    <ace:maskedEntry mask="99/99/9999" value="#{periodoManagedBean.fechaInicio}" id="fechaVigenciaInicio" >
+                                        <ace:ajax execute="@this" render="@this fechaVigenciaInicio fechaVigenciaInicioMsg" event="blur"></ace:ajax>
+                                        <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                    </ace:maskedEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="fechaVigenciaInicioMsg" for="fechaVigenciaInicio" initEffect="slide" changeEffect="shake"/> 
+                                    <ace:ajax />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" class="td-label">
+                                    <h:outputLabel value="#{msg.fechaHasta}:" />
+                                </td>
+                                <td align="left" class="td-input">
+                                    <ace:maskedEntry mask="99/99/9999" value="#{periodoManagedBean.fechaFin}" id="fechaVigenciaFin">
+                                        <ace:ajax execute="@this" render="@this fechaVigenciaFin fechaVigenciaFinMsg" event="blur"></ace:ajax>
+                                        <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                    </ace:maskedEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="fechaVigenciaFinMsg" for="fechaVigenciaFin" initEffect="slide" changeEffect="shake"/> 
+                                    <ace:ajax />
+                                </td>
+                            </tr>
+                        </table>
+                        <div align="right" class="panelBotonesBusqueda">
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{periodoManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{periodoManagedBean.actualizar}"/>
+                            </h:panelGrid>                            
+                        </div>                      
+                    </ace:panel>
+                    <ace:dataTable id="periodoPanelDataTable" value="#{periodoManagedBean.listElements}" var="item" page="#{periodoManagedBean.page}"
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="anio" headerText="#{msg.ejercicio}">
+                            <center>
+                                <h:outputText id="cellAnio" value="#{item.ejercicio.anio}"/>
+                            </center>                            
+                        </ace:column>
+                        <ace:column id="fechaDesde" headerText="#{msg.fechaInicio}">
+                            <center>
+                                <h:outputText id="cellFechaInicio" value="#{item.fechaInicio}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </center>                      
+                        </ace:column>
+                        <ace:column id="fechaFin" headerText="#{msg.fechaFin}">
+                            <center>
+                                <h:outputText id="cellFechaFin" value="#{item.fechaFin}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </center>                       
+                        </ace:column>
+                        <ace:column id="periodo" headerText="#{msg.action}" class="panelAcciones" >
+                            <h:panelGrid  columns="3"> 
+                                <ace:pushButton id="detalle"  action="detallePeriodo" p:title="#{msg.detalle}" actionListener="#{periodoManagedBean.verDetalle}" rendered="#{periodoManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />    
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar"  action="editarPeriodo" p:title="#{msg.editar}" actionListener="#{periodoManagedBean.prepararParaEditar()}" rendered="#{periodoManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{periodoManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogPeriodo.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" /> 
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogPeriodo" binding="#{confirmDialogPeriodo}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogPeriodo.clientId}').hide();" actionListener="#{periodoManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogPeriodo.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

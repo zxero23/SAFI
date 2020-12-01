@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formEditarAgente" title=" ">
+                <ace:panel id="editarAgente" header="#{msg.editAgente}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                       <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.apellidoNombre}: " />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="apellidoNombre" label="#{msg.apellidoNombre}" value="#{agenteManagedBean.apellidoNombre}" maxlength="#{msg.maxLength}" required="true">
+                                    <ace:ajax render="@this apellidoNombre apellidoNombreMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="apellidoNombreMsg" for="apellidoNombre" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.dni}: " />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="dni" label="#{msg.dni}" value="#{agenteManagedBean.dni}" min="0" max="99999999" type="number" required="true">
+                                    <ace:ajax render="@this dni dniMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="dniMsg" for="dni" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.legajo}: " />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="legajo" label="#{msg.legajo}" value="#{agenteManagedBean.legajo}" min="0" max="99999999" type="number" required="true">
+                                    <ace:ajax render="@this legajo legajoMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="legajoMsg" for="legajo" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="2" >
+                                    <ace:pushButton id="save"  action="#{agenteManagedBean.guardarEdicion}" >
+                                        <i class="fa fa-pencil"></i>
+                                        #{msg.saveEdit}
+                                    </ace:pushButton>                     
+                                    <ace:pushButton id="cancel"  action="agenteConf" immediate="true" actionListener="#{agenteManagedBean.limpiar()}" >
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table> 
+                    <h:inputHidden value="#{agenteManagedBean.id}" />
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

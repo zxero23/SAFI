@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formEditarServicio" title=" ">
+                <ace:panel id="editarServicio" header="#{msg.editServicio}">
+                    <table border="0" cellspacing="5" class="panel-buttons" style="padding-bottom: 0px;">   
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.codigo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="codigo" label="#{msg.codigo}" value="#{servicioManagedBean.codigo}"  disabled="true" maxlength="#{msg.maxLength}" required="true">
+                                    <ace:ajax render="@this codigo codigoMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="codigoMsg" for="codigo" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.descripcion}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="descripcion" label="#{msg.descripcion}" value="#{servicioManagedBean.descripcion}" maxlength="#{msg.maxLength}" required="true">
+                                    <ace:ajax render="@this descripcion descripcionMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="descripcionMsg" for="descripcion" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.abreviatura}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="abreviatura" label="#{msg.abreviatura}" value="#{servicioManagedBean.abreviatura}" maxlength="255" required="true" validator="#{servicioManagedBean.validatorEspaciosEnBlanco}">
+                                    <ace:ajax render="@this abreviatura abreviaturaMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="abreviaturaMsg" for="abreviatura" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.tipoServicio}: " />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="tipoServicio"
+                                                         value="#{servicioManagedBean.idTipoTramite}"
+                                                         required="true"
+                                                         label="#{msg.tipoServicio}" >
+                                    <f:selectItem itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                    <f:selectItems value="#{servicioManagedBean.selectItemsTipoServicio}"/>
+                                    <ace:ajax execute="@this" render="@this tipoServicioMsg @all" event="valueChange"/>
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="tipoServicioMsg" for="tipoServicio" /> 
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.confCodigoExpediente}" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu 
+                                    id="idServicios" label="#{msg.servicios}"
+                                    value="#{servicioManagedBean.idCodigoExpAux}"
+                                    valueChangeListener="#{servicioManagedBean.cargaCodigos}"
+                                    required="false">
+                                    <f:selectItem  itemValue="0" noSelectionOption="false" class="ejercicioAux fuenteMayu" itemLabel="#{msg.seleccionarCodigo}"/>
+                                    <f:selectItems id="prueba" value="#{servicioManagedBean.selectItemsCodigosDisponibles}"/>
+                                    <ace:ajax execute="@this" render="@all"/>
+                                </ace:simpleSelectOneMenu>
+
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                    <table border="0" cellspacing="5" class="panel-buttons" style="padding-top: 0px;">   
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.confCodigoExpedienteSeleccionados}" />
+                            </td>
+                            <td align="left">
+                                <ace:dataTable id="serviciosDataTable" 
+                                               value="#{servicioManagedBean.lstcodigoOrganismoSorted}"
+                                               var="item"
+                                               paginator="true"
+
+                                               paginatorPosition="bottom"
+                                               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                               currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                               rows="10"
+                                               class="panel-buttons">
+                                    <ace:column id="columnAbreviatura" headerText="#{msg.codigo}" style="width: 150px !important;">
+                                        <div class="panel-column-data-center">
+                                            <h:outputText id="cellAbreviatura" value="#{item.codigo}"/>
+                                        </div>                            
+                                    </ace:column>
+
+                                    <ace:column id="accion" headerText="#{msg.confAction}" class="panelAcciones" style="width:20%">
+                                        <h:panelGrid  columns="3">                               
+                                            <ace:pushButton id="eliminar" p:title="#{msg.quitar}" actionListener="#{servicioManagedBean.quitarCodigo()}">
+                                                <span class="fa fa-trash-o" aria-hidden="true" />
+                                                <f:param name="id" value="#{item.id}"/>
+                                                <ace:ajax execute="@this serviciosDataTable" render="@all" />
+                                            </ace:pushButton>
+                                        </h:panelGrid>
+                                    </ace:column> 
+                                </ace:dataTable>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="2" >
+                                    <ace:pushButton id="save"  action="#{servicioManagedBean.guardarEdicion}" >
+                                        <i class="fa fa-pencil"></i>
+                                        #{msg.saveEdit}
+                                    </ace:pushButton>                     
+                                    <ace:pushButton id="cancel"  action="servicioConf" immediate="true" actionListener="#{servicioManagedBean.limpiar()}" >
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                    <h:inputHidden value="#{servicioManagedBean.id}" />
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formNuevoRecursoModificado" title=" ">
+                <ace:panel id="nuevoRecursoModificado" header="#{msg.newRecursoModificado}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.ejercicio}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.ejercicio.anio}"/>
+                            </td>
+                            <td align="left"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.nomenclador}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.organismo.clasificadorOrganismo.id}.
+                                                     #{recursoPropioManagedBean.ceroIzquierda(recursoPropioManagedBean.organismo.codigoOrganismo)}.
+                                                     #{recursoPropioManagedBean.recursoPropio.caracter.id}.
+                                                     #{recursoPropioManagedBean.clasificadorRecurso.obtenerCodigoCompleto(recursoPropioManagedBean.clasificadorRecurso)}.
+                                                     #{recursoPropioManagedBean.concepto}"/>
+                            </td>
+                            <td align="left"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.concepto}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.descripcion}"/>
+                            </td>
+                            <td align="left"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.fechaAlta}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.fechaAlta}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </td>
+                            <td align="left"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.importeOriginal}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.importeOriginal}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </td>
+                            <td align="left"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.importeActual}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.importeActual}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>                                    
+                                </h:outputText>
+                                 <ace:ajax render="@this" />
+                               
+                            </td>
+                            <td align="left"></td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.fechaInstrumentoLegal}:"/>
+                            </td>
+                            <td align="left">
+                                <icecore:focusManager for="fechaModificacion"   >
+                                <ace:maskedEntry id="fechaModificacion" label="#{msg.fechaInstrumentoLegal}" value="#{recursoPropioManagedBean.fechaModificacion}" 
+                                                 validator="#{recursoPropioManagedBean.validarFechaRecModificado}"
+                                                 mask="99/99/9999" required="true">
+                                    <ace:ajax render="@this fechaModificacion fechaModificacionError" event="blur"/>
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/> 
+                                </ace:maskedEntry>
+                                </icecore:focusManager>
+                            </td>
+                            <td align="left">
+                                <ace:message id="fechaModificacionError" for="fechaModificacion" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.instrumentoLegal}:"/>
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="itemsDescInstLegal" value="#{recursoPropioManagedBean.idInstrumentoLegal}" 
+                                                         label="#{msg.instrumentoLegal}" required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                    <f:selectItems value="#{recursoPropioManagedBean.selectItemsInstrumentosLegales}" /> 
+                                    <ace:ajax render="@this itemsDescInstLegal itemsDescInstLegalMsg" event="blur"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="itemsDescInstLegalMsg" for="itemsDescInstLegal" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.numeroInstrumentoLegal}:"/>
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="nroInst" label="#{msg.numeroInstrumentoLegal}" value="#{recursoPropioManagedBean.numeroInstrumento}" required="true">
+                                    <ace:ajax render="@this nroInst nroInstError" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="nroInstError" for="nroInst" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.importe}:"/>
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="importe" label="#{msg.importe}" value="#{recursoPropioManagedBean.importeRecMod}" 
+                                               validator="#{recursoPropioManagedBean.validarImporteRecursoModificado}"
+                                               type="number"                                               
+                                               required="true">    
+                                    <ace:ajax render="@this importe importeError" event="blur"/>
+                                </ace:textEntry>
+                                <icecore:defaultAction id="nuevaModRec" action="#{recursoPropioManagedBean.crearRecursoModificado()}" key="Enter" />
+                            </td>
+                            <td align="left">
+                                <ace:message id="importeError" for="importe" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right"></td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="3" >
+                                    <ace:pushButton id="save"  action="#{recursoPropioManagedBean.crearRecursoModificado()}" >
+                                        <i class="fa fa-floppy-o"></i>
+                                        #{msg.save}
+                                        
+                                    </ace:pushButton>
+                                    <ace:pushButton id="saveCreate" action="#{recursoPropioManagedBean.crearOtroRecursoModificado()}">
+                                        <span class="icon-stack">
+                                            <i class="fa fa-floppy-o icon-stack-3x"></i>
+                                            <i class="fa fa-plus icon-stack-1x right_align"></i>
+                                        </span>
+                                        #{msg.saveCreate}
+                                        <ace:ajax render="@all" />   
+                                    </ace:pushButton>
+                                    <ace:pushButton id="cancel"  action="recursoPropioConf" immediate="true" actionListener="#{recursoPropioManagedBean.limpiar()}" >
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left"></td>
+                        </tr>
+                    </table>
+                </ace:panel>
+                 <script>     
+                            function setCursor() {          
+                                document.getElementById("formNuevoRecursoModificado:fechaModificacion_field").select();
+                            }
+                </script>
+            </h:form>   
+        </ui:define>
+    </ui:composition>
+</html>

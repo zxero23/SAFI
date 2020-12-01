@@ -1,0 +1,393 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formNuevoMovimiento" title=" " >
+                <ace:panel id="nuevoMovimiento" header="#{msg.newMovimiento}">
+                    <icecore:focusManager for="slcEjercicio">
+                        <table border="0" cellspacing="5" class="panel-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.ejercicio}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcEjercicio" label="#{msg.ejercicio}" 
+                                                             value="#{movimientoManagedBean.idEjercicio}"
+                                                             required="true">
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                        <f:selectItems value="#{movimientoManagedBean.selectItemsEjercicio}" /> 
+                                        <ace:ajax execute="@this" render="@all" event="blur" listener="#{movimientoManagedBean.actualizarSaldo()}"/>
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" listener="#{movimientoManagedBean.actualizarSaldo()}"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="slcEjercicioMsg" for="slcEjercicio" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>  
+                            <ui:fragment rendered="#{movimientoManagedBean.servicioUsuario}" >
+                                <tr>
+                                    <td align="right">
+                                        <h:outputLabel value="#{msg.servicio}:" />
+                                    </td>
+                                    <td align="left">
+                                        <ace:simpleSelectOneMenu id="slcSservicio" label="#{msg.servicio}" 
+                                                                 value="#{movimientoManagedBean.idServicio}">
+                                            <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                            <f:selectItems value="#{movimientoManagedBean.selectItemsServicio}"  /> 
+                                            <ace:ajax execute="@this" render="@all" event="blur" resetValues="true" listener="#{movimientoManagedBean.actualizarSaldo()}"/> 
+                                            <ace:ajax execute="@this" render="@all" event="valueChange" resetValues="true" listener="#{movimientoManagedBean.actualizarSaldo()}"/> 
+                                        </ace:simpleSelectOneMenu>
+                                    </td>                            
+                                </tr> 
+                            </ui:fragment>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.cuentaBancaria}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcCuentaBanacaria" label="#{msg.cuentaBancaria}"
+                                                             value="#{movimientoManagedBean.idCuentaBancaria}"
+                                                             required="true">
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                        <f:selectItems value="#{movimientoManagedBean.selectItemsCuentaBancaria}" />
+                                        <ace:ajax execute="@this" render="@all" event="blur" listener="#{movimientoManagedBean.actualizarSaldo()}"/> 
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" listener="#{movimientoManagedBean.actualizarSaldo()}"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="slcCuentaBanacariaMsg" for="slcCuentaBanacaria" initEffect="slide" changeEffect="shake"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.saldo}:" />
+                                </td>
+                                <td align="left">
+                                    <h:outputText id="saldo" value="#{movimientoManagedBean.saldoCuentaBancaria}">
+                                        <f:convertNumber currencySymbol="$" groupingUsed="true" locale="es_AR" type="currency"/>
+                                    </h:outputText>
+                                </td>
+                                <td align="left"> </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.tipoOrden}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcTipoOrdenGasto" label="#{msg.tipoOrden}"
+                                                             value="#{movimientoManagedBean.idTipoOrdenGasto}"
+                                                             required="true"
+                                                             valueChangeListener="#{movimientoManagedBean.ordenChange}">
+                                       <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                        <f:selectItems value="#{movimientoManagedBean.selectItemsTipoOrdenGasto}" /> 
+                                        <ace:ajax execute="@this" render="@all" event="blur" listener="#{movimientoManagedBean.actualizarTipoFondo()}"/> 
+                                        <ace:ajax execute="@this" render="@all" event="valueChange"  listener="#{movimientoManagedBean.actualizarTipoFondo()}"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="slcTipoOrdenGastoMsg" for="slcTipoOrdenGasto" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.tipoFondo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcTipoFondo" label="#{msg.tipoFondo}"
+                                                             value="#{movimientoManagedBean.idTipoFondo}"
+                                                             required="true"
+                                                             >  
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                        <f:selectItems value="#{movimientoManagedBean.selectItemsTipoFondo}" /> 
+                                        <ace:ajax execute="@this" render="@all" event="blur" listener="#{movimientoManagedBean.actualizarTipoImputacion()}"/>
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" listener="#{movimientoManagedBean.actualizarTipoImputacion()}"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="slcTipoFondoMsg" for="slcTipoFondo" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.tipoImputacion}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcTipoImputacion" label="#{msg.tipoImputacion}"
+                                                             value="#{movimientoManagedBean.idTipoImputacion}"
+                                                             required="true"
+                                                             valueChangeListener="#{movimientoManagedBean.ordenChange}">
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>    
+                                        <f:selectItems value="#{movimientoManagedBean.selectItemsTipoImputacion}" /> 
+                                        <ace:ajax execute="@this" render="@all" event="blur" /> 
+                                        <ace:ajax execute="@this" render="@all"   /> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="slcTipoImputacionMsg" for="slcTipoImputacion" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.nroOrden}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="nroOrden" label="#{msg.nroOrden}" value="#{movimientoManagedBean.numeroOrden}"
+                                                   type="number"
+                                                   p:onkeydown="javascript: return event.keyCode==69 ? false: true">
+                                        <ace:ajax execute="@this" render="@all"  /> 
+                                        <ace:ajax execute="@this"  render="@all" event="blur"/>                                
+                                    </ace:textEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="nroOrdenMsg" for="nroOrden" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.nroPedidoFondo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="nroPedidoFondo" label="#{msg.nroPedidoFondo}"
+                                                   value="#{movimientoManagedBean.numeroPedidoFondo}"
+                                                   type="number"
+                                                   p:onkeydown="javascript: return event.keyCode==69 ? false: true">
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                        <ace:ajax render="@this nroPedidoFondo nroPedidoFondoMsg" event="blur"/>                                
+                                    </ace:textEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="nroPedidoFondoMsg" for="nroPedidoFondo" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.nroEntregaFondo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="nroEntregaFondo" label="#{msg.nroEntregaFondo}" value="#{movimientoManagedBean.numeroEntregaFondo}"
+                                                   type="number"
+                                                   p:onkeydown="javascript: return event.keyCode==69 ? false: true">
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                        <ace:ajax render="@this nroEntregaFondo nroEntregaFondoMsg" event="blur"/>                                
+                                    </ace:textEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="nroEntregaFondoMsg" for="nroEntregaFondo" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" style="padding-top:20px;" colspan="3">
+                                    <h:outputLabel value="#{msg.sobreExpte}" style="font-size: 1.2em;"/>
+                                </td>                            
+                            </tr>
+                           <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.codigosExpediente}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:comboBox id="slcCodigoExpediente" label="#{msg.codigosExpediente}"
+                                                             value="#{movimientoManagedBean.idCodigoOrganismo}"
+                                                             validator="#{movimientoManagedBean.validarCodigoExp}"
+                                                              autocomplete="off"
+                                                             required="true">
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                        <f:selectItems value="#{movimientoManagedBean.selectItemsCodigoExpediente}" />
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                        <ace:ajax execute="@this" render="@this slcCodigoExpediente slcCodigoExpedienteMsg" event="blur"/>  
+                                    </ace:comboBox>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="slcCodigoExpedienteMsg" for="slcCodigoExpediente" initEffect="slide" changeEffect="shake"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.correlativo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="numero" label="#{msg.correlativo}"
+                                                   value="#{movimientoManagedBean.numero}"
+                                                   required="true"
+                                                   type="number"
+                                                   p:onkeydown="javascript: return event.keyCode==69 ? false: true">
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                        <ace:ajax render="@this numero numeroMsg" event="blur"/>                                
+                                    </ace:textEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="numeroMsg" for="numero" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.anio}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="anio" label="#{msg.anio}"
+                                                   value="#{movimientoManagedBean.anio}"
+                                                   validator="#{movimientoManagedBean.validarAnioExp}"
+                                                   type="number"
+                                                   p:onkeydown="javascript: return event.keyCode==69 ? false: true"     
+                                                   placeholder="#{msg.ejemplo}"
+                                                   required="true">
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                        <ace:ajax execute="@this" render="@this anio anioMsg" event="blur"></ace:ajax>                         
+                                    </ace:textEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="anioMsg" for="anio" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" style="padding-top:20px;" colspan="3">
+                                    <h:outputLabel value="#{msg.sobreComprob}" style="font-size: 1.2em;" />
+                                </td>                            
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.nroComprobante}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="nroComprobante" label="#{msg.nroComprobante}"
+                                                   value="#{movimientoManagedBean.numeroComprobante}"
+                                                   required="true"
+                                                   maxlength="10"
+                                                   type="number"
+                                                   p:onkeydown="javascript: return event.keyCode==69 ? false: true">
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                        <ace:ajax render="@this nroComprobante nroComprobanteMsg" event="blur"/>                                
+                                    </ace:textEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="nroComprobanteMsg" for="nroComprobante" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.fechaComprobante}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:maskedEntry id="fechaComprobante" label= "#{msg.fechaComprobante}"
+                                                     value="#{movimientoManagedBean.fechaComprobante}"
+                                                     validator="#{movimientoManagedBean.validarFechaComprobante}"
+                                                     mask="99/99/9999"
+                                                     required="true">
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                        <ace:ajax render="@this fechaComprobante fechaComprobanteMsg" event="blur"/>
+                                        <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/> 
+                                    </ace:maskedEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="fechaComprobanteMsg" for="fechaComprobante" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.descri}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="descripcion" label="#{msg.descri}"
+                                                   value="#{movimientoManagedBean.descripcion}"
+                                                   maxlength="#{msg.maxLength}"
+                                                   required="true">
+                                        <ace:ajax execute="@this" render="@all" event="valueChange" /> 
+                                        <ace:ajax render="@this descripcion descripcionMsg" event="blur"/>                                
+                                    </ace:textEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="descripcionMsg" for="descripcion" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.importe}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="importe" label="#{msg.importe}"
+                                                   value="#{movimientoManagedBean.importe}"
+                                                   maxlength="12"
+                                                   required="true"
+                                                   type="number"
+                                                   p:onkeydown="javascript: return event.keyCode==69 ? false: true">                                        
+                                        <ace:ajax render="importeMsg" event="blur"/>                                
+                                    </ace:textEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="importeMsg" for="importe" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>
+                            <tr style="display: #{movimientoManagedBean.idTipoOrdenGasto eq 9?'':'none'}" >
+                                <td align="right">
+                                    <h:outputLabel id="lblRecursoPropio" value="#{msg.recursoPropio}:" rendered="#{movimientoManagedBean.idTipoOrdenGasto eq 9}"/>
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectRecursoPropio" label="#{msg.movRecursoPropio}"
+                                                             value="#{movimientoManagedBean.idRecursoPropio}"                                    
+                                                             validator="#{movimientoManagedBean.validatorRecursoPropio}"
+                                                             valueChangeListener="#{movimientoManagedBean.limpiarComboClasificadorRecursoPropio}"
+                                                             rendered="#{movimientoManagedBean.idTipoOrdenGasto eq 9}"
+                                                             required="true">
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                        <f:selectItems value="#{movimientoManagedBean.selectItemsRecursosPropios}"  />
+                                        <ace:ajax />
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message for="selectRecursoPropio"  rendered="#{movimientoManagedBean.idTipoOrdenGasto eq 9}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                </td>
+                                <td align="left">
+                                    <h:panelGrid id="buttonGrid" columns="3" >
+                                        <ace:pushButton id="save" action="#{movimientoManagedBean.crear()}" >
+                                            <i class="fa fa-floppy-o"></i>
+                                            #{msg.save}
+                                        </ace:pushButton>
+                                        <ace:pushButton id="saveCreate" action="#{movimientoManagedBean.crearOtro()}" >
+                                            <span class="icon-stack">
+                                                <i class="fa fa-floppy-o icon-stack-3x"></i>
+                                                <i class="fa fa-plus icon-stack-1x right_align"></i>
+                                            </span>
+                                            #{msg.saveCreate}
+                                        </ace:pushButton>
+                                        <ace:pushButton id="cancel"  action="movimientoConf" immediate="true" actionListener="#{movimientoManagedBean.limpiar()}" >
+                                            <i class="fa fa-ban"></i>
+                                            #{msg.cancel}
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </td>
+                                <td align="left">
+                                </td>
+                            </tr>
+                        </table>
+                    </icecore:focusManager>
+                </ace:panel>
+                <script>
+                    
+                    function actualizarCombos() { 
+                        if (document.getElementById("formNuevoMovimiento:slcTipoOrdenGasto_input").selectedIndex =='6'){
+                            document.getElementById("formNuevoMovimiento:slcTipoFondo_input").selectedIndex = "1"; 
+                            document.getElementById("formNuevoMovimiento:slcTipoImputacion_input").selectedIndex = "1";
+                        }
+                    }
+                    
+                </script>
+                <ace:submitMonitor id="submitMonitorNuevoMovimiento"
+                                   for="formNuevoMovimiento"
+                                   blockUI="@all"
+                                   autoCenter="true"
+                                   activeLabel="#{msg.espere}"
+                                   networkErrorLabel="#{msg.errorConexion}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

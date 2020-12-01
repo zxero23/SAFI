@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formDetalleCodigoExpediente" title=" ">
+                <ace:panel id="detalleCodigoExpediente" header="#{msg.detailsCodigoExpediente}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.id}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{codigoExpedienteManagedBean.id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.codigo}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{codigoExpedienteManagedBean.codigo}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value= "(*) #{msg.ejercicio}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slcEjercicio" label="#{msg.ejercicio}"
+                                                         value="#{codigoExpedienteManagedBean.idEjercicio}"
+                                                         required="true">
+                                    <f:selectItems value="#{codigoExpedienteManagedBean.selectItemsEjercicio}"  /> 
+                                    <ace:ajax render="@all" event="valueChange" listener="#{codigoExpedienteManagedBean.mostrarExpedienteSegunEjercicio(codigoExpedienteManagedBean.idEjercicio)}"/> 
+                                    <ace:ajax render="@all" event="blur" listener="#{codigoExpedienteManagedBean.mostrarExpedienteSegunEjercicio(codigoExpedienteManagedBean.idEjercicio)}"/>                    
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slcEjercicioMsg" for="slcEjercicio" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <ace:dataTable id="servicios" value="#{codigoExpedienteManagedBean.lstServicioSorted}" var="servicio" paginator="true" paginatorPosition="bottom" rows="10" >                       
+                        <ace:column id="nroCuenta" headerText="#{msg.servicios}">                            
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellnroCuenta" value="#{servicio.codigo} - #{servicio.abreviatura} "/>
+                            </div>                            
+                        </ace:column>                        
+                    </ace:dataTable>
+                    <br></br>
+                    <br></br>
+                    <div align="center"> 
+                        <ace:pushButton id="volver" action="codigoExpedienteConf" actionListener="#{codigoExpedienteManagedBean.limpiar()}" >
+                            <i class="fa fa-arrow-circle-left"></i>
+                            #{msg.volver}
+                        </ace:pushButton> 
+                    </div>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

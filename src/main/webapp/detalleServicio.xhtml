@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formDetalleServicio" title=" ">
+                <ace:panel id="detalleServicio" header="#{msg.detailsServicio}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.id}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{servicioManagedBean.servicio.id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.codigo}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{servicioManagedBean.servicio.codigo}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.descri}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{servicioManagedBean.servicio.descripcion}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.abreviatura}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{servicioManagedBean.servicio.abreviatura}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.tipoServicio}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{servicioManagedBean.servicio.tipoServicio.nombre}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.confCodigoExpediente}:"/>
+                            </td>
+                            <td align="left">
+
+                                <ace:dataTable id="codigoExpedientesPanelDataTable" value="#{servicioManagedBean.servicio.lstCodigoExpediente}" var="item" paginator="true" paginatorPosition="bottom" rows="10" class="panel-dataTable">
+
+                                    <ace:column id="codigos" headerText="#{msg.Codigos}">
+                                        <center>
+                                            <h:outputText id="cellCodigos" value="#{item.codigo}"/>
+                                        </center>
+                                    </ace:column>
+
+                                </ace:dataTable>
+                            </td>
+                        </tr> 
+
+
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.confCuentaBancaria}:"/>
+                            </td>
+                            <td align="left">
+
+                                <ace:dataTable id="cuentasBancariasPanelDataTable" value="#{servicioManagedBean.servicio.getLstCuentaBnacariaActivasOrdenadas()}" var="item" paginator="true" paginatorPosition="bottom" rows="10" class="panel-dataTable">
+
+                                    <ace:column id="ejercicio" headerText="#{msg.ejercicio}">
+                                        <center>
+                                            <h:outputText id="cellEjercicio" value="#{item.ejercicio.anio}"/>
+                                        </center>
+                                    </ace:column>
+                                    <ace:column id="numero" headerText="#{msg.numero}">
+                                        <div align="center">
+                                            <h:outputText id="cellNumero" value="#{item.numero}"/>
+                                        </div>                           
+                                    </ace:column>                     
+                                    <ace:column id="descripcion" headerText="#{msg.descri}">
+                                        <div align="center">
+                                            <h:outputText id="cellDescripcion" value="#{item.descripcion}"/>
+                                        </div>                            
+                                    </ace:column>
+                                </ace:dataTable>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.confOrganismo}:"/>
+                            </td>
+                            <td align="left">
+                                <ace:dataTable id="organismoPanelDataTable" value="#{servicioManagedBean.servicio.getOrganismosActivos()}" var="item" paginator="true" paginatorPosition="bottom" rows="10" class="panel-dataTable">
+                                    <ace:column id="cod" headerText="#{msg.codigoOrganismo}">
+                                        <center>
+                                            <h:outputText id="cellCod" value="#{organismoManagedBean.ceroIzquierda(item.codigoOrganismo)}"/>
+                                        </center>
+                                    </ace:column>
+                                    <ace:column id="nombre" headerText="#{msg.nombre}">
+                                        <div class="panel-column-data-left">
+                                            <h:outputText id="cellNombre" value="#{item.nombre}"/>
+                                        </div>                           
+                                    </ace:column>
+                                </ace:dataTable>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.confUsuario}:"/>
+                            </td>
+                            <td align="left">
+                                <ace:dataTable id="usuarioPanelDataTable" value="#{servicioManagedBean.servicio.usuariosActivos}" var="item" paginator="true" paginatorPosition="bottom" rows="10" class="panel-dataTable">
+                                    <ace:column id="apellidoNombreCol" headerText="#{msg.apellidoNombre}">
+                                        <center>
+                                            <h:outputText id="cellApellidoNombre" value="#{item.apellidoNombre}"/>
+                                        </center>
+                                    </ace:column>
+                                    <ace:column id="nombreUsuarioCol" headerText="#{msg.uss}">
+                                        <div class="panel-column-data-left">
+                                            <h:outputText id="cellNombreUsuario" value="#{item.nombreUsuario}"/>
+                                        </div>                           
+                                    </ace:column>          
+                                </ace:dataTable>
+                            </td>
+                        </tr> 
+                    </table>                                       
+                    <div align="center"> 
+                        <ace:pushButton id="volver" action="servicioConf" actionListener="#{servicioManagedBean.limpiar()}" >
+                            <i class="fa fa-arrow-circle-left"></i>
+                            #{msg.volver}
+                        </ace:pushButton> 
+                    </div>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"> 
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formDetalleRecurso" styleClass="form" title=" ">
+                <h:panelGroup styleClass="titulos">
+                    <h:outputLabel value="#{msg.detailsRecursoModificado}"/>
+                </h:panelGroup>
+                <table border="0" cellspacing="3" >
+                    <tr>
+                        <td align="right">
+                            <h:outputLabel value="#{msg.numeroInstrumento}:"/>
+                        </td>
+                        <td align="left">
+                            <h:outputLabel value="#{recursoModificadoManagedBean.numeroInstrumento}" styleClass="black"/>         
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <h:outputLabel value="#{msg.fechaInstrumento}:"/>
+                        </td>
+                        <td align="left">
+                            <h:outputLabel value="#{recursoModificadoManagedBean.fechaInstrumento}" styleClass="black">
+                                <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                            </h:outputLabel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <h:outputLabel value="#{msg.descripcionInstLegal}:"/>
+                        </td>
+                        <td align="left">
+                            <h:outputLabel value="#{recursoModificadoManagedBean.descripcionInstrumento}" styleClass="black"/>
+                        </td>
+                    </tr>
+                        <tr>
+                        <td align="right">
+                            <h:outputLabel value="#{msg.descripcionConcepto}:"/>
+                        </td>
+                        <td align="left">
+                            <h:outputLabel value="#{recursoModificadoManagedBean.descripcionConcepto}" styleClass="black"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <h:outputLabel value="#{msg.importe}:"/>
+                        </td>
+                        <td align="left">
+                            <h:outputText value="#{recursoModificadoManagedBean.importe}">
+                                <f:convertNumber currencySymbol="$" groupingUsed="true" locale="es_AR" type="currency"/>
+                            </h:outputText>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <div align="center">
+                    <h:commandLink action="recursosModificadosConf" value="- #{msg.volver} -"/>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

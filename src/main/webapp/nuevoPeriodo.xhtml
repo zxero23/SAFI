@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formNuevoPeriodo" title=" ">
+                <ace:panel id="nuevoPeriodo" header="#{msg.newPeriodo}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right" class="td-label">
+                                <h:outputLabel value="(*) #{msg.fechaInicio}:" />
+                            </td>
+                            <td align="left" class="td-input">
+                                <ace:maskedEntry id="fechaInicio" value="#{periodoManagedBean.fechaInicio}"
+                                                 label="#{msg.fechaInicio}"
+                                                 mask="99/99/9999"
+                                                 required="true">
+                                    <ace:ajax execute="@this" render="@this fechaInicio fechaInicioMsg" event="blur"></ace:ajax>
+                                    <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                </ace:maskedEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="fechaInicioMsg" for="fechaInicio" initEffect="slide" changeEffect="shake"/> 
+                                <ace:ajax />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right" class="td-label">
+                                <h:outputLabel value="(*) #{msg.fechaFin}:" />
+                            </td>
+                            <td align="left" class="td-input">
+                                <ace:maskedEntry id="fechaFin" value="#{periodoManagedBean.fechaFin}"
+                                                 label="#{msg.fechaFin}"
+                                                 mask="99/99/9999"
+                                                 required="true">
+                                    <ace:ajax execute="@this" render="@this fechaFin fechaFinMsg" event="blur"></ace:ajax>
+                                    <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                </ace:maskedEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="fechaFinMsg" for="fechaFin" initEffect="slide" changeEffect="shake"/> 
+                                <ace:ajax />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="3" >
+                                    <ace:pushButton id="save" action="#{periodoManagedBean.crear()}" >
+                                        <i class="fa fa-floppy-o"></i>
+                                        #{msg.save}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="saveCreate" action="#{periodoManagedBean.crearOtro()}" >
+                                        <span class="icon-stack">
+                                            <i class="fa fa-floppy-o icon-stack-3x"></i>
+                                            <i class="fa fa-plus icon-stack-1x right_align"></i>
+                                        </span>
+                                        #{msg.saveCreate}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="cancel"  action="periodoConf" immediate="true" actionListener="#{periodoManagedBean.limpiar()}" >
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

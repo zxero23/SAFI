@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formFeriadoConf" title=" ">
+                <ace:panel id="feriadoConfPanelPrincipal" header="#{msg.confFeriado}">
+                    <h:panelGrid columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="feriadoConf" actionListener="#{feriadoManagedBean.actualizar}" value="#{msg.confFeriado}" immediate="true"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{feriadoManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoFeriado" value="#{msg.newFeriado}" actionListener="#{feriadoManagedBean.limpiar()}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="feriadoConfPanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true"  class="panel-buttons">
+                        <table border="0" cellspacing="5" class="panel-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.nombre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="nombreBuscar" value="#{feriadoManagedBean.nombreBsq}" />
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.fechaDesde}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:maskedEntry id="fechaDesdeBuscar"  value="#{feriadoManagedBean.fechaDesdeBuscar}" mask="99/99/9999">
+                                        <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"/>
+                                        <ace:ajax execute="@this" render="@this fechaDesdeBuscar fechaDesdeBuscarMsg" event="blur"/>
+                                    </ace:maskedEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="fechaDesdeBuscarMsg" for="fechaDesdeBuscar" initEffect="slide" changeEffect="shake"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.fechaHasta}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:maskedEntry id="fechaHastaBuscar" value="#{feriadoManagedBean.fechaHastaBuscar}" mask="99/99/9999">
+                                        <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"/>
+                                        <ace:ajax execute="@this" render="@this fechaHastaBuscar fechaHastaBuscarMsg" event="blur"/>
+                                    </ace:maskedEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="fechaHastaBuscarMsg" for="fechaHastaBuscar" initEffect="slide" changeEffect="shake"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div align="right" class="panelBotonesBusqueda">
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton id="find" actionListener="#{feriadoManagedBean.aplicarFiltro}">
+                                    #{msg.find}
+                                </ace:pushButton>
+                                <ace:pushButton id="actualizar" actionListener="#{feriadoManagedBean.actualizar}" immediate="true">
+                                    #{msg.actualizar}
+                                </ace:pushButton>
+                            </h:panelGrid>                            
+                        </div>
+                    </ace:panel>
+                    <ace:dataTable id="feriadoConfPanelDataTable" value="#{feriadoManagedBean.listElements}" var="item" page="#{feriadoManagedBean.page}" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="nombre" headerText="#{msg.nombre}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellNombre" value="#{item.nombre}"/>
+                            </div>
+                        </ace:column>
+                        <ace:column id="fecha" headerText="#{msg.fecha}">
+                            <div class="panel-column-data-center">
+                                <h:outputText id="cellFecha" value="#{item.fecha}">
+                                    <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"/>
+                                </h:outputText>
+                            </div>
+                        </ace:column>
+                        <ace:column id="acciones" headerText="#{msg.confAction}" class="panelAcciones" >
+                            <h:panelGrid  columns="3"> 
+                                <ace:pushButton id="detalle" p:title="#{msg.detalle}" action="detalleFeriado" actionListener="#{feriadoManagedBean.verDetalle}" rendered="#{feriadoManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar" p:title="#{msg.editar}" action="editarFeriado" actionListener="#{feriadoManagedBean.prepararParaEditar()}" rendered="#{feriadoManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{feriadoManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogFeriado.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" />
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogFeriado"
+                                                        binding="#{confirmDialogFeriado}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogFeriado.clientId}').hide();" actionListener="#{feriadoManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogFeriado.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>   
+                    </ace:dataTable>
+                </ace:panel>
+                <script>
+                    function limpiarCamposBusqueda() {
+                        document.getElementById("formFeriadoConf:fechaDesdeBuscar_field").value = "";
+                        document.getElementById("formFeriadoConf:fechaHastaBuscar_field").value = "";
+                        document.getElementById("formFeriadoConf:nombreBuscar_input").value = "";
+                    }
+                </script>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

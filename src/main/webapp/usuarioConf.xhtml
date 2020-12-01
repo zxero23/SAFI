@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formUsuario" title=" ">
+                <ace:panel id="usuarioPanelPrincipal" header="#{msg.confUsuario}">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="usuarioConf" actionListener="#{usuarioManagedBean.actualizar}" value="#{msg.confUsuario}"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{usuarioManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoUsuario" value="#{msg.newUsuario}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="usuarioPanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true" class="panel-buttons">
+                        <table cellspacing="10">
+                            <tr>
+                                <td align="right">                                
+                                    <h:outputLabel value="#{msg.apellidoNombre}: " />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry value="#{usuarioManagedBean.apellidoNombreBsq}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">                                
+                                    <h:outputLabel value="#{msg.dni}: " />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry value="#{usuarioManagedBean.dniBsq}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">                                
+                                    <h:outputLabel value="#{msg.uss}: " />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry value="#{usuarioManagedBean.nombreUsuarioBsq}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.servicio}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcSservicio" value="#{usuarioManagedBean.idServicioBsq}" label="#{msg.servicio}">
+                                        <f:selectItem itemValue="0" itemLabel="#{msg.todos}"/>
+                                        <f:selectItems value="#{usuarioManagedBean.selectItemsServicio}" /> 
+                                        <ace:ajax render="@this" event="valueChange"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>                            
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.grupo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcGrupo" value="#{usuarioManagedBean.idGrupoBsq}" label="#{msg.servicio}">
+                                        <f:selectItem itemValue="0" itemLabel="#{msg.todos}"/>
+                                        <f:selectItems value="#{usuarioManagedBean.selectItems}" /> 
+                                        <ace:ajax render="@this" event="valueChange"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>                            
+                            </tr>
+                        </table>
+                        <div align="right" >
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{usuarioManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{usuarioManagedBean.actualizar}"/>
+                            </h:panelGrid>
+                        </div>                 
+                    </ace:panel>
+                    <ace:dataTable id="usuarioPanelDataTable" value="#{usuarioManagedBean.listElements}" var="item" page="#{usuarioManagedBean.page}" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport} "
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="dni"  headerText="#{msg.dni}">
+                            <div align="center" >
+                                <h:outputText id="cellDNI" value="#{empty item.dni ? ' -  ' : item.dni } "/>
+                            </div>
+                        </ace:column>
+                        <ace:column id="nombre"  headerText="#{msg.apellidoNombre}">
+                            <div align="left" >
+                                <h:outputText id="cellNombre" value="#{item.apellidoNombre}"/>
+                            </div>
+                        </ace:column>
+                        <ace:column id="uss" headerText="#{msg.uss}">
+                            <h:outputText id="cellUss" value="#{item.nombreUsuario}"/>
+                        </ace:column>
+                        <ace:column id="accion" headerText="#{msg.confAction}" class="panelAcciones4Botones"  >
+                            <h:panelGrid  columns="4">
+                                <ace:pushButton id="detalle" p:title="#{msg.detalle}" action="detalleUsuario" actionListener="#{usuarioManagedBean.verDetalle}" rendered="#{usuarioManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar" p:title="#{msg.editar}" action="editarUsuario" actionListener="#{usuarioManagedBean.prepararParaEditar()}" rendered="#{usuarioManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{usuarioManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogUsuario.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" />
+                                </ace:pushButton>
+                                <ace:pushButton id="restorePassword" p:title="#{msg.restorePassword}" disabled="#{item.updatedPassword}" rendered="#{usuarioManagedBean.restorePassword}" p:onclick="ice.ace.instance('#{item.updatedPassword ? '' : confirmDialogRestorePassword.clientId}').show();return false;">
+                                    <span class="fa fa-key" aria-hidden="true" />
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogUsuario" binding="#{confirmDialogUsuario}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogUsuario.clientId}').hide();" actionListener="#{usuarioManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogUsuario.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                                <ace:confirmationDialog id="confirmDialogRestorePassword" binding="#{confirmDialogRestorePassword}"
+                                                        message="#{msg.msgRestorePassword}"
+                                                        header="#{msg.confirmRestore}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yesRP" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogRestorePassword.clientId}').hide();" action="#{usuarioManagedBean.retorePassword()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="noRP" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogRestorePassword.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel> 
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

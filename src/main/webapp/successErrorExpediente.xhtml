@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formSuccessErrorExpediente" title=" ">
+                <ace:panel header="#{expedienteManagedBean.title}">
+                    <table border="0" cellspacing="5" class="panel-message">
+                        <tr colspan="2" align="left">
+                            <td align="right">
+                                <span class="#{expedienteManagedBean.images}"/>
+                            </td>
+                            <td align="left">
+                                <h:outputLabel value="#{expedienteManagedBean.msgSuccessError}" class="msg-exito" rendered="#{expedienteManagedBean.esCorrecto}"/>
+                                <h:outputLabel value="#{expedienteManagedBean.msgSuccessError}" class="msg-error" rendered="#{!expedienteManagedBean.esCorrecto}"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table border="0" cellspacing="5" class="panel-message">
+                        <tr>
+                            <td>
+                                <ace:dynamicResource id="expedientePDF"
+                                                     label="#{msg.verReportePDF}"
+                                                     type="button"
+                                                     mimeType="application/pdf"
+                                                     resource="#{expedienteManagedBean.generarReportePDF}"
+                                                     fileName="expedienteMovimientos-#{expedienteManagedBean.dateTime}.pdf"
+                                                     attachment="true" 
+                                                     rendered="true" > 
+                                </ace:dynamicResource> 
+                            </td>
+                            <td>
+                                <ace:dynamicResource id="expedienteXLS"
+                                                     label="#{msg.verReporteXLS}"
+                                                     type="button"
+                                                     mimeType="application/vnd.ms-excel"
+                                                     resource="#{expedienteManagedBean.generarReporteXLS}"
+                                                     fileName="expedienteMovimientos-#{expedienteManagedBean.dateTime}.xls"
+                                                     attachment="true" 
+                                                     rendered="true" > 
+                                </ace:dynamicResource> 
+                            </td>
+                        </tr>
+                    </table>
+                    <div align="center"> 
+                        <h:panelGrid id="buttonGrid" columns="2" >
+                            <ace:pushButton id="volver" action="detalleExpediente">
+                                <i class="fa fa-arrow-circle-left"></i>
+                                #{msg.volver}
+                            </ace:pushButton> 
+                            <ace:pushButton id="volverExpedientes" action="expedientesConf" actionListener="#{expedienteManagedBean.limpiar()}">
+                                <i class="fa fa-arrow-circle-left"></i>
+                                #{msg.volverExpedientes}
+                            </ace:pushButton>
+                        </h:panelGrid>
+                    </div>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

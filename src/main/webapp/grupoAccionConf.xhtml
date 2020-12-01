@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formGrupoAccion" title=" ">
+                <ace:panel id="grupoAccion" header="#{msg.editarAccionesGrupo}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.grupo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slmGrupos" value="#{permisoManagedBean.idGrupo}" valueChangeListener="#{permisoManagedBean.updateListAcctions}" immediate="true" required="true" >                                                         
+                                    <f:selectItem itemLabel="#{msg.ninguno}" itemValue=""/>
+                                    <f:selectItems value="#{permisoManagedBean.selectItemsGrupo}" />
+                                    <ace:ajax execute="@this" render="@this slmGruposMsg dualListControl secondList" event="valueChange" />
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slmGruposMsg" for="slmGrupos" initEffect="slide" changeEffect="shake"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.confAction}:" />
+                            </td>
+                            <td align="left">
+                                <ace:listControl id="dualListControl" position="MIDDLE" >
+                                    <ace:list id="firstList" value="#{permisoManagedBean.itemsDerecha}"
+                                              styleClass="subList"
+                                              dropGroup="textGroup"
+                                              selectionMode="multiple"
+                                              height="300px">
+                                        <f:facet name="header">
+                                            <h:outputLabel value="#{msg.accionesDisponibles}" />
+                                        </f:facet>
+                                    </ace:list>
+                                    <ace:list id="secondList" value="#{permisoManagedBean.itemsIzquierda}"
+                                              styleClass="subList"
+                                              dropGroup="textGroup"
+                                              selectionMode="multiple"
+                                              height="300px">
+                                        <f:facet name="header">
+                                            <h:outputLabel value="#{msg.accionesSeleccionadas}" />
+                                        </f:facet>
+                                    </ace:list>
+                                </ace:listControl>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="2" class="panel-buttons">
+                                    <ace:pushButton id="save" action="#{permisoManagedBean.editarGrupoAccion()}" >
+                                        <i class="fa fa-pencil"></i>
+                                        #{msg.saveEdit}
+                                    </ace:pushButton>                     
+                                    <ace:pushButton id="cancel"  action="administracion" immediate="true" actionListener="#{permisoManagedBean.limpiar()}" >
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>                            
+                        </tr>
+                    </table>
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

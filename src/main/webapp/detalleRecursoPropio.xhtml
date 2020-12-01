@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formDetalleRecursoPropio" title=" ">
+                <ace:panel id="detalleRecursoPropio" header="#{msg.detailsRecursoPropio}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.id}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.ejercicio}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.ejercicio.anio}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.servicio}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.servicio.codigo} - #{recursoPropioManagedBean.recursoPropio.servicio.descripcion}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.importeOriginal}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.importeOriginal}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.importeModificacion}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.importeModificaciones}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.importeActual}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.importeActual}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" colspan="2">
+                                <h2>#{msg.nomenclador}</h2>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.clasificadorInstitucional}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.ceroIzquierda(recursoPropioManagedBean.recursoPropio.organismo.clasificadorOrganismo.id)} - #{recursoPropioManagedBean.recursoPropio.organismo.clasificadorOrganismo.nombre}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.organismo}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.ceroIzquierda(recursoPropioManagedBean.recursoPropio.organismo.codigoOrganismo)} - #{recursoPropioManagedBean.recursoPropio.organismo.nombre}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.caracter}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText  value="#{recursoPropioManagedBean.ceroIzquierda(recursoPropioManagedBean.recursoPropio.caracter.id)} - #{recursoPropioManagedBean.recursoPropio.caracter.nombre.toUpperCase()}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.genero}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText  value="#{recursoPropioManagedBean.ceroIzquierda(recursoPropioManagedBean.clasificadorRecurso.clasificadorRecursoPropio.clasificadorRecursoPropio.clasificadorRecursoPropio.codigo)} - #{recursoPropioManagedBean.clasificadorRecurso.clasificadorRecursoPropio.clasificadorRecursoPropio.clasificadorRecursoPropio.nombre}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.jurisdicion}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText  value="#{recursoPropioManagedBean.ceroIzquierda(recursoPropioManagedBean.clasificadorRecurso.clasificadorRecursoPropio.clasificadorRecursoPropio.codigo)} - #{recursoPropioManagedBean.clasificadorRecurso.clasificadorRecursoPropio.clasificadorRecursoPropio.nombre}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.tipoRecurso}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.recursoPropio.clasificadorRecurso.clasificadorRecursoPropio.nombre !=null? recursoPropioManagedBean.ceroIzquierda(recursoPropioManagedBean.recursoPropio.clasificadorRecurso.clasificadorRecursoPropio.codigo).toString().concat(' - ').concat(recursoPropioManagedBean.recursoPropio.clasificadorRecurso.clasificadorRecursoPropio.nombre): 'NO TIENE'}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.clase}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{recursoPropioManagedBean.ceroIzquierda(recursoPropioManagedBean.recursoPropio.clasificadorRecurso.codigo)} - #{recursoPropioManagedBean.recursoPropio.clasificadorRecurso.nombre}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.conceptoD}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText  value="#{recursoPropioManagedBean.recursoPropio.concepto}- #{recursoPropioManagedBean.recursoPropio.descripcion}" />
+                            </td>
+                        </tr>
+                    </table>  
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="left" colspan="2">
+                                <h2>#{msg.recursosModificados}</h2>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                    <ace:dataTable id="recursosModificados" value="#{recursoPropioManagedBean.recursoPropio.lstRecursoModificadoOrderByNumAsc}" var="recursoModificado" >
+                        <ace:column id="numeroModificacionRM" headerText="#{msg.numeroModificacion}">
+                            <div align="center">
+                                <h:outputText id="cellNumeroModificacionRM" value="#{recursoModificado.numeroModificacion}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="fechaMoficacionRM" headerText="#{msg.fechaInstrumentoLegal}">
+                            <div  align="center">
+                                <h:outputText id="cellFechaMoficacionRM" value="#{recursoModificado.fechaMoficacion}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="descripcionRM" headerText="#{msg.instrumentoLegal}">
+                            <div class="panel-column-data-center">
+                                <h:outputText id="cellDescripcionRM" value="#{recursoModificado.instrumentoLegal.descripcion}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="numeroInstrumentoLegalRM" headerText="#{msg.numeroInstrumentoLegal}">
+                            <div align="center">
+                                <h:outputText id="cellInstrumentoLegalRM" value="#{recursoModificado.instrumentoLegal.numero}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="fechaAltaRM" headerText="#{msg.fechaModificacion}">
+                            <div  align="center">
+                                <h:outputText id="cellFechaAltaRM" value="#{recursoModificado.fechaAlta}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="importeAnteriorRM" headerText="#{msg.importe}">
+                            <div align="center">
+                                <h:outputText id="cellImporteAnteriorRM" value="#{recursoModificado.importe}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </div>                            
+                        </ace:column>
+                    </ace:dataTable>
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="left" colspan="2">
+                                <h2>#{msg.movimientos}</h2>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                    <ace:dataTable id="movimientos" value="#{recursoPropioManagedBean.recursoPropio.lstMovimientos}" var="movimiento" paginator="true" paginatorPosition="bottom" rows="10" >
+                        <ace:column id="nroCuenta" headerText="#{msg.cuentaBancaria}">                            
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellnroCuenta" value="#{movimiento.cuentaBancaria.numero} - #{movimiento.cuentaBancaria.descripcion }"/>
+                            </div>                            
+                        </ace:column>                        
+                        <ace:column id="nroAsiento" headerText="#{msg.nroAsiento}">
+                            <center>
+                                <h:outputText id="cellnroAsiento" value="#{movimiento.numeroAsiento}"/>
+                            </center>                          
+                        </ace:column >
+                        <ace:column id="fechaAlta" headerText="#{msg.fechaAlta}">
+                            <center>
+                                <h:outputText id="cellFechaAlta" value="#{movimiento.fechaAlta}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </center>                         
+                        </ace:column>
+                        <ace:column id="descripcion" headerText="#{msg.descripcion}">                            
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellDescripcion" value="#{movimiento.descripcion}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="importeT" headerText="#{msg.importe}">
+                            <center>
+                                <h:outputText id="cellImporteT" value="#{movimiento.importe}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </center>                          
+                        </ace:column>
+                    </ace:dataTable>
+                    <div align="center" style="padding-top: 10px;">  
+                        <ace:pushButton action="recursoPropioConf"  actionListener="#{recursoPropioManagedBean.limpiar()}" >
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                            #{msg.volver}
+                        </ace:pushButton>
+                    </div>
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

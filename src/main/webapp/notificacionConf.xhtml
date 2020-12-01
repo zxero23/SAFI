@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formLeerNotificacion" title=" ">
+                <ace:panel id="leerNotificacionPanelPrincipal" header="#{msg.notificaciones}">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="notificacionConf" actionListener="#{notificacionManagedBean.actualizar}" value="#{msg.notificaciones}"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{notificacionManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="enviarMensajeNotificacion" value="#{msg.enviarNotificacion}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="notificacionPanelBusqueda" header="#{msg.busqueda}" toggleable="true" closeSpeed="200" collapsed="true" class="panel-buttons">
+                        <table border="0" cellspacing="5" class="panel-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.leido}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectSaldoCero" label="#{msg.leido}" value="#{notificacionManagedBean.leidoBsq}" >  
+                                        <f:selectItem itemValue="0" itemLabel="#{msg.todos}"/>
+                                        <f:selectItem itemValue="1" itemLabel="SÍ"/>
+                                        <f:selectItem itemValue="2" itemLabel="NO"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" class="td-label">
+                                    <h:outputLabel value="#{msg.fechaDesde}:" />
+                                </td>
+                                <td align="left" class="td-input">
+                                    <ace:maskedEntry mask="99/99/9999" value="#{notificacionManagedBean.fechaDesdeBsq}" id="fechaDesdeBuscar" >
+                                        <ace:ajax execute="@this" render="@this fechaDesdeBuscar fechaDesdeBuscarMsg" event="blur"></ace:ajax>
+                                        <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                    </ace:maskedEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="fechaDesdeBuscarMsg" for="fechaDesdeBuscar" initEffect="slide" changeEffect="shake"/> 
+                                    <ace:ajax />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" class="td-label">
+                                    <h:outputLabel value="#{msg.fechaHasta}:" />
+                                </td>
+                                <td align="left" class="td-input">
+                                    <ace:maskedEntry mask="99/99/9999" value="#{notificacionManagedBean.fechaHastaBsq}" id="fechaHastaBuscar">
+                                        <ace:ajax execute="@this" render="@this fechaHastaBuscar fechaHastaBuscarMsg" event="blur"></ace:ajax>
+                                        <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                    </ace:maskedEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="fechaHastaBuscarMsg" for="fechaHastaBuscar" initEffect="slide" changeEffect="shake"/> 
+                                    <ace:ajax />
+                                </td>
+                            </tr>
+                        </table>       
+                        <div align="right" >
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{notificacionManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{notificacionManagedBean.actualizar}"/>
+                            </h:panelGrid> 
+                        </div>
+                    </ace:panel>
+                    <ace:dataTable id="notificacionPanelDataTable" value="#{notificacionManagedBean.listElements}" var="item" page="#{notificacionManagedBean.page}" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="leido" headerText="#{msg.leido}" style="width: 76px;" class="panel-message">
+                            <div class="panel-column-data-center">
+                                <span class="#{item.leido ? 'fa fa-check-circle-o' : 'fa fa-times-circle-o'}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="fecha" headerText="#{msg.fecha}" style="width: 80px;">
+                            <div class="panel-column-data-center">
+                                <h:outputText id="cellFecha" value="#{item.fecha}">
+                                    <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy HH:mm" locale="es_AR"/>
+                                </h:outputText>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="servicio" headerText="#{msg.servicio}">
+                            <div class="panel-column-data-center">
+                                <h:outputText id="cellservicio" value="#{item.usuarioEmisor.servicio.codigo} - #{item.usuarioEmisor.servicio.abreviatura}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="user" headerText="#{msg.uss}">
+                            <div class="panel-column-data-center">
+                                <h:outputText id="cellUss" value="#{item.usuarioEmisor.apellidoNombre}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="mensaje" headerText="#{msg.mensaje}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellMensaje" value="#{item.mensaje}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="accion" headerText="#{msg.confAction}" class="panelAcciones1Boton" rendered="#{empty notificacionManagedBean.usuario.servicio}">
+                            <h:panelGrid  columns="1">
+                                <ace:pushButton id="detalle" p:title="#{msg.marcarComoLeido}" actionListener="#{notificacionManagedBean.leer}" rendered="#{notificacionManagedBean.baja}" disabled="#{item.leido}">
+                                    <span class="fa fa-eye" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formCodigoExpediente" title=" ">
+                <ace:panel id="codigoExpedientePanelPrincipal" header="#{msg.confCodigoExpediente}">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="codigoExpedienteConf" actionListener="#{codigoExpedienteManagedBean.actualizar}" value="#{msg.confCodigoExpediente}"/>
+                            | 
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{codigoExpedienteManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoCodigoExpediente"  value="#{msg.newCodigoExpediente}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="codigoExpedientePanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true"  class="panel-buttons">
+                        <table border="0" cellspacing="5" class="table-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.codigo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry value="#{codigoExpedienteManagedBean.codigoBsq}" />
+                                </td>                            
+                            </tr>                             
+                        </table>    
+                        <div align="right" >
+                            <h:panelGrid columns="2" >
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{codigoExpedienteManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{codigoExpedienteManagedBean.actualizar}"/>
+                            </h:panelGrid>
+                        </div>
+                    </ace:panel>
+                    <ace:dataTable id="codigoExpedienteDataTable" value="#{codigoExpedienteManagedBean.listElements}"  var="item" page="#{usuarioManagedBean.page}" 
+                                  
+                                    lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport} "
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">                                               
+                        <ace:column id="codigo" headerText="#{msg.codigo}">
+                            <div class="panel-column-data-left">
+                                <center>
+                                    <h:outputText id="cellCodigo" value="#{item.codigo}"/>
+                                </center>
+                            </div>                           
+                        </ace:column>
+                        <ace:column id="accion" headerText="#{msg.confAction}" class="panelAcciones" >
+                            <h:panelGrid  columns="3"> 
+                                <ace:pushButton id="detalle"  action="detalleCodigoExpediente" p:title="#{msg.detalle}" actionListener="#{codigoExpedienteManagedBean.verDetalle}" rendered="#{codigoExpedienteManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />    
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar"  action="editarCodigoExpediente" p:title="#{msg.editar}" actionListener="#{codigoExpedienteManagedBean.prepararParaEditar()}" rendered="#{codigoExpedienteManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{codigoExpedienteManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogCodigoExpediente.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" /> 
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogCodigoExpediente" binding="#{confirmDialogCodigoExpediente}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogCodigoExpediente.clientId}').hide();" actionListener="#{codigoExpedienteManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogCodigoExpediente.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

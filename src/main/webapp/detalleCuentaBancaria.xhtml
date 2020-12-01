@@ -1,0 +1,277 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formDetalleCuentaBancaria" title=" ">
+                <ace:panel id="detalleCuentaBancaria" header="#{msg.detailsCuentaBancaria}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right" style="width: 130px;">
+                                <h:outputLabel value="#{msg.id}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{cuentaBancariaManagedBean.cuentaBancaria.id}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.ejercicio}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.ejercicio ? '-' : cuentaBancariaManagedBean.cuentaBancaria.ejercicio.anio}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.servicio}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.servicio ? '-' : cuentaBancariaManagedBean.cuentaBancaria.servicio.codigo.toString().concat(' - ').concat(cuentaBancariaManagedBean.cuentaBancaria.servicio.descripcion.toString())}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.banco}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.banco ? '-' : cuentaBancariaManagedBean.cuentaBancaria.banco.nombre}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.tipoCuenta}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.tipoCuenta ? '-' : cuentaBancariaManagedBean.cuentaBancaria.tipoCuenta.nombre}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.tipoMoneda}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.tipoMoneda ? '-' : cuentaBancariaManagedBean.cuentaBancaria.tipoMoneda.nombre}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.numeroCuenta}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.numero ? '-' : cuentaBancariaManagedBean.cuentaBancaria.numero}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.descri}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.descripcion ? '-' : cuentaBancariaManagedBean.cuentaBancaria.descripcion}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.alias}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.alias ? '-' : cuentaBancariaManagedBean.cuentaBancaria.alias}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.cbu}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.cbu ? '-' : cuentaBancariaManagedBean.cuentaBancaria.cbu}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.fechaAlta}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.fechaAlta ? '-' : cuentaBancariaManagedBean.cuentaBancaria.fechaAlta}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.fechaBaja}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.fechaBaja ? '-' : cuentaBancariaManagedBean.cuentaBancaria.fechaBaja}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.saldo}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.saldo ? 0 : cuentaBancariaManagedBean.cuentaBancaria.saldo}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.estadoCuenta}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{empty cuentaBancariaManagedBean.cuentaBancaria.estadoCuentaBancaria ? '-' : cuentaBancariaManagedBean.cuentaBancaria.estadoCuentaBancaria.nombre}"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.movimientos}:"/>
+                            </td>
+                            <td align="left">
+                                <ace:dataTable id="movimientos" value="#{cuentaBancariaManagedBean.lstMovimientos}" rows="10" var="item" >
+                                    <f:facet name="header" >
+                                        #{msg.ultimosMovimientos}
+                                    </f:facet>
+                                    <ace:column id="anio" headerText="#{msg.anio}"  rendered="false">
+                                        <center>
+                                            <h:outputText id="cellAnio" value="#{empty item.ejercicio ? '-' : item.ejercicio.anio}"/>
+                                        </center>                            
+                                    </ace:column>
+
+                                    <ace:column id="nroAsiento" headerText="#{msg.nroAsiento}"  rendered="true" style="width: 60% !important;">
+                                        <center>
+                                            <h:outputText id="cellnroAsiento" value="#{empty item.numeroAsiento ? '-' : item.numeroAsiento}"/>
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="expediente" headerText="#{msg.expediente}"  rendered="false">
+                                        <center>
+                                            <h:outputText id="cellExpediente" value="#{item.expediente.codigo} - #{item.expediente.numero} - #{item.expediente.anio}"/>
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="fechaAlta" headerText="#{msg.fechaAlta}">
+                                        <center>
+                                            <h:outputText id="cellFechaAlta" value="#{empty item.fechaAlta ? '-' : item.fechaAlta}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/> 
+                                            </h:outputText>
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="servicio" headerText="#{msg.servicio}">
+                                        <div class="panel-column-data-left">
+                                            <h:outputText id="cellServicio" value="#{empty item.cuentaBancaria.servicio ? '-' : item.cuentaBancaria.servicio.codigo.toString().concat(' - ').concat(item.cuentaBancaria.servicio.abreviatura)}"/>
+                                        </div>                            
+                                    </ace:column>
+                                    <ace:column id="tipoOrdenGasto" headerText="#{msg.tipoOrden}">
+                                        <center>
+                                            <h:outputText id="celltipoOrdenGasto" value="#{item.funciones.get(0).tipoOrdenGasto.id}"/>
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="tipoFondo" headerText="#{msg.tipoFondo}">
+                                        <center>
+                                            <h:outputText id="cellTipoFondo" value="#{item.funciones.get(0).tipoFondo.id}"/>
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="tipoImputacion" headerText="#{msg.tipoImputacion}">
+                                        <center>
+                                            <h:outputText id="cellTipoImputacion" value="#{item.funciones.get(0).tipoImputacion.id}"/>
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="importeT" headerText="#{msg.importe}">
+                                        <div class="panel-column-data-right">
+                                            <h:outputText id="cellImporteT" value="#{empty item.importe ? 0 : item.importe}" >
+                                                <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                            </h:outputText>
+                                        </div>
+                                    </ace:column>
+                                    <ace:column id="fechaComprobante" headerText="#{msg.fechaComprobante}" rendered="false">
+                                        <center>
+                                            <h:outputText id="cellFechaComprobante" value="#{empty item.fechaComprobante ? '-' : item.fechaComprobante}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/> 
+                                            </h:outputText>
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="comprobante" headerText="#{msg.nroComprobante}" rendered="false">
+                                        <center>
+                                            <h:outputText id="cellComprobrante" value="#{empty item.numeroComprobante ? '-' : item.numeroComprobante}"/>                                    
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="descripcion" headerText="#{msg.descri}" style="width: 200% !important;">
+                                        <div class="panel-column-data-left">
+                                            <h:outputText id="cellDescripcion" value="#{empty item.descripcion ? '-' : item.descripcion}"/>
+                                        </div>                            
+                                    </ace:column>
+                                </ace:dataTable>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.saldoAcumulado}:"/>
+                            </td>
+                            <td align="left">
+                                <ace:dataTable id="saldos" value="#{cuentaBancariaManagedBean.lstSaldoAcumulado}" rows="17" var="item" >
+                                    <f:facet name="header" >
+                                        #{msg.acumuladores}
+                                    </f:facet>
+                                    <ace:column id="saldoactual" headerText="#{msg.saldoactual}" >
+                                        <center>
+                                            <h:outputText id="cellsaldoactualCero" value="#{empty item.saldoActual ? 0 : item.saldoActual}">
+                                                <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                            </h:outputText>
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="saldoanterior" headerText="#{msg.saldoanterior}"  rendered="true">
+                                        <center>
+                                            <h:outputText id="cellsaldoanterior" value="#{empty item.saldoAnterior ? 0 : item.saldoAnterior}">
+                                                <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                            </h:outputText>
+                                        </center>                            
+                                    </ace:column>
+                                    <ace:column id="saldoOriginal" headerText="#{msg.saldoOriginal}"  >
+                                        <center>
+                                            <h:outputText id="cellsaldoOriginal" value="#{empty item.saldoOriginal ? 0 : item.saldoOriginal}">
+                                                <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                            </h:outputText>
+                                        </center>                            
+                                    </ace:column>                                   
+                                    <ace:column id="acumulador" headerText="#{msg.acumulador}" >                                        
+                                        <h:outputText id="cellacumulador" value="#{item.tipoAcumulador.id}-#{item.tipoAcumulador.nombre}"/>                                                                    
+                                    </ace:column>                                    
+                                    <ace:column id="fecha" headerText="#{msg.fecha}"  >
+                                        <center>
+                                            <h:outputText id="cellfecha" value="#{item.fechaActual}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                            </h:outputText>
+                                        </center>                            
+                                    </ace:column>
+                                </ace:dataTable>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.archivo}:"/>
+                            </td>
+                            <td align="left">
+                                <ui:fragment rendered="#{!empty cuentaBancariaManagedBean.cuentaBancaria.url}">
+                                    <embed src="#{facesContext.externalContext.requestContextPath}/CuentaBancaria/#{cuentaBancariaManagedBean.cuentaBancaria.url}" width="800px" height="600px" type="application/pdf"/>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{empty cuentaBancariaManagedBean.cuentaBancaria.url}">
+                                    <h:outputText value="#{msg.cuentaSinArchivo}"/>
+                                </ui:fragment>
+                            </td>                                                  
+                        </tr>
+                    </table>
+                    <div align="center"> 
+                        <ace:pushButton id="volver" action="cuentaBancariaConf" actionListener="#{cuentaBancariaManagedBean.limpiar()}" >
+                            <i class="fa fa-arrow-circle-left"></i>
+                            #{msg.volver}
+                        </ace:pushButton> 
+                    </div>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formOrganismo" title=" ">
+                <ace:panel id="organismoPanelPrincipal" header="#{msg.confOrganismo}" >
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="organismoConf" actionListener="#{organismoManagedBean.actualizar()}" value="Organismos"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{organismoManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoOrganismo" value="#{msg.newOrganismo}" actionListener="#{organismoManagedBean.limpiar()}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="organismoPanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true" class="panel-buttons">
+                        <table cellspacing="10">
+                            <tr>
+                                <td align="right">                                
+                                    <h:outputLabel value="#{msg.codigoOrganismo}: " />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry value="#{organismoManagedBean.codigoOrganismoBsq}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">                                
+                                    <h:outputLabel value="#{msg.nombre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry value="#{organismoManagedBean.nombreBsq}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.organismoPadre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="organismo"
+                                                             value="#{organismoManagedBean.idOrganismoPadreBsq}">
+                                        <f:selectItem  noSelectionOption="true" itemValue="-1" itemLabel="#{msg.elegir}"/>
+                                        <f:selectItems value="#{organismoManagedBean.selectItems}" />
+                                        <ace:ajax execute="@this" render="@this organismoError" event="valueChange"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="organismoError" for="organismo" initEffect="slide" changeEffect="fade"></ace:message>
+                                </td>
+                            </tr>                            
+                            <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.clasificadorOrganismo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu
+                                    id="clasificador"
+                                    value="#{organismoManagedBean.idClasificadorOrganismoBsq}">
+                                    <f:selectItem itemValue="0" itemLabel="#{msg.todos}"/>
+                                    <f:selectItems value="#{organismoManagedBean.selectItemsClasificadorOrganismo}" />
+                                    <ace:ajax execute="@this" render="@this clasificadorError" event="valueChange"/>
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="clasificadorError" for="clasificador" initEffect="slide" changeEffect="fade"></ace:message>
+                            </td>
+                        </tr>
+                        </table>
+                        <div align="right" >
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton value="#{msg.find}"  actionListener="#{organismoManagedBean.aplicarFiltro}" />
+                                <ace:pushButton value="#{msg.actualizar}"   actionListener="#{organismoManagedBean.actualizar}"/>
+                            </h:panelGrid>
+                        </div>                               
+                    </ace:panel>
+                    <ace:dataTable id="organismoPanelDataTable" value="#{organismoManagedBean.listElements}" var="item" page="#{organismoManagedBean.page}" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="organismoPadre" headerText="#{msg.organismoPadre}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellOrganismoPadre" value="#{empty item.organismoPadre ? '-' : organismoManagedBean.ceroIzquierda(item.organismoPadre.codigoOrganismo).concat(' - ').concat(item.organismoPadre.nombre)}"/>
+                            </div>
+                        </ace:column>
+                        <ace:column id="cod" headerText="#{msg.codigoOrganismo}" >
+                            <center>
+                                <h:outputText id="cellCod" value="#{organismoManagedBean.ceroIzquierda(item.codigoOrganismo)}"/>
+                            </center>
+                        </ace:column>
+                        <ace:column id="cla" headerText="#{msg.clasificadorOrganismo}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellCla" value="#{empty item.clasificadorOrganismo.nombre ? '-' : item.clasificadorOrganismo.id.toString().concat(' - ').concat(item.clasificadorOrganismo.nombre)}"/>
+                            </div>
+                        </ace:column>
+                        <ace:column id="nombre" headerText="#{msg.nombre}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellNombre" value="#{item.nombre}"/>   
+                            </div>
+                        </ace:column>
+                        <ace:column id="accion" headerText="#{msg.confAction}" class="panelAcciones"  >
+                            <h:panelGrid  columns="3"> 
+                                <ace:pushButton id="detalle" p:title="#{msg.detalle}" action="detalleOrganismo" actionListener="#{organismoManagedBean.verDetalle}" rendered="#{organismoManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar" p:title="#{msg.editar}" action="editarOrganismo" actionListener="#{organismoManagedBean.prepararParaEditar()}" rendered="#{organismoManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{organismoManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogOrganismo.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" />
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogOrganismo" binding="#{confirmDialogOrganismo}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogOrganismo.clientId}').hide();" actionListener="#{organismoManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogOrganismo.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>          
+                </ace:panel>  
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

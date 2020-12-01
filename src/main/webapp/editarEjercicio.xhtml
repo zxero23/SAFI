@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formEditarEjercicio" title=" ">
+                <ace:panel id="editarEjercicio" header="#{msg.editEjercicio}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.anio}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputLabel  value="#{ejercicioManagedBean.anio}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.estadoEjercicio}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="selectEstadoEjercicio" value="#{ejercicioManagedBean.idEstadoEjercicio}" label="#{msg.estadoEjercicio}"  required="true">
+                                    <f:selectItems value="#{ejercicioManagedBean.selectItemsEstadoEjercicio}" /> 
+                                    <ace:ajax execute="@this" render="@this selectEstadoEjercicio selectEstadoEjercicioMsg" event="valueChange"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="selectEstadoEjercicioMsg" for="selectEstadoEjercicio" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>                        
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.fechaComplementaria}:" />
+                            </td>
+                            <td align="left">
+                                <ace:maskedEntry  id="fechaComplementaria" label="#{msg.fechaComplementaria}" value="#{ejercicioManagedBean.fechaComplementaria}"  mask="99/99/9999" required="true">
+                                    <ace:ajax execute="@this" render="@this fechaComplementaria fechaComplementariaMsg" event="valueChange"/> 
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>    
+                                </ace:maskedEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="fechaComplementariaMsg" for="fechaComplementaria" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="2" >
+                                    <ace:pushButton id="save" action="#{ejercicioManagedBean.guardarEdicion}" >
+                                        <i class="fa fa-pencil"></i>
+                                        #{msg.saveEdit}
+                                    </ace:pushButton>                     
+                                    <ace:pushButton id="cancel"  action="ejercicioConf" immediate="true" actionListener="#{ejercicioManagedBean.limpiar()}" >
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                    <h:inputHidden value="#{ejercicioManagedBean.id}" />
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

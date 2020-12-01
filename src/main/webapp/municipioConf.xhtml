@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formMunicipio" title=" ">
+                <ace:panel id="municipioPanelPrincipal" header="#{msg.confMunicipio}">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="municipioConf" actionListener="#{municipioManagedBean.actualizar}" value="Municipios"/>
+                            |
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="#{municipioManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoMunicipio" value="Nuevo Municipio"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="municipioPanelBusqueda" header="#{msg.busqueda}" toggleable="true" collapsed="true" closeSpeed="200" class="panel-buttons">
+                        <table border="0" cellspacing="5" class="panel-buttons">                           
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.provincia}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectProvincia" value="#{municipioManagedBean.idProvinciaBsq}" label="Provincia"  >
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}" /> 
+                                        <f:selectItems value="#{municipioManagedBean.selectItemsProvinciaBsq}" /> 
+                                        <ace:ajax render="@this selectProvincia selectDepartamento selectDepartamento" event="valueChange"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">                                    
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.departamento}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectDepartamento" value="#{municipioManagedBean.idDepartamentoBsq}" label="Departamento"  >
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}" /> 
+                                        <f:selectItems value="#{municipioManagedBean.selectItemsDepartamentoBsq}" /> 
+                                        <ace:ajax render="@this selectDepartamento " event="valueChange"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">                                    
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.nombre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="nombre" value="#{municipioManagedBean.nombreBsq}" />
+                                </td>                                
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.codigoPostal}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="codigopostal" value="#{municipioManagedBean.codigoPostalBsq}" />
+                                </td>                                
+                            </tr> 
+                        </table>
+                        <div align="right" class="panelBotonesBusqueda">
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{municipioManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{municipioManagedBean.actualizar}"/>
+                            </h:panelGrid>                            
+                        </div>                     
+                    </ace:panel>
+                    <ace:dataTable id="municipioPanelDataTable" value="#{municipioManagedBean.listElements}" var="item" page="#{municipioManagedBean.page}" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="codigoPostalCol" headerText="#{msg.codigoPostal}" style="width: 15%">
+                            <center>
+                                <h:outputText id="cellCod" value="#{item.codigoPostal}"/>
+                            </center>
+                        </ace:column>
+                        <ace:column id="nombreCol" headerText="#{msg.nombre}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellNombre" value="#{item.nombre}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="accion" headerText="#{msg.confAction}" class="panelAcciones">
+                            <h:panelGrid  columns="3">
+                                <ace:pushButton id="detalle" p:title="#{msg.detalle}" action="detalleMunicipio" actionListener="#{municipioManagedBean.verDetalle}" rendered="#{municipioManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar" p:title="#{msg.editar}" action="editarMunicipio" actionListener="#{municipioManagedBean.prepararParaEditar()}" rendered="#{municipioManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{municipioManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogMunicipio.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" />
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogMunicipio" binding="#{confirmDialogMunicipio}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="400"
+                                                        height="200"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogMunicipio.clientId}').hide();" actionListener="#{municipioManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogMunicipio.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

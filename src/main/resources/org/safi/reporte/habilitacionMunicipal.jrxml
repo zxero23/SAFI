@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-01-23T08:26:29 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="habilitacionMunicipal" pageWidth="499" pageHeight="600" columnWidth="499" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3b4aac0f-c8b0-4e12-98bc-32aa4deb3fa9">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Contaduria"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="historial" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT 
+	m.nombre AS municipio,
+	hm.numero_inscripcion_habilitacion AS numero,
+	hm.fecha_vencimiento AS fec
+FROM proveedores AS p
+	INNER JOIN historiales_proveedor AS h ON h.proveedor_id = p.id
+	LEFT JOIN proveedores_habilitaciones_municipales AS phm ON phm.proveedor_id = p.id
+	LEFT JOIN habilitaciones_municipales AS hm ON hm.id=phm.habilitacionesmunicipales_id
+	LEFT JOIN municipios AS m ON m.id= hm.municipio_id 
+WHERE
+	h.id = $P{historial}
+	AND hm.estado = TRUE
+ORDER BY municipio]]>
+	</queryString>
+	<field name="municipio" class="java.lang.String"/>
+	<field name="numero" class="java.lang.String"/>
+	<field name="fec" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="45" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="25" width="240" height="20" forecolor="#000000" backcolor="#E0E0E0" uuid="46702224-8792-4ebe-82ea-36df04f8f6f3"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Municipio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToBandHeight" mode="Opaque" x="240" y="25" width="177" height="20" forecolor="#000000" backcolor="#E0E0E0" uuid="3bc82dce-2937-499c-9889-5c0ede9316a9"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° de Inscripción/Habilitación]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="5" width="499" height="16" uuid="fbb1482d-df6d-41b3-bc04-f6ece04df7eb"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Double"/>
+					<leftPen lineWidth="0.0" lineStyle="Double"/>
+					<bottomPen lineWidth="1.0" lineStyle="Double"/>
+					<rightPen lineWidth="0.0" lineStyle="Double"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF(
+	$V{REPORT_COUNT}==1,
+	"Habilitación Municipal",
+	"Habilitaciones Municipales"
+)]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToBandHeight" mode="Opaque" x="417" y="25" width="82" height="20" forecolor="#000000" backcolor="#E0E0E0" uuid="d6b7443e-99c3-4f4c-9f53-485b10c3c643"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vencimiento]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="20">
+			<rectangle>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="499" height="20" backcolor="#FAFAFA" uuid="e60866a1-c3d3-4f1c-b11b-1bc2062777f1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="240" height="20" uuid="719e0ec8-ee85-4463-a73d-2b3027535e6d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{municipio}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="240" y="0" width="177" height="20" uuid="b3373c18-191e-4412-85da-bc789b499cd4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="417" y="0" width="82" height="20" uuid="0a084933-726d-42b5-9cda-cd3bf13f1ffb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{fec},"dd/MM/yyyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

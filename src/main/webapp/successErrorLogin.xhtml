@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ace="http://www.icefaces.org/icefaces/components">
+    <h:head>
+        <meta name="viewport" content="width=device-width,initial-scale=1"></meta>
+        <title>.: SAFI :.</title>
+        <link rel="stylesheet" href="css/tema.css" type="text/css"/>
+        <link rel="shortcut icon" href="images/favicon-misiones-rojo.png"/>
+    </h:head>
+    <h:body  class="login-body">
+        <f:loadBundle basename="com.safi.ui.labels" var="msg"/> 
+        <div class="layout-wrapper layout-menu-horizontal" >
+            <div class="topbar">
+                <div class="topbar-main">
+                    <a href="#">
+                        <img src="images/contaduria-general-blanco.png" class="logo" alt=""/>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="layout-content" >
+            <div class="overlay" >
+                <div class="login-panel ui-fluid ui-shadow" >
+                    <div class="ui-g" >
+                        <h:form id="login" >
+                            <div class="ui-g-12 logo-container">
+                                <h1>Vuelve a ingresar tu contraseña.</h1>
+                                <br/>
+                                <h:outputLabel value="#{webManagedBean.msgSuccessError}"/>
+                                <br/>
+                                <h:outputText value="¿Olvidaste tu contraseña? Solicita una nueva."/>
+                            </div>
+                            <div class="ui-g-12">
+                                <ace:textEntry id="user" p:title="Usuario" label="Usuario" placeholder="#{msg.uss}" class="form-control" value="#{webManagedBean.nombreUsuario}" required="true">
+                                    <ace:ajax />                    
+                                </ace:textEntry>
+                            </div>
+                            <div class="ui-g-12">
+                                <ace:textEntry id="pass" p:title="Contraseña" label="Contraseña" placeholder="#{msg.pass}" class="form-control" value="#{webManagedBean.claveAcceso}" required="true" secret="true">
+                                    <ace:ajax />                    
+                                </ace:textEntry>
+                            </div>
+                            <div class="ui-g-12 button-container">
+                                <ace:pushButton id="login"   value="#{msg.login}"  action="#{webManagedBean.login}"  />
+                                <icecore:defaultAction action="#{webManagedBean.login()}" key="Enter" />
+                            </div>
+                            <div>
+                                <ace:linkButton id="forgetPasswordLink"
+                                                value="¿Olvidaste la contraseña?"
+                                                action="forgetPassword"
+                                                immediate="true"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+                <div class="footer-index" style="position: fixed;">
+                    <div class="layout-wrapper" >
+                        <div class="footer clearfix">
+                            <div class="footer-right">
+
+                                <span>Provincia de Misiones - 2020</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>

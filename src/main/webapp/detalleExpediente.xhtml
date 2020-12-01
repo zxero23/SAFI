@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formDetalleMovimiento" title=" ">
+                <ace:panel id="detalleExpediente" header="#{msg.detailsExpediente}">
+                    <table> 
+                        <tr>
+                            <td align="left" colspan="2">
+                                <h2>#{msg.expediente}</h2>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>                
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.codigo}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{expedienteManagedBean.codigo}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.correlativo}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{expedienteManagedBean.numero}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.anio}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{expedienteManagedBean.anio}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" colspan="2">
+                                <h2>#{msg.movimientos}</h2>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>                        
+                    </table>               
+                    <ace:dataTable id="movimientos" value="#{expedienteManagedBean.listaMovimientos}" var="movimiento" paginator="true" paginatorPosition="bottom" rows="10" >                       
+                        <ace:column id="ejercicio" headerText="#{msg.ejercicio}">                            
+                            <center>
+                                <h:outputText id="cellejercicio" value="#{movimiento.ejercicio.anio}"/>                       
+                            </center>                            
+                        </ace:column>   
+                        <ace:column id="nroCuenta" headerText="#{msg.cuentaBancaria}">                            
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellnroCuenta" value="#{movimiento.cuentaBancaria.numero} - #{movimiento.cuentaBancaria.descripcion }"/>
+                            </div>                            
+                        </ace:column>                        
+                        <ace:column id="nroAsiento" headerText="#{msg.nroAsiento}">
+                            <center>
+                                <h:outputText id="cellnroAsiento" value="#{movimiento.numeroAsiento}"/>
+                            </center>                          
+                        </ace:column >
+                        <ace:column id="Operacion" headerText="#{msg.operacion}">
+                            <center>
+                                <h:outputText id="celltipoOrdenGasto" value="#{empty movimiento.funciones?'-':movimiento.funciones.get(0).tipoOrdenGasto.id} 
+                                              - #{empty movimiento.funciones?'-':movimiento.funciones.get(0).tipoFondo.id} 
+                                              - #{empty movimiento.funciones?'-':movimiento.funciones.get(0).tipoImputacion.id}"/>                               
+                            </center>                            
+                        </ace:column>
+                        <ace:column id="fechaAlta" headerText="#{msg.fechaAlta}">
+                            <center>
+                                <h:outputText id="cellFechaAlta" value="#{movimiento.fechaAlta}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </center>                         
+                        </ace:column>
+                         <ace:column id="nroOrden" headerText="#{msg.nroOrden}">                            
+                            <center>
+                                <h:outputText id="cellnroOrden" value="#{movimiento.numeroOrden}"/>
+                           </center>                        
+                        </ace:column>
+                        <ace:column id="pedidoFondo" headerText="#{msg.pedidoFondo}">                            
+                            <center>
+                                <h:outputText id="cellpedidoFondo" value="#{movimiento.numeroPedidoFondo}"/>
+                           </center>                        
+                        </ace:column>
+                        <ace:column id="Nrocomprobante" headerText="#{msg.nroComprobanteM}">
+                            <center>                           
+                                <h:outputText id="cellNrocomprobante" value="#{movimiento.numeroComprobante}"/>                          
+                            </center>
+                        </ace:column>
+                        <ace:column id="descripcion" headerText="#{msg.descripcion}">                            
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellDescripcion" value="#{movimiento.descripcion}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="importeT" headerText="#{msg.importe}">
+                            <center>
+                                <h:outputText id="cellImporteT" value="#{movimiento.importe}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </center>                          
+                        </ace:column>
+                    </ace:dataTable>
+                    <div align="right" style="margin-bottom: 7px;margin-top: 7px;margin-right: 10px">                                
+                        <h3> <h:panelGrid cellpadding="3" cellspacing="5" columns="4" >
+                                <h:outputLabel value="#{msg.totalIngresos}"/>   
+                                <h:outputText value="#{expedienteManagedBean.totalIngresos}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                                <h:outputLabel value="#{msg.totalCargos}"/>
+                                <h:outputText value="#{expedienteManagedBean.totalCargos}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                                <h:outputLabel value="#{msg.totalDescargos}"/>
+                                <h:outputText value="#{expedienteManagedBean.totalDescargos}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                                <h:outputLabel value="#{msg.totalPendientes}"/>
+                                <h:outputText value="#{expedienteManagedBean.totalPendientes}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                                <h:outputLabel value="#{msg.situacionFinanciera}" rendered="#{expedienteManagedBean.verSituacionFinanciera}"/>
+                                <h:outputText value="#{expedienteManagedBean.situacionFinanciera}" rendered="#{expedienteManagedBean.verSituacionFinanciera}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </h:panelGrid> 
+                        </h3>                       
+                    </div>
+                    <div align="center">
+                        <h:panelGrid id="buttonGrid" columns="2" >
+                            <ace:pushButton id="volver" action="expedientesConf" actionListener="#{expedienteManagedBean.limpiar()}" >
+                                <i class="fa fa-arrow-circle-left"></i>
+                                #{msg.volver}
+                            </ace:pushButton>                      
+                            <ace:pushButton id="generarReporte" action="successErrorExpediente" actionListener="#{expedienteManagedBean.generarReporte()}" >
+                                <i class="fa fa-file-text" ></i>
+                                #{msg.generarReporte}
+                            </ace:pushButton>
+                        </h:panelGrid>
+
+                    </div>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

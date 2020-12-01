@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//ES" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>        
+        <meta name="viewport" content="width=device-width,initial-scale=1"></meta>
+        <title>.: SAFI :.</title>
+        <link rel="stylesheet" href="css/tema.css" type="text/css"/>
+        <link rel="shortcut icon" href="images/favicon-misiones-rojo.png"/>
+    </h:head>
+    <h:body class="main-body" > 
+        <div class="layout-wrapper layout-menu-horizontal" >
+            <f:loadBundle basename="com.safi.ui.labels" var="msg"/> 
+            <ui:include src="banner.xhtml"/>
+            <div id="content" class="layout-content" title=" ">
+                <ui:insert name="content"/>
+            </div>
+            <div class="footer clearfix footer-layout" >
+                <ui:include src="footer.xhtml"/>
+            </div> 
+        </div>
+    </h:body>
+</html>

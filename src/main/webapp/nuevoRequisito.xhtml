@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formNuevoRequisito" title=" ">
+                <ace:panel id="nuevoRequisito" header="#{msg.newRequisito}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.nombre}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="nombre" label="#{msg.nombre}" value="#{requisitoManagedBean.nombre}" required="true" maxlength="#{msg.maxLength}" validator="#{requisitoManagedBean.validatorNombreRequisito}">
+                                    <ace:ajax render="@this nombre nombreMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="nombreMsg" for="nombre" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.descri}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textAreaEntry id="descripcion" label="#{msg.descri}" rows="4" value="#{requisitoManagedBean.descripcion}" required="true" validator="#{requisitoManagedBean.validatorEspaciosEnBlanco}">
+                                    <ace:ajax render="@this descripcion descripcionMsg" event="blur"/>                                
+                                </ace:textAreaEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="descripcionMsg" for="descripcion" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.tipoRequisito}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="selectTipoRequisito"
+                                                         value="#{requisitoManagedBean.idTipoRequisito}"
+                                                         label="#{msg.tipoRequisito}"
+                                                         required="true">
+                                    <f:selectItem itemValue="0"
+                                                  noSelectionOption="true"
+                                                  itemLabel="#{msg.ninguno}"/> 
+                                    <f:selectItems value="#{requisitoManagedBean.selectItemsTipoRequisito}" /> 
+                                    <ace:ajax execute="@this"
+                                              render="@this selectTipoRequisito selectTipoRequisitoMsg"
+                                              event="valueChange"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="selectTipoRequisitoMsg" for="selectTipoRequisito" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr> 
+                         <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.confTipoPersona}: " />
+                            </td>
+                            <td align="left">
+                                <ace:checkboxButtons id="selectTipoPersona" value="#{requisitoManagedBean.idsTiposPersonas}" 
+                                                     required="true"
+                                                     indicatorPosition="left" 
+                                                     p:label="#{msg.confTipoPersona}"
+                                                     labelPosition="right">
+                                    <f:selectItems value="#{requisitoManagedBean.selectItemsTipoPersona}"/>
+                                    <ace:ajax execute="@this" render="@this selectTipoPersona selectTipoPersonaMsg" event="valueChange" />
+                                </ace:checkboxButtons>
+                            </td>
+                            <td align="left">
+                                <ace:message id="selectTipoPersonaMsg" for="selectTipoPersona" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.confTipoTramite}: " />
+                            </td>
+                            <td align="left">
+                                <ace:checkboxButtons id="selectTipoTramite" 
+                                                     value="#{requisitoManagedBean.idsTiposTramites}" 
+                                                     required="true" 
+                                                     indicatorPosition="left" 
+                                                     p:label="#{msg.confTipoTramite}"
+                                                     labelPosition="right">
+                                    <f:selectItems value="#{requisitoManagedBean.selectItemsTipoTramite}"/>
+                                    <ace:ajax execute="@this" render="@this selectTipoTramite selectTipoTramiteMsg" event="valueChange" />
+                                </ace:checkboxButtons>
+                            </td>
+                            <td align="left">
+                                <ace:message id="selectTipoTramiteMsg" for="selectTipoTramite" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="3" >
+                                    <ace:pushButton id="save"  action="#{requisitoManagedBean.crear()}" >
+                                        <i class="fa fa-floppy-o"></i>
+                                        #{msg.save}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="saveCreate" action="#{requisitoManagedBean.crearOtro()}" >
+                                        <span class="icon-stack">
+                                            <i class="fa fa-floppy-o icon-stack-3x"></i>
+                                            <i class="fa fa-plus icon-stack-1x right_align"></i>
+                                        </span>
+                                        #{msg.saveCreate}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="cancel"  action="requisitoConf" immediate="true" actionListener="#{requisitoManagedBean.limpiar()}" >
+                                        
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

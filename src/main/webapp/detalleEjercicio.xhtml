@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formDetalleTipoImputacion" title=" ">
+                <ace:panel id="detalleTipoImputacion" header="#{msg.detalleEjercicio}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.id}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{ejercicioManagedBean.ejercicio.id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.anio}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{ejercicioManagedBean.ejercicio.anio}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.fechaInicio}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{ejercicioManagedBean.ejercicio.fechaInicio}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.fechaFin}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{ejercicioManagedBean.ejercicio.fechaFin}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>   
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.fechaComplementaria}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{ejercicioManagedBean.ejercicio.fechaComplementaria}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>   
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.confPeriodo}: "/>
+                            </td>
+                            <td align="left" colspan="2">
+                                <ace:dataTable id="periodosDataTable" 
+                                               value="#{ejercicioManagedBean.ejercicio.lstPeriodosOrderByFechaInicio}"
+                                               var="item"
+                                               paginator="true"
+                                               paginatorPosition="bottom"
+                                               rows="13"
+                                               class="panel-buttons">
+                                    <ace:column id="columnFechaInicio" headerText="#{msg.fechaInicio}">
+                                        <div class="panel-column-data-center">
+                                            <h:outputText id="cellFechaInicio" value="#{item.fechaInicio}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                            </h:outputText>
+                                        </div>                            
+                                    </ace:column>
+                                    <ace:column id="columnFechaFin" headerText="#{msg.fechaFin}">
+                                        <div class="panel-column-data-center">
+                                            <h:outputText id="cellFechaFin" value="#{item.fechaFin}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                            </h:outputText>
+                                        </div>                            
+                                    </ace:column>
+                                </ace:dataTable>
+                            </td> 
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.confServicio}:"/>
+                            </td>
+                            <td align="left">
+                                <ace:dataTable id="serviciosDataTable" 
+                                               value="#{ejercicioManagedBean.ejercicio.lstServiciosSorted}"
+                                               var="item"
+                                               paginator="true"
+                                               paginatorPosition="bottom"
+                                               rows="10"
+                                               class="panel-buttons">
+                                    <ace:column id="columnCodigo" headerText="#{msg.codigo}">
+                                        <div class="panel-column-data-center">
+                                            <h:outputText id="cellCodigo" value="#{item.codigo}"/>
+                                        </div>                            
+                                    </ace:column>
+                                    <ace:column id="columnDescripcion" headerText="#{msg.descripcion}">
+                                        <div class="panel-column-data-center">
+                                            <h:outputText id="cellDescripcion" value="#{item.descripcion}"/>
+                                        </div>                            
+                                    </ace:column>
+                                </ace:dataTable>
+                            </td>
+                        </tr> 
+                    </table>
+                    <div align="center"> 
+                        <ace:pushButton id="volver" action="ejercicioConf" actionListener="#{ejercicioManagedBean.limpiar()}" >
+                            <i class="fa fa-arrow-circle-left"></i>
+                            #{msg.volver}
+                        </ace:pushButton> 
+                    </div>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

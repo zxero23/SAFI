@@ -1,0 +1,227 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formClasificadorRecursoPropio" title=" ">
+                <ace:panel id="clasificadorRecursoPropioPanelPrincipal" header="#{msg.confClasificadorRecursoPropio}">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="clasificadorRecursoPropioConf" actionListener="#{clasificadorRecursoPropioManagedBean.actualizar}" value="#{msg.confClasificadorRecursoPropio}"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{clasificadorRecursoPropioManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoClasificadorRecursoPropio" value="#{msg.newClasificadorRecursoPropio}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="clasificadorRecursoPropioPanelBusquedaArbol" header="#{msg.busquedaArbol}" toggleable="true" toggleSpeed="200" collapsed="false" class="panel-buttons">
+                        <table border="0" cellspacing="5" class="panel-message">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="(*) #{msg.ejercicio}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcEjercicio" label="#{msg.ejercicio}" 
+                                                             value="#{clasificadorRecursoPropioManagedBean.idEjercicio}"
+                                                             required="true">
+
+                                        <f:selectItems value="#{clasificadorRecursoPropioManagedBean.selectItemsEjercicio}" /> 
+                                        <ace:ajax execute="@this" render="@all" event="blur" />
+                                        <ace:ajax execute="@this" render="@all" event="valueChange"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="slcEjercicioMsg" for="slcEjercicio" initEffect="slide" changeEffect="shake"/> 
+                                </td>
+                            </tr>  
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value= "(*) #{msg.servicio}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcServicio" label="#{msg.servicio}"
+                                                             value="#{clasificadorRecursoPropioManagedBean.idServicio}" 
+                                                             >
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                        <f:selectItems value="#{clasificadorRecursoPropioManagedBean.selectItemsServicio}" /> 
+                                        <ace:ajax render="@all lblArbol wtree levelc span3" event="valueChange"/> 
+                                        <ace:ajax execute="@this" render="@all" event="blur" />
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="slcSercicioMsg" for="slcServicio" initEffect="slide" changeEffect="shake"/>
+                                </td>
+                            </tr>
+                        </table> 
+
+                    </ace:panel>
+                    <div class="arbol" >
+                        <h2 id="lblArbol" class="lblArbol" >#{empty clasificadorRecursoPropioManagedBean.arbol ? '' :msg.arbol}</h2>
+                        <ul id="wtree" class="wtree">
+                            <ui:repeat value="#{clasificadorRecursoPropioManagedBean.arbol}" var="clasificador" >
+                                <ui:fragment rendered="#{clasificador.clasificadorRecursoPropio==null}" >
+                                    <li>
+                                        <span>#{clasificador.obtenerCodigoCompleto(clasificador)} - #{clasificador.nombre}</span>
+                                        <ui:fragment rendered="#{not empty clasificador.clasificadoresRecursoPropio}" >
+                                            <ui:repeat value="#{clasificador.clasificadoresRecursoPropio}" var="levelA" >
+                                                <ul>
+                                                    <li>
+                                                        <span>#{levelA.obtenerCodigoCompleto(levelA)} - #{levelA.nombre}</span>
+                                                        <ui:fragment rendered="#{not empty levelA.clasificadoresRecursoPropio}" >
+                                                            <ui:repeat value="#{levelA.clasificadoresRecursoPropio}" var="levelB" >
+                                                                <ul>
+                                                                    <li>
+                                                                        <span>#{levelB.obtenerCodigoCompleto(levelB)} - #{levelB.nombre}</span> 
+                                                                        <ui:fragment rendered="#{not empty levelB.clasificadoresRecursoPropio}" >
+                                                                            <ui:repeat value="#{levelB.clasificadoresRecursoPropio}" var="levelC" >
+                                                                                <ul>
+                                                                                    <li>
+                                                                                        <span>#{levelC.obtenerCodigoCompleto(levelC)} - #{levelC.nombre}</span>
+                                                                                        <ui:fragment id="levelc" rendered="#{not empty clasificadorRecursoPropioManagedBean.obtenerRecusroPropioPorClasificadorRecurso(levelC)}" >
+                                                                                            <ui:repeat value="#{clasificadorRecursoPropioManagedBean.obtenerRecusroPropioPorClasificadorRecurso(levelC)}" var="levelD" >
+                                                                                                <ul>
+                                                                                                    <li>
+                                                                                                        <span id="span3">#{levelC.obtenerCodigoCompleto(levelC)}.#{levelD.concepto} - #{levelD.descripcion} </span>
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                            </ui:repeat>
+                                                                                        </ui:fragment>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </ui:repeat>
+                                                                        </ui:fragment>
+                                                                    </li> 
+                                                                </ul>
+                                                            </ui:repeat>
+                                                        </ui:fragment>
+                                                    </li>
+                                                </ul>
+                                            </ui:repeat>
+                                        </ui:fragment>
+                                    </li>
+                                </ui:fragment>
+                            </ui:repeat>
+                        </ul>
+                    </div>
+                    <ace:panel id="clasificadorRecursoPropioPanelBusqueda" header="#{msg.busquedaClasificador}" toggleable="true" toggleSpeed="200" collapsed="false" class="panel-buttons">
+                        <table border="0" cellspacing="5" class="table-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.nombre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="nombreBsq" value="#{clasificadorRecursoPropioManagedBean.nombreBsq}" labelPosition="left"/>
+                                </td>                            
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.clasificadorRecursoPropioPadre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectClasificadorRecursoPropioBsq" 
+                                                             value="#{clasificadorRecursoPropioManagedBean.idClasificadorRecursoPropioPadreBsq}" label="#{msg.clasificadorRecursoPropioPadre}"  required="true">
+                                        <f:selectItem  itemValue="0"  itemLabel="#{msg.elegir}" />
+                                        <f:selectItems value="#{clasificadorRecursoPropioManagedBean.selectItems}" /> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>                            
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.codigo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="codigoBsq" type="number" value="#{clasificadorRecursoPropioManagedBean.codigoBsq}" labelPosition="left"/>
+                                </td>                            
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.tipoClasificadorRecursoPropioPadre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectTipoClasificadorRecursoPropioBsq" value="#{clasificadorRecursoPropioManagedBean.idTipoClasificadorRecursoPropioBsq}" label="#{msg.tipoClasificadorRecursoPropioPadre}"  required="true">
+                                        <f:selectItem  itemValue="0"  itemLabel="#{msg.todos}" />
+                                        <f:selectItems value="#{clasificadorRecursoPropioManagedBean.selectItemsTipoClasificaorRecursoPropio}" /> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>                            
+                            </tr> 
+                        </table>    
+                        <div align="right" >
+                            <h:panelGrid columns="2" >
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{clasificadorRecursoPropioManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{clasificadorRecursoPropioManagedBean.actualizar}"/>
+                            </h:panelGrid>
+                        </div>               
+                    </ace:panel>
+
+                    <ace:dataTable id="clasificadorRecursoPropioPanelDataTable" value="#{clasificadorRecursoPropioManagedBean.listElements}" var="item" page="#{clasificadorRecursoPropioManagedBean.page}" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="nombreCol" headerText="#{msg.nombre}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellNombre" value="#{item.nombre}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="codigo" headerText="#{msg.codigo}">
+                            <div align="center">
+                                <h:outputText id="cellCodigo" value="#{item.obtenerCodigoCompleto(item)}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="tipoClasificador" headerText="#{msg.tipoClasificadorRecursoPropio}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellTipoClasificador" value="#{item.tipoClasificadorRecursoPropio.nombre}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="accion" headerText="#{msg.confAction}" class="panelAcciones"  >
+                            <h:panelGrid  columns="3"> 
+                                <ace:pushButton id="detalle" p:title="#{msg.detalle}" action="detalleClasificadorRecursoPropio" actionListener="#{clasificadorRecursoPropioManagedBean.verDetalle}" rendered="#{clasificadorRecursoPropioManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar" p:title="#{msg.editar}" action="editarClasificadorRecursoPropio" actionListener="#{clasificadorRecursoPropioManagedBean.prepararParaEditar()}" rendered="#{clasificadorRecursoPropioManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{clasificadorRecursoPropioManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogClasificadorRecursoPropio.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" />
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogClasificadorRecursoPropio" binding="#{confirmDialogClasificadorRecursoPropio}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogClasificadorRecursoPropio.clientId}').hide();" actionListener="#{clasificadorRecursoPropioManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogClasificadorRecursoPropio.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+
+                </ace:panel> 
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

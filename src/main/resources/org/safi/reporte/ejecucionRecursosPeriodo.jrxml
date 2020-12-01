@@ -1,0 +1,1541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-06-30T14:07:59 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ejecucionRecursosPeriodo" pageWidth="1008" pageHeight="612" orientation="Landscape" columnWidth="968" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="94eca233-89d7-4a96-b57c-d56490bedeee">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Contaduria"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="fechaInicioAnio" class="java.util.Date"/>
+	<parameter name="fechaDesde" class="java.util.Date"/>
+	<parameter name="fechaHasta" class="java.util.Date"/>
+	<parameter name="idServicio" class="java.lang.Long"/>
+	<parameter name="idOrganismo" class="java.lang.Long"/>
+	<parameter name="idEjercicio" class="java.lang.Long"/>
+	<parameter name="escudo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+	rp.id AS recPropio_id,
+	s.codigo||' - '||s.descripcion AS servicio,
+	clas_org.id||' - '||clas_org.nombre AS clasif_organismo,
+	CASE WHEN o.codigo_organismo<10
+		THEN '0'||o.codigo_organismo::VARCHAR||' - '||o.nombre
+		ELSE o.codigo_organismo||' - '||o.nombre 
+		END AS desc_organismo,
+	CASE WHEN o.codigo_organismo<10
+		THEN '0'||o.codigo_organismo::VARCHAR
+		ELSE o.codigo_organismo::VARCHAR
+		END AS organismo,	
+	caracter.id AS caracter,
+	UPPER(caracter.nombre) AS caracter_desc,
+	(SELECT genero.codigo
+		FROM clasificadores_recursos_propios AS clase_rec 
+			INNER JOIN clasificadores_recursos_propios AS tipo_rec ON tipo_rec.id=clase_rec.clasificadorrecursopropio_id	
+			INNER JOIN clasificadores_recursos_propios AS juris ON juris.id=tipo_rec.clasificadorrecursopropio_id
+			INNER JOIN clasificadores_recursos_propios AS genero ON genero.id=juris.clasificadorrecursopropio_id
+		WHERE clase_rec.id=crp.id) AS genero,
+	(SELECT genero.nombre
+		FROM clasificadores_recursos_propios AS clase_rec 
+			INNER JOIN clasificadores_recursos_propios AS tipo_rec ON tipo_rec.id=clase_rec.clasificadorrecursopropio_id	
+			INNER JOIN clasificadores_recursos_propios AS juris ON juris.id=tipo_rec.clasificadorrecursopropio_id
+			INNER JOIN clasificadores_recursos_propios AS genero ON genero.id=juris.clasificadorrecursopropio_id
+		WHERE clase_rec.id=crp.id) AS genero_desc,
+	(SELECT juris.codigo
+		FROM clasificadores_recursos_propios AS clase_rec 
+			INNER JOIN clasificadores_recursos_propios AS tipo_rec ON tipo_rec.id=clase_rec.clasificadorrecursopropio_id	
+			INNER JOIN clasificadores_recursos_propios AS juris ON juris.id=tipo_rec.clasificadorrecursopropio_id
+		WHERE clase_rec.id=crp.id) AS jurisdiccion,
+	(SELECT juris.nombre
+		FROM clasificadores_recursos_propios AS clase_rec 
+			INNER JOIN clasificadores_recursos_propios AS tipo_rec ON tipo_rec.id=clase_rec.clasificadorrecursopropio_id	
+			INNER JOIN clasificadores_recursos_propios AS juris ON juris.id=tipo_rec.clasificadorrecursopropio_id
+		WHERE clase_rec.id=crp.id) AS jurisdiccion_desc,
+	(SELECT tipo_rec.codigo
+		FROM clasificadores_recursos_propios AS clase_rec 
+			INNER JOIN clasificadores_recursos_propios AS tipo_rec ON tipo_rec.id=clase_rec.clasificadorrecursopropio_id				
+		WHERE clase_rec.id=crp.id) AS tipo_recurso,
+	(SELECT tipo_rec.nombre
+		FROM clasificadores_recursos_propios AS clase_rec 
+			INNER JOIN clasificadores_recursos_propios AS tipo_rec ON tipo_rec.id=clase_rec.clasificadorrecursopropio_id				
+		WHERE clase_rec.id=crp.id) AS tipo_recurso_desc,
+	 (SELECT clase_rec.codigo
+		FROM clasificadores_recursos_propios AS clase_rec 
+		WHERE clase_rec.id=crp.id) AS clase_recurso,
+	(SELECT clase_rec.nombre
+		FROM clasificadores_recursos_propios AS clase_rec 
+		WHERE clase_rec.id=crp.id) AS clase_recurso_desc,
+	rp.concepto AS concepto, 
+	rp.importe_original, 
+	rp.importe_actual,
+	rp.descripcion AS concepto_desc,
+	m.numero_asiento,
+	m.fecha_alta,
+	m.fecha_comprobante,
+	m.numero_comprobante,
+	m.descripcion AS movimiento_desc,
+	m.importe,
+	ej.anio AS anio
+FROM 
+	 recursos_propios AS rp
+	LEFT JOIN servicios AS s ON s.id=rp.servicio_id
+	LEFT JOIN organismos AS o ON o.id = rp.organismo_id
+	LEFT JOIN clasificadores_organismos AS clas_org ON clas_org.id=o.clasificadororganismo_id
+	LEFT JOIN clasificadores_recursos_propios AS crp ON crp.id=rp.clasificadorrecurso_id AND crp.tipoclasificadorrecursopropio_id=4	
+	LEFT JOIN caracter ON caracter.id=rp.caracter_id
+	LEFT JOIN ejercicios AS ej ON ej.id = rp.ejercicio_id
+	LEFT JOIN movimientos AS m ON rp.id = m.recursopropio_id
+		AND m.estado=true
+		AND DATE(m.fecha_alta) BETWEEN  $P{fechaInicioAnio}  AND  $P{fechaHasta} 
+		AND m.ejercicio_id=  $P{idEjercicio} 
+		AND m.id IN 
+			(SELECT DISTINCT(mf.movimiento_id)
+				FROM movimientos_funciones AS mf
+					INNER JOIN funciones AS f ON mf.funciones_id=f.id
+						AND f.tipoacumulador_id=3)			
+WHERE rp.estado=true	
+	AND ej.id=  $P{idEjercicio} 
+	AND o.estado=true
+	AND concepto NOT LIKE 'XX'	
+	AND CASE WHEN $P{idServicio} <>0 THEN rp.servicio_id= $P{idServicio}  ELSE 1=1 END
+	AND CASE WHEN  $P{idOrganismo}  <>0 THEN o.id=$P{idOrganismo}  ELSE 1=1 END
+ORDER BY s.codigo::numeric,organismo, caracter, genero, jurisdiccion, tipo_recurso, clase_recurso, concepto, m.fecha_alta, m.numero_asiento]]>
+	</queryString>
+	<field name="recpropio_id" class="java.lang.Integer"/>
+	<field name="servicio" class="java.lang.String"/>
+	<field name="clasif_organismo" class="java.lang.String"/>
+	<field name="desc_organismo" class="java.lang.String"/>
+	<field name="organismo" class="java.lang.String"/>
+	<field name="caracter" class="java.lang.Integer"/>
+	<field name="caracter_desc" class="java.lang.String"/>
+	<field name="genero" class="java.lang.Long"/>
+	<field name="genero_desc" class="java.lang.String"/>
+	<field name="jurisdiccion" class="java.lang.Long"/>
+	<field name="jurisdiccion_desc" class="java.lang.String"/>
+	<field name="tipo_recurso" class="java.lang.Long"/>
+	<field name="tipo_recurso_desc" class="java.lang.String"/>
+	<field name="clase_recurso" class="java.lang.Long"/>
+	<field name="clase_recurso_desc" class="java.lang.String"/>
+	<field name="concepto" class="java.lang.String"/>
+	<field name="importe_original" class="java.math.BigDecimal"/>
+	<field name="importe_actual" class="java.math.BigDecimal"/>
+	<field name="concepto_desc" class="java.lang.String"/>
+	<field name="numero_asiento" class="java.lang.Long"/>
+	<field name="fecha_alta" class="java.sql.Timestamp"/>
+	<field name="fecha_comprobante" class="java.sql.Timestamp"/>
+	<field name="numero_comprobante" class="java.lang.Long"/>
+	<field name="movimiento_desc" class="java.lang.String"/>
+	<field name="importe" class="java.math.BigDecimal"/>
+	<field name="anio" class="java.lang.Integer"/>
+	<variable name="calculoConcepto" class="java.math.BigDecimal" resetType="Group" resetGroup="Concepto">
+		<variableExpression><![CDATA[$F{importe_original}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="calculoClaseRecurso" class="java.math.BigDecimal" resetType="Group" resetGroup="ClaseRecurso" incrementType="Group" incrementGroup="Concepto" calculation="Sum">
+		<variableExpression><![CDATA[$V{calculoConcepto}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="calculoTipoRecurso" class="java.math.BigDecimal" resetType="Group" resetGroup="TipoRecurso" incrementType="Group" incrementGroup="ClaseRecurso" calculation="Sum">
+		<variableExpression><![CDATA[$V{calculoClaseRecurso}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="calculoJurisdiccion" class="java.math.BigDecimal" resetType="Group" resetGroup="Jurisdiccion" incrementType="Group" incrementGroup="TipoRecurso" calculation="Sum">
+		<variableExpression><![CDATA[$V{calculoTipoRecurso}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="calculoGenero" class="java.math.BigDecimal" resetType="Group" resetGroup="Genero" incrementType="Group" incrementGroup="Jurisdiccion" calculation="Sum">
+		<variableExpression><![CDATA[$V{calculoJurisdiccion}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="calculoCaracter" class="java.math.BigDecimal" resetType="Group" resetGroup="Caracter" incrementType="Group" incrementGroup="Genero" calculation="Sum">
+		<variableExpression><![CDATA[$V{calculoGenero}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="actualConcepto" class="java.math.BigDecimal" resetType="Group" resetGroup="Concepto">
+		<variableExpression><![CDATA[$F{importe_actual}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="actualClaseRecurso" class="java.math.BigDecimal" resetType="Group" resetGroup="ClaseRecurso" incrementType="Group" incrementGroup="Concepto" calculation="Sum">
+		<variableExpression><![CDATA[$V{actualConcepto}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="actualTipoRecurso" class="java.math.BigDecimal" resetType="Group" resetGroup="TipoRecurso" incrementType="Group" incrementGroup="ClaseRecurso" calculation="Sum">
+		<variableExpression><![CDATA[$V{actualClaseRecurso}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="actualJurisdiccion" class="java.math.BigDecimal" resetType="Group" resetGroup="Jurisdiccion" incrementType="Group" incrementGroup="TipoRecurso" calculation="Sum">
+		<variableExpression><![CDATA[$V{actualTipoRecurso}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="actualGenero" class="java.math.BigDecimal" resetType="Group" resetGroup="Genero" incrementType="Group" incrementGroup="Jurisdiccion" calculation="Sum">
+		<variableExpression><![CDATA[$V{actualJurisdiccion}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="actualCaracter" class="java.math.BigDecimal" resetType="Group" resetGroup="Caracter" incrementType="Group" incrementGroup="Genero" calculation="Sum">
+		<variableExpression><![CDATA[$V{actualGenero}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="periodoConcepto" class="java.math.BigDecimal" resetType="Group" resetGroup="Concepto" calculation="Sum">
+		<variableExpression><![CDATA[$F{fecha_alta}!=null ?
+IF(new Date($F{fecha_alta}.getTime()).compareTo($P{fechaDesde}) >= 0,
+	IF($F{importe}!=null,$F{importe},BigDecimal.ZERO), BigDecimal.ZERO
+)
+ : BigDecimal.ZERO]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="periodoClaseRecurso" class="java.math.BigDecimal" resetType="Group" resetGroup="ClaseRecurso" incrementType="Group" incrementGroup="Concepto" calculation="Sum">
+		<variableExpression><![CDATA[$V{periodoConcepto}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="periodoTipoRecurso" class="java.math.BigDecimal" resetType="Group" resetGroup="TipoRecurso" incrementType="Group" incrementGroup="ClaseRecurso" calculation="Sum">
+		<variableExpression><![CDATA[$V{periodoClaseRecurso}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="periodoJurisdiccion" class="java.math.BigDecimal" resetType="Group" resetGroup="Jurisdiccion" incrementType="Group" incrementGroup="TipoRecurso" calculation="Sum">
+		<variableExpression><![CDATA[$V{periodoTipoRecurso}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="periodoGenero" class="java.math.BigDecimal" resetType="Group" resetGroup="Genero" incrementType="Group" incrementGroup="Jurisdiccion" calculation="Sum">
+		<variableExpression><![CDATA[$V{periodoJurisdiccion}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="periodoCaracter" class="java.math.BigDecimal" resetType="Group" resetGroup="Caracter" incrementType="Group" incrementGroup="Genero" calculation="Sum">
+		<variableExpression><![CDATA[$V{periodoGenero}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="acumuladaConcepto" class="java.math.BigDecimal" resetType="Group" resetGroup="Concepto" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{importe}!=null,$F{importe},BigDecimal.ZERO)]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="acumuladaClaseRecurso" class="java.math.BigDecimal" resetType="Group" resetGroup="ClaseRecurso" incrementType="Group" incrementGroup="Concepto" calculation="Sum">
+		<variableExpression><![CDATA[$V{acumuladaConcepto}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="acumuladaTipoRecurso" class="java.math.BigDecimal" resetType="Group" resetGroup="TipoRecurso" incrementType="Group" incrementGroup="ClaseRecurso" calculation="Sum">
+		<variableExpression><![CDATA[$V{acumuladaClaseRecurso}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="acumuladaJurisdiccion" class="java.math.BigDecimal" resetType="Group" resetGroup="Jurisdiccion" incrementType="Group" incrementGroup="TipoRecurso" calculation="Sum">
+		<variableExpression><![CDATA[$V{acumuladaTipoRecurso}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="acumuladaGenero" class="java.math.BigDecimal" resetType="Group" resetGroup="Genero" incrementType="Group" incrementGroup="Jurisdiccion" calculation="Sum">
+		<variableExpression><![CDATA[$V{acumuladaJurisdiccion}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="acumuladaCaracter" class="java.math.BigDecimal" resetType="Group" resetGroup="Caracter" incrementType="Group" incrementGroup="Genero" calculation="Sum">
+		<variableExpression><![CDATA[$V{acumuladaGenero}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<group name="Servicio" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{servicio}]]></groupExpression>
+		<groupHeader>
+			<band height="12">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="968" height="12" uuid="3a11303a-4ebe-4460-ac77-df53efffc144">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box padding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{servicio}!=null,$F{servicio},"")]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Organismo" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{organismo}]]></groupExpression>
+		<groupHeader>
+			<band height="80">
+				<staticText>
+					<reportElement x="0" y="23" width="15" height="57" uuid="71af9fbd-4bd8-4d55-b1d6-72b2fb9a845f"/>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Caracter]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="15" y="23" width="15" height="57" uuid="eef94c21-d8d5-4763-882a-c9dc0dfabad2">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Género]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="30" y="23" width="15" height="57" uuid="75e2b612-a812-4193-a5d5-cca67763aa4f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Jurisdicción]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="45" y="23" width="15" height="57" uuid="27ac2e68-e923-42bb-8e1d-f2f79538d746">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Tipo Recurso]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="60" y="23" width="15" height="57" uuid="abecbd47-daa0-4a57-8c73-c0861ccce95d">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Clase Recurso]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="75" y="23" width="24" height="57" uuid="8d60d59e-b665-4ef9-a5c6-1aead39914f9">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+					<text><![CDATA[Concepto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="99" y="23" width="259" height="57" uuid="4a3cc0b4-2f85-40e8-bba1-00c76dfdbaba"/>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Concepto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="358" y="23" width="140" height="57" uuid="236ba6be-705f-4ff5-981b-5b73f12a0366"/>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Cálculo Recursos]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="498" y="23" width="140" height="57" uuid="03f94902-4964-47a6-a701-d2c8edb2bc53">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Recurso Actual]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="638" y="23" width="140" height="57" uuid="5c9c6ca9-3f38-43d8-a2ef-c6d1389f80fd">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Recaudación del Periodo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="778" y="23" width="140" height="57" uuid="07c6abb0-0573-4e7e-b9cf-44a42b0c9a24">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[Recaudación Acumulada]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="918" y="23" width="50" height="57" uuid="4248e0f5-4f1b-45d0-b728-715562c00976">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<text><![CDATA[%]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="968" height="23" uuid="cef8dc5a-ea6c-430b-b203-92357e978942">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box padding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{clasif_organismo}!=null,$F{clasif_organismo},"LA CONSULTA NO DEVUELVE INFORMACIÓN PARA GENERAR EL REPORTE.")
++"\n"+IF($F{desc_organismo}!=null,$F{desc_organismo},"")]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Caracter" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{caracter}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<printWhenExpression><![CDATA[$F{servicio}!=null]]></printWhenExpression>
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="99" height="14" uuid="f632409e-d94b-455e-abaf-0e3e46b72486">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Caracter" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="99" y="0" width="259" height="14" uuid="e2850617-ecbc-4078-a5b8-bc9a2c7d425f"/>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{caracter_desc}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Caracter" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="358" y="0" width="140" height="14" uuid="25cf6736-3649-457f-b14a-ce9580126dda"/>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{calculoCaracter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Caracter" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="498" y="0" width="140" height="14" uuid="04513ab5-5f54-4c8c-a58f-df2b382f77d0"/>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{actualCaracter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Caracter" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="778" y="0" width="140" height="14" uuid="981e58e6-e854-4126-ba2c-82fe85fa580f"/>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladaCaracter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Caracter" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="638" y="0" width="140" height="14" uuid="6f3d2f1d-caee-4344-8642-8d2cb0697c49"/>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{periodoCaracter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Caracter" pattern="#,##0.00%" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="918" y="0" width="50" height="14" uuid="4e2ee6ac-e3d6-4137-b04a-f9494b4ae234"/>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($V{actualCaracter}.compareTo(BigDecimal.ZERO) != 0,
+	$V{acumuladaCaracter}.doubleValue()/$V{actualCaracter}.doubleValue(),
+	BigDecimal.ZERO
+)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="15" height="14" uuid="deb31de7-08a7-4228-98fc-f8d8476f024c"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{caracter}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Genero">
+		<groupExpression><![CDATA[$F{genero}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<printWhenExpression><![CDATA[$F{servicio}!=null]]></printWhenExpression>
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="99" height="14" uuid="e481f3ad-3c4f-4324-94eb-1986504afd41">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Genero" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="99" y="0" width="259" height="14" uuid="06d4f742-b266-40df-bba7-c9140322fe7d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{genero_desc}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Genero" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="358" y="0" width="140" height="14" uuid="d43154c7-2baa-4061-a3ae-d906b5c7cda5">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{calculoGenero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Genero" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="498" y="0" width="140" height="14" uuid="4d1598e9-dccb-470c-9edd-167c62aa5d0d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{actualGenero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Genero" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="778" y="0" width="140" height="14" uuid="b2e3366a-9ed8-4ca3-a614-6016b748f036">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladaGenero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Genero" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="638" y="0" width="140" height="14" uuid="29361140-f56d-40f7-84ee-72834a2c14f9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{periodoGenero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Genero" pattern="#,##0.00%" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="918" y="0" width="50" height="14" uuid="11ffdb52-a3dc-420c-9d12-b741d07e6832">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($V{actualGenero}.compareTo(BigDecimal.ZERO) != 0,
+	$V{acumuladaGenero}.doubleValue()/$V{actualGenero}.doubleValue(),
+	BigDecimal.ZERO
+)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="15" height="14" uuid="0ddd5044-f016-45dd-bd23-3540b8462e20">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{caracter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="0" width="15" height="14" uuid="391c3ad8-dac2-4c95-92dc-c5113a26a369">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{genero}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Jurisdiccion">
+		<groupExpression><![CDATA[$F{jurisdiccion}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<printWhenExpression><![CDATA[$F{servicio}!=null]]></printWhenExpression>
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="99" height="14" uuid="82f4442a-3f64-4cb3-8eee-aad4987645aa"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Jurisdiccion" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="99" y="0" width="259" height="14" uuid="5bac6659-5632-409d-818e-28daef318f36">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{jurisdiccion_desc}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Jurisdiccion" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="358" y="0" width="140" height="14" uuid="b571082e-25ab-49db-83da-a7f033086021">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{calculoJurisdiccion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Jurisdiccion" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="498" y="0" width="140" height="14" uuid="d6b1d31e-7194-401f-98c7-cd2c825d97f7">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{actualJurisdiccion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Jurisdiccion" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="778" y="0" width="140" height="14" uuid="dbefe20b-5e24-452c-9617-ab2a3a8c1df2">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladaJurisdiccion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Jurisdiccion" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="638" y="0" width="140" height="14" uuid="f0bde24a-7164-486d-8ebc-bb55bab7a4ff">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{periodoJurisdiccion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Jurisdiccion" pattern="#,##0.00%" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="918" y="0" width="50" height="14" uuid="8c745602-7bc2-4e44-9c46-8d3a5de53a04">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($V{actualJurisdiccion}.compareTo(BigDecimal.ZERO) != 0,
+	$V{acumuladaJurisdiccion}.doubleValue()/$V{actualJurisdiccion}.doubleValue(),
+	BigDecimal.ZERO
+)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="15" height="14" uuid="ea4b5eaf-0948-4c9a-b4dc-7bb06f7b14fd">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{caracter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="0" width="15" height="14" uuid="380d0d30-8e22-49e8-903d-76dcb98198d3">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{genero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="0" width="15" height="14" uuid="e973fa71-7c4c-4a4f-bb31-9e90e06b86aa">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{jurisdiccion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="TipoRecurso">
+		<groupExpression><![CDATA[$F{tipo_recurso}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<printWhenExpression><![CDATA[$F{servicio}!=null]]></printWhenExpression>
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="99" height="14" uuid="013bfdb1-43aa-48fb-87a8-c8ac4c95296f"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="TipoRecurso" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="99" y="0" width="259" height="14" uuid="675db75c-aa6b-489f-bc18-51c5d20895c3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tipo_recurso_desc}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="TipoRecurso" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="358" y="0" width="140" height="14" uuid="948da9d9-09e1-42ec-9f70-10459f04930e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{calculoTipoRecurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="TipoRecurso" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="498" y="0" width="140" height="14" uuid="fb51f204-7df0-4301-a753-4ec9af141eb6">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{actualTipoRecurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="TipoRecurso" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="638" y="0" width="140" height="14" uuid="776e0753-0cf9-48b1-ae20-5ef7b971580d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{periodoTipoRecurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="TipoRecurso" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="778" y="0" width="140" height="14" uuid="862d9a81-198e-44db-811f-d835ec663630">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladaTipoRecurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="TipoRecurso" pattern="#,##0.00%" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="918" y="0" width="50" height="14" uuid="ad04e40d-57d3-4400-94b9-bbf6ec3caa68">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($V{actualTipoRecurso}.compareTo(BigDecimal.ZERO) != 0,
+	$V{acumuladaTipoRecurso}.doubleValue()/$V{actualTipoRecurso}.doubleValue(),
+	BigDecimal.ZERO
+)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="15" height="14" uuid="de4268c6-eb55-4660-a5f6-925dbf96d8ae">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{caracter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="0" width="15" height="14" uuid="4614a788-1e1b-4caf-8e19-65f492f7dd64">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{genero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="0" width="15" height="14" uuid="d957d0be-2187-48f5-b455-99ab32aea3e8">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{jurisdiccion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="45" y="0" width="15" height="14" uuid="52d4bbef-3f88-4094-bc7e-1174cabc7d3b">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tipo_recurso}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="ClaseRecurso">
+		<groupExpression><![CDATA[$F{clase_recurso}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<printWhenExpression><![CDATA[$F{servicio}!=null]]></printWhenExpression>
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="99" height="14" uuid="0446b137-d6d9-415e-9384-27f4128ffce7"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="ClaseRecurso" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="99" y="0" width="259" height="14" uuid="6f1a5fd4-f6de-4727-a019-49773fc960aa">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{clase_recurso_desc}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="ClaseRecurso" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="358" y="0" width="140" height="14" uuid="5e27b26b-2b54-4c39-b733-48dcf2ff2993">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{calculoClaseRecurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="ClaseRecurso" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="498" y="0" width="140" height="14" uuid="0afb6f2e-2773-46ff-8bf7-320d4b977741">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{actualClaseRecurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="ClaseRecurso" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="638" y="0" width="140" height="14" uuid="b718fdec-d23f-43ef-bd52-ed332cb98799">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{periodoClaseRecurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="ClaseRecurso" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="778" y="0" width="140" height="14" uuid="db45e4fd-da90-406c-ba5f-e3cece809b95">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladaClaseRecurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="ClaseRecurso" pattern="#,##0.00%" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="918" y="0" width="50" height="14" uuid="5c8a1117-c53d-4fa8-8032-dd95f5e1a825">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($V{actualClaseRecurso}.compareTo(BigDecimal.ZERO) != 0,
+	$V{acumuladaClaseRecurso}.doubleValue()/$V{actualClaseRecurso}.doubleValue(),
+	BigDecimal.ZERO
+)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="15" height="14" uuid="c894c875-1384-49b2-bbcb-3a773d572813">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{caracter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="0" width="15" height="14" uuid="423f3bf4-d3bf-44a2-99e1-6061e782c80b">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{genero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="0" width="15" height="14" uuid="9c1ba41b-df0f-4628-9769-6b3975165353">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{jurisdiccion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="45" y="0" width="15" height="14" uuid="2696f4c9-df59-4965-83fd-1c768fea75e6">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tipo_recurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="60" y="0" width="15" height="14" uuid="f3b80a82-55f5-4916-9174-efc332c7ab9d">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{clase_recurso}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Concepto">
+		<groupExpression><![CDATA[$F{concepto}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<printWhenExpression><![CDATA[$F{servicio}!=null]]></printWhenExpression>
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="99" height="14" uuid="85da1150-df57-47af-a636-793aad1b1cb1"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Concepto" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="99" y="0" width="259" height="14" uuid="591295ce-b8be-4cf7-9338-afd8834e9ae8">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{concepto_desc}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Concepto" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="358" y="0" width="140" height="14" uuid="b539afe1-6618-494d-84af-f846eb79659b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{calculoConcepto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Concepto" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="498" y="0" width="140" height="14" uuid="b8770964-3f17-4a0d-8bd4-18943a5724c7">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{actualConcepto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Concepto" pattern="$#,##0.00" isBlankWhenNull="false">
+					<reportElement stretchType="RelativeToTallestObject" x="638" y="0" width="140" height="14" uuid="297f734d-4c12-437d-9c42-536f914b368d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{periodoConcepto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Concepto" pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="778" y="0" width="140" height="14" uuid="bcd5b815-ce5e-48dc-b65c-63feacaea887">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladaConcepto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="Concepto" pattern="#,##0.00%" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="918" y="0" width="50" height="14" uuid="01d0e626-aae0-4a06-bfaf-2ea493c3fab9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($V{actualConcepto}.signum() != 0,
+	$V{acumuladaConcepto}.doubleValue() / $V{actualConcepto}.doubleValue(),
+	BigDecimal.ZERO
+)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="15" height="14" uuid="932865af-38c8-47ae-b134-0f2914eaa96a">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{caracter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="15" y="0" width="15" height="14" uuid="f12faa19-4008-46a7-93d4-42f832127abe">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{genero}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="0" width="15" height="14" uuid="2459fef8-f542-434e-bdfa-62d0a49d2fb0">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{jurisdiccion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="45" y="0" width="15" height="14" uuid="a332e698-06cb-48d3-b74d-13047dbb13c2">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tipo_recurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="60" y="0" width="15" height="14" uuid="83725f37-2858-491f-8f41-634b9d3ed8e9">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{clase_recurso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="75" y="0" width="24" height="14" uuid="03d4ac6d-2e9c-404b-bea9-5535b5509166">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="64" splitType="Stretch">
+			<image>
+				<reportElement x="20" y="0" width="45" height="49" uuid="62979d16-da22-4533-9ba5-86458f72a69d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{escudo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="52" width="85" height="12" uuid="56728ba6-a14d-49cb-80fd-c58e5db8ee87">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Provincia de Misiones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="0" width="799" height="11" uuid="0c844197-0f3c-4f93-8a05-28311418dd85"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Movimientos de Fondos y Valores]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="11" width="799" height="18" uuid="6a336d88-b936-44e2-b8ff-6765b29cad80">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EJECUCIÓN DE RECURSOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="29" width="799" height="13" uuid="238e9250-66ab-4ce3-9693-0e0406cfc9bb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[Correspondientes al periodo]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="85" y="42" width="799" height="13" uuid="8f4ef7a4-0251-4211-a03f-e819c1a597e7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{fechaDesde},"dd/MM/yyyy")+" al "+DATEFORMAT($P{fechaHasta},"dd/MM/yyyy")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="883" y="0" width="85" height="14" uuid="5cb7b447-5b1b-4fb9-8efa-fd2686d91c72">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página: "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="883" y="14" width="85" height="14" uuid="4295ca73-1d3a-489e-a90a-9f4794b57eca">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ejercicio: "+IF($F{anio}!=null,$F{anio},"0")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="8" width="780" height="12" forecolor="#A6A6A6" uuid="151be3e0-9646-4e19-8451-e69566b8b226">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha y Hora de impresión: "+DATEFORMAT (NOW(),"dd/MM/yyyy HH:mm:ss")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="780" y="8" width="147" height="12" forecolor="#A6A6A6" uuid="bc700611-4adf-47cc-878f-124c4807a0d0"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="927" y="8" width="41" height="12" forecolor="#A6A6A6" uuid="2f318187-cef6-480c-8a37-29c3626d4202"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

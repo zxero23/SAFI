@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formEditarFeriado" title=" ">
+                <ace:panel id="editarFeriado" header="#{msg.editFeriado}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.nombre}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="nombre" label="#{msg.nombre}" value="#{feriadoManagedBean.nombre}" required="true" maxlength="#{msg.maxLength}" validator="#{feriadoManagedBean.validatorNombreFeriado}">
+                                    <ace:ajax render="@this nombre nombreMsg" event="blur"/>                                
+                                </ace:textEntry>
+                            </td>
+                            <td align="left">
+                                <ace:message id="nombreMsg" for="nombre" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.fecha}:" />
+                            </td>
+                            <td align="left">                                
+                                <ace:maskedEntry id="fecha" label="#{msg.fecha}"
+                                                 value="#{feriadoManagedBean.fecha}"
+                                                 mask="99/99/9999"
+                                                 required="true"
+                                                 validator="#{feriadoManagedBean.validarFechaFeriado}">
+                                    <ace:ajax execute="@this" render="@this fecha fechaMsg" event="blur"></ace:ajax>
+                                    <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                </ace:maskedEntry>                               
+                            </td>
+                            <td align="left">
+                                <ace:message id="fechaMsg" for="fecha" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="2" >
+                                    <ace:pushButton id="save"  action="#{feriadoManagedBean.guardarEdicion}" >
+                                        <i class="fa fa-pencil"></i>
+                                        #{msg.saveEdit}
+                                    </ace:pushButton>                     
+                                    <ace:pushButton id="cancel"  action="feriadoConf" immediate="true" actionListener="#{feriadoManagedBean.limpiar()}" >
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                    <h:inputHidden value="#{feriadoManagedBean.id}" />
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

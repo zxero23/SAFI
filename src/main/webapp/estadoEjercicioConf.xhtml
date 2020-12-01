@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formEstadoEjercicio" title=" ">
+                <ace:panel id="estadoEjercicioPanelPrincipal" header="#{msg.confEstadoEjercicio}" class="panel-buttons">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="estadoEjercicioConf" actionListener="#{estadoEjercicioManagedBean.actualizar}" value="#{msg.confEstadoEjercicio}"/>
+                        |
+                        </h:panelGroup>                        
+                        <h:panelGroup rendered="#{estadoEjercicioManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoEstadoEjercicio" value="#{msg.newEstadoEjercicio}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="estadoEjercicioPanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true"  class="panel-buttons">
+                        <table border="0" cellspacing="5" class="panel-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.nombre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="nombre" value="#{estadoEjercicioManagedBean.nombreBsq}" />
+                                </td>                                
+                            </tr> 
+                        </table>
+                        <div align="right" class="panelBotonesBusqueda">
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{estadoEjercicioManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{estadoEjercicioManagedBean.actualizar}"/>
+                            </h:panelGrid>                            
+                        </div>                     
+                    </ace:panel>
+                    <ace:dataTable id="estadoEjercicioPanelDataTable" value="#{estadoEjercicioManagedBean.listElements}" page="#{estadoEjercicioManagedBean.page}" var="item" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport} "
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">                        
+                        <ace:column id="id" headerText="#{msg.id}" style="" >
+                            <center>
+                                <h:outputText id="cellId" value="#{item.id}"/>
+                            </center>                            
+                        </ace:column>                        
+                        <ace:column id="nombreCol" headerText="#{msg.nombre}" >
+                            <center>
+                                <h:outputText id="cellNombre" value="#{item.nombre}"/>
+                            </center>                            
+                        </ace:column>
+                        <ace:column id="acciones" headerText="#{msg.confAction}" class="panelAcciones" >
+                            <h:panelGrid  columns="3">                
+                                <ace:pushButton id="detalle"  action="detalleEstadoEjercicio" p:title="#{msg.detalle}" actionListener="#{estadoEjercicioManagedBean.verDetalle}" rendered="#{estadoEjercicioManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />    
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar"  action="editarEstadoEjercicio" p:title="#{msg.editar}" actionListener="#{estadoEjercicioManagedBean.prepararParaEditar()}" rendered="#{estadoEjercicioManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>                                
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{estadoEjercicioManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogEstadoEjercicio.clientId}').show();return false;">
+                                     <span class="fa fa-trash-o" aria-hidden="true" /> 
+                                </ace:pushButton>                                                               
+                                <ace:confirmationDialog id="confirmDialogEstadoEjercicio" binding="#{confirmDialogEstadoEjercicio}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogEstadoEjercicio.clientId}').hide();" actionListener="#{estadoEjercicioManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogEstadoEjercicio.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

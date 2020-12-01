@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formDetalleMovimiento" title=" ">
+                <ace:panel id="detalleMovimiento" header="#{msg.detailsMovimiento}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.id}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.nroAsiento}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.numeroAsiento}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.fechaAlta}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.fechaAlta}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/> 
+                                </h:outputText>     
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.ejercicio}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.ejercicio.anio}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.servicio}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.cuentaBancaria.servicio.codigo} - #{movimientoManagedBean.movimiento.cuentaBancaria.servicio.abreviatura}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.cuentaBancaria}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.cuentaBancaria.numero} - #{movimientoManagedBean.movimiento.cuentaBancaria.descripcion}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.saldo}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.cuentaBancaria.saldo}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" locale="es_AR" type="currency"/>
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.tipoOrden}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.funciones.get(0).tipoOrdenGasto.id} - #{movimientoManagedBean.movimiento.funciones.get(0).tipoOrdenGasto.nombre}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.tipoFondo}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.funciones.get(0).tipoFondo.id} - #{movimientoManagedBean.movimiento.funciones.get(0).tipoFondo.nombre}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.tipoImputacion}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.funciones.get(0).tipoImputacion.id} - #{movimientoManagedBean.movimiento.funciones.get(0).tipoImputacion.nombre}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.nroOrden}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.numeroOrden}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.nroPedidoFondo}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.numeroPedidoFondo}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.nroEntregaFondo}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.numeroEntregaFondo}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding-top:20px;" colspan="3">
+                                <h:outputLabel value="#{msg.sobreExpte}" style="font-size: 1.2em;"/>
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.codigoOrganismo}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.expediente.codigo}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.correlativo}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.expediente.numero}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.anio}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.expediente.anio}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding-top:20px;" colspan="3">
+                                <h:outputLabel value="#{msg.sobreComprob}" style="font-size: 1.2em;" />
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.nroComprobante}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.numeroComprobante}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.fechaComprobante}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.fechaComprobante}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/> 
+                                </h:outputText>     
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.descri}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.descripcion}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.importe}:"/>
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{movimientoManagedBean.movimiento.importe}" >
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" locale="es_AR" type="currency"/>
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <ui:fragment rendered="#{movimientoManagedBean.movimiento.recursoPropio != null }" >
+                            <tr>
+                                <td align="left" style="padding-top:20px;" colspan="3">
+                                    <h:outputLabel value="#{msg.recursoPropio}" style="font-size: 1.2em;" />
+                                </td>                            
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.servicio}:"/>
+                                </td>
+                                <td align="left">
+                                    <h:outputText value="#{movimientoManagedBean.recurso.servicio}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.clasificadorInstitucional}:"/>
+                                </td>
+                                <td align="left">
+                                    <h:outputText value="#{movimientoManagedBean.recurso.cla_ins}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.organismo}:"/>
+                                </td>
+                                <td align="left">
+                                    <h:outputText value="#{movimientoManagedBean.recurso.cod_org}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.caracter}:"/>
+                                </td>
+                                <td align="left">
+                                    <h:outputText value="#{movimientoManagedBean.recurso.caracter}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.clasificadorRecursoPropio}:"/>
+                                </td>
+                                <td align="left">
+                                    <h:outputText value="#{movimientoManagedBean.recurso.codigoCompleto}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.concepto}:"/>
+                                </td>
+                                <td align="left">
+                                    <h:outputText value="#{movimientoManagedBean.recurso.nroConcepto}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.descripcion}:"/>
+                                </td>
+                                <td align="left">
+                                    <h:outputText value="#{movimientoManagedBean.recurso.detalleConcepto}"/>
+                                </td>
+                            </tr>
+                        </ui:fragment>                                        
+                    </table>
+                    <div align="center"> 
+                        <ace:pushButton id="volver" action="movimientoConf" actionListener="#{movimientoManagedBean.limpiar()}" >
+                            <i class="fa fa-arrow-circle-left"></i>
+                            #{msg.volver}
+                        </ace:pushButton> 
+                    </div>
+                </ace:panel>
+                <ace:submitMonitor id="submitMonitorDetalleMovimiento"
+                                   for="formDetalleMovimiento"
+                                   blockUI="@all"
+                                   autoCenter="true"
+                                   activeLabel="#{msg.espere}"
+                                   networkErrorLabel="#{msg.errorConexion}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

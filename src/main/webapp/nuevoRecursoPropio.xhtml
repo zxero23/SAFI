@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:icecore="http://www.icefaces.org/icefaces/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formNuevoRecursoPropio" title=" " >
+                <ace:panel id="nuevoRecursoPropio" header="#{msg.newRecursoPropio}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.ejercicio}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slcEjercicio" label="#{msg.ejercicio}"
+                                                         value="#{recursoPropioManagedBean.idEjercicio}"
+                                                         required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                    <f:selectItems value="#{recursoPropioManagedBean.getSelectItemsEjercicioAltaRecursoPropio()}" /> 
+                                    <ace:ajax render="@this importe slcEjercicioMsg slcServicio slcOrganismo" event="valueChange"/>
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slcEjercicioMsg" for="slcEjercicio" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr>  
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.servicio}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slcServicio" label="#{msg.servicio}"
+                                                         value="#{recursoPropioManagedBean.idServicio}"
+                                                         required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                    <f:selectItems value="#{recursoPropioManagedBean.selectItemsServicio}" /> 
+                                    <ace:ajax render="@this slcServicio slcServicioMsg slcOrganismo" event="valueChange"/>
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slcServicioMsg" for="slcServicio" initEffect="slide" changeEffect="shake"/> 
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.organismo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slcOrganismo" label="#{msg.organismo}"
+                                                         value="#{recursoPropioManagedBean.idOrganismo}"
+                                                         required="true">
+                                    <f:selectItem  itemValue="-1" noSelectionOption="true" itemLabel="#{msg.elegir}"/>
+                                    <f:selectItems value="#{recursoPropioManagedBean.selectItemsOrganismo}" /> 
+                                    <ace:ajax render="@this slcOrganismoMsg slcOrganismo" event="blur" /> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slcOrganismoMsg" for="slcOrganismo" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.caracter}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="selectCaracter" label="#{msg.caracter}"
+                                                         value="#{recursoPropioManagedBean.idCaracter}" 
+                                                         required="true">
+                                    <f:selectItem  itemValue="-1" noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                    <f:selectItems value="#{recursoPropioManagedBean.selectItemsCaracter}" /> 
+                                    <ace:ajax render="@this selectCaracter selectCaracterMsg" event="blur"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="selectCaracterMsg" for="selectCaracter" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.clasificadorRecursoPropio}:"  />
+                            </td>
+                            <td align="left">
+                                <ace:comboBox 
+                                    id="selectClasificadorRecursoPropioNew" label="#{msg.clasificadorRecursoPropio}"
+                                    value="#{recursoPropioManagedBean.idClasificador}"
+                                    placeholder="#{msg.placeholderSelectClasificador}" 
+                                    showListOnInput="true" 
+                                    required="true"
+                                    filterMatchMode="contains"
+                                    autocomplete="off"
+                                    valueChangeListener="#{recursoPropioManagedBean.limpiarComboClasificadorRecursoPropioPadre}" >
+                                    <f:selectItems value="#{recursoPropioManagedBean.selectItemsClasificador}" />
+                                     
+                                    <ace:ajax execute="@this" event="blur" onSuccess="borrarMensajeClasRecPropio()" render="@this selectClasificadorRecursoPropioNew selectClasificadorRecursoPropioNewMsg" />
+                                </ace:comboBox>
+                            </td>
+                            <td align="left">
+                                <ace:message id="selectClasificadorRecursoPropioNewMsg" for="selectClasificadorRecursoPropioNew" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>  
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.nroConcepto}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="concepto" label="#{msg.nroConcepto}"
+                                               value="#{recursoPropioManagedBean.concepto}"                                              
+                                               required="true"
+                                               validatorMessage="#{msg.ingresoSoloNumero}">
+                                    <f:validateRegex pattern="\d*(.\d+)?"/>
+                                    <ace:ajax render="@this concepto conceptoMsg" event="blur"/>         
+                                </ace:textEntry> 
+                            </td>
+                            <td align="left">
+                                <ace:message id="conceptoMsg" for="concepto" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.descriConcepto}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="descripcion" label="#{msg.descriConcepto}"
+                                               value="#{recursoPropioManagedBean.descripcion}"
+                                               required="true">
+                                    <ace:ajax render="@this descripcion descripcionMsg" event="blur"/>         
+                                </ace:textEntry> 
+                            </td>
+                            <td align="left">
+                                <ace:message id="descripcionMsg" for="descripcion" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>                        
+                                                
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.importe}:" />
+                            </td>
+                            <td align="left">
+                                <ace:textEntry id="importe" label="#{msg.importe}"
+                                               value="#{recursoPropioManagedBean.importe}"
+                                               disabled="#{recursoPropioManagedBean.desactivarImporte}"
+                                               validator="#{recursoPropioManagedBean.validarImporteRecursoPropio}"
+                                               maxlength="12"                                                  
+                                               type="number"
+                                               required="true">
+                                    <ace:ajax render="@this importe importeMsg" event="blur"/>         
+                                </ace:textEntry>
+                                <icecore:defaultAction id="prueba" action="#{recursoPropioManagedBean.crear()}" key="Enter" />
+                            </td>
+                            <td align="left">
+                                <ace:message id="importeMsg" for="importe" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="3" >
+                                    <ace:pushButton id="save" action="#{recursoPropioManagedBean.crear()}" >
+                                        <i class="fa fa-floppy-o"></i>
+                                        #{msg.save}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="saveCreate" action="#{recursoPropioManagedBean.crearOtro()}" >
+                                        <span class="icon-stack">
+                                            <i class="fa fa-floppy-o icon-stack-3x"></i>
+                                            <i class="fa fa-plus icon-stack-1x right_align"></i>
+                                        </span>
+                                        #{msg.saveCreate}
+                                    </ace:pushButton>
+                                    <ace:pushButton id="cancel"  action="recursoPropioConf" immediate="true" actionListener="#{recursoPropioManagedBean.limpiar()}" >
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                </ace:panel>    
+                <script>
+                        function borrarMensajeClasRecPropio(){                            
+                            mensaje= document.getElementById("formNuevoRecursoPropio:selectClasificadorRecursoPropioNewMsg_msg");
+                                if (mensaje){
+                                        padre = mensaje.parentNode;
+                                        padre.removeChild(mensaje);
+                                 }
+                        }
+                </script>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

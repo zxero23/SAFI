@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"> 
+    <ui:composition template="./layout.xhtml">  
+        <ui:define name="content">
+            <h:form id="formRecursosModificadosConf" title=" " styleClass="form">
+                <ace:panel id="recursoModificadoPanelPrincipal" header="#{msg.recursosModificados}">
+                <h:panelGrid  columns="2" class="panel-buttons">
+                    <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true"></span>
+                            <h:commandLink action="recursoConf" actionListener="#{recursoModificadoManagedBean.actualizar}" value="Recursos Modificados"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{recursoModificadoManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true"></span>
+                            <h:commandLink action="nuevoRecursoModificado" value="#{msg.newRecursoPropio}"/>
+                        </h:panelGroup>
+                </h:panelGrid>               
+                <table border="0" cellspacing="3" >   
+                    <tr>
+                        <td align="left">
+                            <h:outputLabel value="#{msg.nomenclador}:" />
+                        </td>
+                        <td align="left">
+                            <h:outputLabel value="#{recursoPropioManagedBean.recursoPropio.servicio.codigo}.#{recursoPropioManagedBean.recursoPropio.organismo.clasificadorOrganismo.id}.#{recursoPropioManagedBean.recursoPropio.caracter.id}.#{recursoPropioManagedBean.genero}.#{recursoPropioManagedBean.concepto}  " styleClass="black"/>
+                        </td>
+                    </tr>
+                </table>
+                <hr align="LEFT" size="1" style="width:370px"/>
+                <table border="0" cellspacing="3" >  
+                    <tr>
+                        <td align="right">
+                            <h:outputLabel value="#{msg.fechaAlta}"/>
+                        </td>
+                        <td align="left">
+                            <h:outputLabel value="#{recursoPropioManagedBean.recursoPropio.fechaAlta}" styleClass="black">
+                                <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                            </h:outputLabel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <h:outputLabel value="#{msg.importeOriginal}"/>
+                        </td>
+                        <td align="left">
+                            <h:outputLabel value="#{recursoPropioManagedBean.recursoPropio.importeOriginal}" styleClass="black">
+                                <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                            </h:outputLabel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <h:outputLabel value="#{msg.importeActual}"/>
+                        </td>
+                        <td align="left">
+                            <h:outputLabel value="#{recursoPropioManagedBean.recursoPropio.importeActual}" styleClass="black">
+                                <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                            </h:outputLabel>
+                        </td>
+                    </tr>
+                </table>
+                <ace:panel id="recursoModificadoPanelBusqueda" header="#{msg.busqueda}" collapsed="false"  toggleable="true" toggleSpeed="200" class="panel-buttons"  >
+                    <table border="0" cellspacing="5" class="panel-buttons">                   
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.numeroInstrumento} "/>
+                            </td>
+                            <td align="left">
+                                <ace:textEntry value="#{recursoPropioManagedBean.nroInstBsq}"/>                                
+                            </td>
+                        </tr>
+                    </table>
+                     <div align="right">
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton value="#{msg.find}" style="margin-left:5px;" actionListener="#{recursoPropioManagedBean.aplicarFiltroRecMod}"/>  
+                                <ace:pushButton value="#{msg.actualizar}" style="margin-left:5px;" actionListener="#{recursoPropioManagedBean.actualizar()}"/> 
+                            </h:panelGrid>   
+                        </div>
+                </ace:panel> 
+                <ace:dataTable id="list" value="#{recursoPropioManagedBean.listaRecursoModificado}"  var="item" rows="10" style="margin-top: 10px;" paginator="true" paginatorPosition="bottom">
+                    <ace:column style="text-align: center">
+                        <f:facet name="header">
+                            <h:outputText value="#{msg.numeroInstrumento}"/>
+                        </f:facet>
+                        <center>
+                            <h:outputText value="#{item.instrumentoLegal.numero}"/>
+                        </center>
+                    </ace:column>
+                    <ace:column style="text-align: center">
+                        <f:facet name="header">
+                            <h:outputText value="#{msg.numeroModificacion}"/>
+                        </f:facet>
+                        <center>
+                            <h:outputText value="#{item.numeroModificacion}"/>
+                        </center>
+                    </ace:column>
+                    <ace:column style="text-align: center">
+                        <f:facet name="header">
+                            <h:outputText value="#{msg.fechaModificacion}"/>
+                        </f:facet>
+                        <center>
+                            <h:outputText value="#{item.fechaMoficacion}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                            </h:outputText>    
+                        </center>
+                    </ace:column>
+                    <ace:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{msg.descripcionConcepto}"/>
+                        </f:facet>
+                        <center>
+                            <h:outputText value="#{item.instrumentoLegal.descripcion}"/>
+                        </center>
+                    </ace:column>
+                    <ace:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{msg.descripcionInstLegal}"/>
+                        </f:facet>
+                        <h:outputText value="#{item.instrumentoLegal.descripcion}"/>
+                    </ace:column>
+                    <ace:column>
+                        <f:facet name="header">
+                            <h:outputText value="#{msg.importe}"/>
+                        </f:facet>
+                        <center>
+                            <h:outputText value="#{item.importe}">
+                                                <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                        </center>
+                    </ace:column>
+                </ace:dataTable>                
+                <div align="center" style="padding-top: 10px;">  
+                        <ace:pushButton action="recursoPropioConf"  actionListener="#{recursoPropioManagedBean.limpiar()}" >
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                            #{msg.volver}
+                        </ace:pushButton>
+                </div>
+                </ace:panel>
+            </h:form>
+        </ui:define>    
+    </ui:composition> 
+</html>

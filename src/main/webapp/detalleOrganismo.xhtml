@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formDetalleMenu" title=" ">
+                <ace:panel id="detalleMenu" header="#{msg.detailsOrganismo}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.id}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{organismoManagedBean.id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.codigoOrganismo}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{organismoManagedBean.codigoOrganismo }"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.nombre}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{organismoManagedBean.nombre}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.organismoPadre}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{organismoManagedBean.organismoPadre}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.clasificadorOrganismo}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{organismoManagedBean.clasificadorOrganismo}"/>
+                            </td>
+                        </tr>                        
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.direccion}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{organismoManagedBean.direccion}"/>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.telefonos}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{organismoManagedBean.telefonos}"/>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.correoOficial}:" />
+                            </td>
+                            <td align="left">
+                                <h:outputText value="#{organismoManagedBean.correoOficial}"/>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="#{msg.servicios}:" />
+                            </td>
+                            <td align="left">
+                                <ace:dataTable id="detalleOrganismoServiciosDataTable" 
+                                               value="#{organismoManagedBean.servicios}"
+                                               var="item"
+                                               paginator="true"
+                                               paginatorPosition="bottom"
+                                               rows="10"
+                                               class="panel-buttons">
+                                    <ace:column id="columnCodigo" headerText="#{msg.codigo}">
+                                        <div class="panel-column-data-center">
+                                            <h:outputText id="cellCodigo" value="#{item.codigo}"/>
+                                        </div>                            
+                                    </ace:column>
+                                    <ace:column id="columnDescripcion" headerText="#{msg.descripcion}">
+                                        <div class="panel-column-data-center">
+                                            <h:outputText id="cellDescripcion" value="#{item.descripcion}"/>
+                                        </div>                            
+                                    </ace:column>
+                                </ace:dataTable>
+                            </td>
+                        </tr> 
+                    </table>    
+                    <div align="center">  
+                        <ace:pushButton action="organismoConf"  actionListener="#{organismoManagedBean.limpiar()}" >
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                            #{msg.volver}
+                        </ace:pushButton>
+                    </div>
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

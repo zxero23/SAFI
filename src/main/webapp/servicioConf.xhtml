@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formServicio" title=" ">
+                <ace:panel id="servicioPanel" header="#{msg.confServicio}">
+                    <h:panelGrid  columns="4" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="servicioConf" actionListener="#{servicioManagedBean.actualizar()}" value="#{msg.confServicio}"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{servicioManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoServicio" value="#{msg.newServicio}" actionListener="#{servicioManagedBean.limpiar()}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="servicioPanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true" class="panel-buttons">
+                        <table border="0" cellspacing="5" class="table-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.codigo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry value="#{servicioManagedBean.codigoBsq}" />
+                                </td>                            
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.abreviatura}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry value="#{servicioManagedBean.abreviaturaBsq}" />
+                                </td>                            
+                            </tr>  
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.descripcion}: " />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry value="#{servicioManagedBean.descripcionBsq}" />
+                                </td>                            
+                            </tr>  
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.tipoServicio}: " />
+                                </td>
+                                <td align="left">
+                                     <ace:simpleSelectOneMenu id="tipoServicioDropdown"
+                                                              value="#{servicioManagedBean.idTipoTramiteBsq}"
+                                                         label="#{msg.tipoServicio}" >
+                                    <f:selectItem itemValue="0" itemLabel="#{msg.elegir}"/>
+                                    <f:selectItems value="#{servicioManagedBean.selectItemsTipoServicio}"/>
+                                    <ace:ajax execute="@this" render="@this" event="valueChange"/>
+                                </ace:simpleSelectOneMenu>
+                                </td>                            
+                            </tr> 
+                        </table>    
+                        <div align="right" >
+                            <h:panelGrid columns="2" >
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{servicioManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{servicioManagedBean.actualizar}"/>
+                            </h:panelGrid>
+                        </div>
+                    </ace:panel>
+                    <ace:dataTable id="servicioPanelDataTable" value="#{servicioManagedBean.listElements}" var="item" page="#{servicioManagedBean.page}" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="codigo" headerText="#{msg.codigo}">                          
+                            <center>
+                                <h:outputText id="cellCodigo" value="#{item.codigo}"/>
+                            </center>                                                  
+                        </ace:column>
+                        <ace:column id="descripcion" headerText="#{msg.descripcion}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellDescripcion" value="#{item.descripcion}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="abreviatura" headerText="#{msg.abreviatura}"  >
+                            <center>
+                                <h:outputText id="cellAbreviatura" value="#{item.abreviatura}"/>
+                            </center>                            
+                        </ace:column>
+                        <ace:column id="tipoServicio" headerText="#{msg.tipoServicio}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellTipoServicio" value="#{item.tipoServicio.nombre}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="accion" headerText="#{msg.confAction}" class="panelAcciones5Botones" >
+                            <h:panelGrid  columns="5"> 
+                                <ace:pushButton id="detalle"  action="detalleServicio" p:title="#{msg.detalle}" actionListener="#{servicioManagedBean.verDetalle}" rendered="#{servicioManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />    
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar"  action="editarServicio" p:title="#{msg.editar}" actionListener="#{servicioManagedBean.prepararParaEditar()}" rendered="#{servicioManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" /> 
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{servicioManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogServicio.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" /> 
+                                </ace:pushButton>
+                                <ace:pushButton id="addUsuarioServicio"  action="agregarUsuarioServicio" p:title="#{msg.gestionarUsuarios}" actionListener="#{servicioManagedBean.prepararParaAgregarUsuario()}" rendered="#{servicioManagedBean.agregarUsuarioServicio}">
+                                    <span class="fa fa-users" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="addOrganismoServicio"  action="agregarOrganismoServicio" p:title="#{msg.gestionarOrganismos}" actionListener="#{servicioManagedBean.prepararParaAgregarOrganismo()}" rendered="#{servicioManagedBean.agregarOrganismoServicio}">
+                                    <span class="fa fa-globe" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogServicio" binding="#{confirmDialogServicio}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogServicio.clientId}').hide();" actionListener="#{servicioManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogServicio.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

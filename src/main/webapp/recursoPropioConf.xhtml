@@ -1,0 +1,232 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formRecursoPropio" title=" ">
+                <ace:panel id="panelRecursoPropio" header="#{msg.confRecursoPropio}" class="panel-buttons">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                        <ace:linkButton action="recursoPropioConf" actionListener="#{recursoPropioManagedBean.actualizar}" value="#{msg.actualizarLiteral}"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{recursoPropioManagedBean.alta}" >
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevoRecursoPropio"  value="#{msg.newRecursoPropio}" />
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="panelBusquedaRecursoPropio" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true"  class="panel-buttons">
+                        <table border="0" cellspacing="5" class="panel-buttons">
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.ejercicio}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcEjercicioBsq" value="#{recursoPropioManagedBean.idEjercicioBsq}" label="#{msg.ejercicio}" >
+                                        <f:selectItem  itemValue="0" itemLabel="#{msg.todos}"/>
+                                        <f:selectItems value="#{recursoPropioManagedBean.selectItemsEjercicioBsq}" /> 
+                                        <ace:ajax execute="@this" render="@this slcEjercicioBsq slcServicioBsq" event="valueChange"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.servicio}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcServicioBsq" value="#{recursoPropioManagedBean.idServicioBsq}" label="#{msg.servicio}" >
+                                        <f:selectItem  itemValue="0" itemLabel="#{msg.todos}"/>
+                                        <f:selectItems value="#{recursoPropioManagedBean.selectItemsServicioBsq}" /> 
+                                        <ace:ajax execute="@this" render="@this slcServicioBsq slcOrganismoBsq" event="valueChange"/>
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.organismo}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="slcOrganismoBsq" value="#{recursoPropioManagedBean.idOrganismoBsq}" label="#{msg.organismo}" >
+                                        <f:selectItem  itemValue="0" itemLabel="#{msg.todos}"/>
+                                        <f:selectItems value="#{recursoPropioManagedBean.selectItemsOrganismoBsq}" /> 
+                                        <ace:ajax execute="@this" render="@this slcOrganismoBsq" event="valueChange" /> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                            </tr>
+                           
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.importeDesde}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="importeDesdeBsq" label="#{msg.importeDesde}"  value="#{recursoPropioManagedBean.importeDesdeBsq}" >
+                                        <ace:ajax render="@this importeDesdeBsq" event="blur"/>         
+                                    </ace:textEntry> 
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.importeHasta}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="importeHastaBsq" label="#{msg.importeDesde}"  value="#{recursoPropioManagedBean.importeHastaBsq}" >
+                                        <ace:ajax render="@this importeHastaBsq" event="blur"/>         
+                                    </ace:textEntry> 
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.descriConcepto}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="descripcionBsq" value="#{recursoPropioManagedBean.descripcionBsq}" />
+                                </td>                                
+                            </tr> 
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.clasificadorRecursoPropioPadre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:comboBox 
+                                        id="selectClasificadorRecursoPropioBsq" label="#{msg.clasificadorRecursoPropioPadre}"
+                                        value="#{recursoPropioManagedBean.idClasificadorBsq}"
+                                        placeholder="#{msg.seleccioneRecursoPropio}:"
+                                        showListOnInput="true"                                      
+                                        filterMatchMode="contains"
+                                        valueChangeListener="#{recursoPropioManagedBean.limpiarComboClasificadorRecursoPropioPadre}" >
+                                        <f:selectItems value="#{recursoPropioManagedBean.selectItemsClasificador}" />
+                                        <ace:ajax />
+                                    </ace:comboBox>
+                                </td>
+                            </tr>  
+                            
+                        </table>
+                        <div align="right" class="panelBotonesBusqueda">
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{recursoPropioManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{recursoPropioManagedBean.actualizar}"/>
+                            </h:panelGrid>                            
+                        </div>
+                    </ace:panel>
+                    <ace:dataTable id="recursoPropioPanelDataTable" value="#{recursoPropioManagedBean.listElements}" var="item" page="#{recursoPropioManagedBean.page}"
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport} "
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:tableConfigPanel id="tableConfig"
+                                              dragHandle=".ui-tableconf-header"
+                                              columnNameConfigurable="false"
+                                              columnVisibilityConfigurable="true"
+                                              columnOrderingConfigurable="false"
+                                              columnSortingConfigurable="false"
+                                              modal="false"
+                                              type="last-col">
+                        </ace:tableConfigPanel>
+                        <ace:column id="ejercicio" headerText="#{msg.ejercicio}">
+                            <div align="center">
+                                <h:outputText id="cellEjercicio" value="#{item.ejercicio.anio}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="servicio" headerText="#{msg.servicio}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellServicio" value="#{item.servicio.codigo} - #{item.servicio.descripcion}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="nomenclador" headerText="#{msg.nomenclador}">
+                            <div align="center">                               
+                                <h:outputText id="cellnomenclador" value="#{item.organismo.clasificadorOrganismo.id}.#{recursoPropioManagedBean.ceroIzquierda(item.organismo.codigoOrganismo)}.#{item.caracter.id}.#{item.clasificadorRecurso.obtenerCodigoCompleto(item.clasificadorRecurso)}.#{item.concepto} "/>                                 
+                            </div>
+                        </ace:column>
+                        <ace:column id="des" headerText="#{msg.descripcion}">
+                            <div class="panel-column-data-left">
+                                <h:outputText id="celldes" value="#{item.descripcion}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="importeOriginal" headerText="#{msg.importeOriginal}">
+                            <div align="center">
+                                <h:outputText id="cellImporteOriginal" value="#{item.importeOriginal}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="modificacion" headerText="#{msg.importeModificacion}">
+                            <div align="center">
+                                <h:outputText id="cellModificacion" value="#{item.getImporteModificaciones()}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="importeActual" headerText="#{msg.importeActual}">
+                            <div align="center">
+                                <h:outputText id="cellImporteActual" value="#{item.importeActual}">
+                                    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" locale="es_AR"/>
+                                </h:outputText>
+                            </div> 
+                        </ace:column>
+                        <ace:column id="recursoPropio" headerText="#{msg.action}" class="panelAcciones4Botones">
+                            <h:panelGrid  columns="4"> 
+                                <ace:pushButton id="detalle"  action="detalleRecursoPropio" p:title="#{msg.detalle}" actionListener="#{recursoPropioManagedBean.verDetalle}" rendered="#{recursoPropioManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />    
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="nuevoRecMod"  action="nuevoRecursoModificado" disabled="#{recursoPropioManagedBean.tieneEjercicioEnFormulacion(item.id)}" p:title="#{msg.nuevoRecursoModificado}" actionListener="#{recursoPropioManagedBean.verDetalleRecMod}"  rendered="#{recursoPropioManagedBean.modificacionRecursoPropio}">
+                                    <span class="fa fa-plus" aria-hidden="true" />    
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar"  action="editarRecursoPropio" disabled="#{recursoPropioManagedBean.tieneMovimientos_RecModificados(item.id)}"  p:title="#{msg.editar}" actionListener="#{recursoPropioManagedBean.prepararParaEditar()}" rendered="#{recursoPropioManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}"  rendered="#{recursoPropioManagedBean.baja}"  
+                                                disabled="#{recursoPropioManagedBean.tieneMovimientos_RecModificados(item.id)}" 
+                                                actionListener="#{recursoPropioManagedBean.tieneMovimientos_RecModificados(item.id)}">
+
+                                    <ace:ajax execute="@none" render="@none" onComplete="ice.ace.instance('#{confirmDialogRecursoPropio.clientId}').show();return false;" />
+                                    <span class="fa fa-trash-o" aria-hidden="true" /> 
+                                </ace:pushButton>     
+                                <ace:confirmationDialog id="confirmDialogRecursoPropio" binding="#{confirmDialogRecursoPropio}" 
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"                                                            
+                                                        width="300"
+                                                        height="155"                                                           
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogRecursoPropio.clientId}').hide();" 
+                                                        actionListener="#{recursoPropioManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogRecursoPropio.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+
+
+
+
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+                <ace:submitMonitor id="submitMonitorPage"
+                                   for=":formRecursoPropio:panelRecursoPropio "
+                                   blockUI="@all"
+                                   autoCenter="true"
+                                   styleClass="submonitor"
+                                   />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

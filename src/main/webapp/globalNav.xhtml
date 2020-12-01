@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition>
+        <h:form id="formMenuBar">
+            <ace:menuBar autoSubmenuDisplay="true" style="width: 99.5%; border: none;">
+                <c:forEach items="#{webManagedBean.menu}" var="item" >
+                    <ace:submenu id="subMenu" label="#{item.nombre}" action="${item.getLink()}" actionListener="#{webManagedBean.listener}">
+                        <c:forEach items="#{item.menus}" var="subItem">
+                            <ace:submenu  label="#{subItem.nombre}"  action="${subItem.getLink()}" >
+                            </ace:submenu>
+                        </c:forEach>
+                        <ace:ajax execute="@this" render="notificacion"/>
+                    </ace:submenu>    
+                </c:forEach>
+            </ace:menuBar>
+        </h:form>
+    </ui:composition>
+</html>

@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"> 
+    <ui:composition template="./layout.xhtml">
+        <ui:define  name="content" >
+            <h:form id="formAdministracion">
+                <div  class="login-panel-padre">
+                    <div class="login-panel-hijo">
+                       
+                        <div class="titulo-principal">#{msg.bienvenido}</div>
+                        <div class="contenedor">
+                            <div class="contenedor-izquierdo">
+                                <div class="prox-feriados">#{msg.proximoFeriado}:</div>
+                                <c:forEach var="item" items="#{webManagedBean.feriados}"  varStatus="status" >
+                                    <ul id="topbar-menu" class="fadeInDown animated">
+                                        <li>
+                                            <h:outputText id="cellFecha" value="#{item.fecha}">
+                                                <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"/>
+                                            </h:outputText>:
+                                            <span class="topbar-item-name fuenteMayu">#{item.nombre}.</span>
+                                        </li>
+                                    </ul>
+                                </c:forEach>
+                            </div>
+                            <div class="contenedor-derecho">
+                                <div class="contaduria-general-panel">
+                                    <img class="logo-misiones" src="images/contaduria-general-negro-solo-escudo.png" alt=""/>
+                                </div>
+<!--                                <div class="contaduria-general-direccion">#{msg.contaduriaGeneralDireccion}</div>
+                                <div class="contacto-contaduria">#{msg.contaduriaGeneralTelefono}</div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

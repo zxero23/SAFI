@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formEditarFuncion" title=" ">
+                <ace:panel id="editarFuncion" header="#{msg.editFuncion}">
+                    <table border="0" cellspacing="5" class="panel-buttons">
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.tipoOrden}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slctTipoOrdenGasto" value="#{funcionManagedBean.idTipoOrdenGasto}" label="#{msg.tipoOrden}"  required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                    <f:selectItems value="#{funcionManagedBean.selectItemsTipoOrdenGasto}" /> 
+                                    <ace:ajax render="@this slctTipoOrdenGasto slctTipoOrdenGastoMsg" event="blur"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slctTipoOrdenGastoMsg" for="slctTipoOrdenGasto" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>                       
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.tipoFondo}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slctTipoFondo" value="#{funcionManagedBean.idTipoFondo}" label="#{msg.tipoFondo}"  required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                    <f:selectItems value="#{funcionManagedBean.selectItemsTipoFondo}" /> 
+                                    <ace:ajax render="@this slctTipoFondo slctTipoFondoMsg" event="blur"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slctTipoFondoMsg" for="slctTipoFondo" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>                         
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.tipoImputacion}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slctTipoImputacion" value="#{funcionManagedBean.idTipoImputacion}" label="#{msg.tipoImputacion}"  required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                    <f:selectItems value="#{funcionManagedBean.selectItemsTipoImputacion}" /> 
+                                    <ace:ajax render="@this slctTipoImputacion slctTipoImputacionMsg" event="blur"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slctTipoImputacionMsg" for="slctTipoImputacion" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>                        
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.tipoAcumulador}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slctTipoAcumulador" value="#{funcionManagedBean.idTipoAcumulador}" label="#{msg.tipoAcumulador}"  required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                    <f:selectItems value="#{funcionManagedBean.selectItemsTipoAcumulador}" /> 
+                                    <ace:ajax render="@this slctTipoAcumulador slctTipoAcumuladornMsg" event="blur"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slctTipoAcumuladornMsg" for="slctTipoAcumulador" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>                        
+                        <tr>
+                            <td align="right">
+                                <h:outputLabel value="(*) #{msg.tipoOperacion}:" />
+                            </td>
+                            <td align="left">
+                                <ace:simpleSelectOneMenu id="slctTipoOperacion" value="#{funcionManagedBean.tipoOperacion}" label="#{msg.tipoOperacion}"  required="true">
+                                    <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}"/>
+                                    <f:selectItem  itemValue="1"  itemLabel="#{msg.suma}"/>
+                                    <f:selectItem  itemValue="-1"  itemLabel="#{msg.resta}"/>
+                                    <ace:ajax render="@this slctTipoOperacion slctTipoOperacionMsg" event="blur"/> 
+                                </ace:simpleSelectOneMenu>
+                            </td>
+                            <td align="left">
+                                <ace:message id="slctTipoOperacionMsg" for="slctTipoOperacion" initEffect="slide" changeEffect="shake"/>
+                            </td>
+                        </tr>                        
+                        <tr>
+                            <td align="right">
+                            </td>
+                            <td align="left">
+                                <h:panelGrid id="buttonGrid" columns="2" >
+                                    <ace:pushButton id="save" action="#{funcionManagedBean.guardarEdicion}" >
+                                        <i class="fa fa-pencil"></i>
+                                        #{msg.saveEdit}
+                                    </ace:pushButton>                     
+                                    <ace:pushButton id="cancel"  action="funcionConf" immediate="true" actionListener="#{funcionManagedBean.limpiar()}" >
+                                        <i class="fa fa-ban"></i>
+                                        #{msg.cancel}
+                                    </ace:pushButton>
+                                </h:panelGrid>
+                            </td>
+                            <td align="left">
+                            </td>
+                        </tr>
+                    </table>
+                    <h:inputHidden value="#{funcionManagedBean.id}" />
+                </ace:panel>                
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

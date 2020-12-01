@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-05-14T08:57:49 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cargosTesoreriaGeneral" pageWidth="612" pageHeight="1008" whenNoDataType="AllSectionsNoDetail" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="38d2dcd2-f815-41ab-a0fa-2ce51ddda534">
+	<property name="ireport.zoom" value="1.331000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="96"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Contaduria"/>
+	<parameter name="fechaDesde" class="java.util.Date"/>
+	<parameter name="fechaHasta" class="java.util.Date"/>
+	<parameter name="idServicio" class="java.lang.Long"/>
+	<parameter name="idCuenta" class="java.lang.Long"/>
+	<parameter name="idEjercicio" class="java.lang.Long"/>
+	<parameter name="escudo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+	m.numero_asiento,
+	m.importe,
+	m.fecha_comprobante,
+	m.fecha_alta,
+	m.descripcion,
+	m.numero_pedido_fondo ,
+	m.numero_entrega_fondo,
+	cb.numero AS nroCuenta,
+	cb.numero||' - '||cb.descripcion AS cuenta,
+	e.codigo||'-'||e.numero||'/'||e.anio AS expediente,
+	s.codigo||' - '||s.descripcion AS servicio,
+	ej.anio,
+	f.tipofondo_id AS clase_fondo
+FROM movimientos m
+	INNER JOIN cuentas_bancarias AS cb ON m.cuentabancaria_id= cb.id
+	INNER JOIN expedientes AS e ON e.id = m.expediente_id
+	INNER JOIN servicios AS s ON s.id = cb.servicio_id
+	INNER JOIN ejercicios AS ej ON ej.id = m.ejercicio_id
+	INNER JOIN movimientos_funciones AS mf ON mf.movimiento_id=m.id
+	INNER JOIN funciones AS f ON mf.funciones_id=f.id
+		AND f.tipoacumulador_id IN (11,12)
+WHERE m.estado=true
+	AND DATE(m.fecha_alta) BETWEEN $P{fechaDesde} AND $P{fechaHasta}
+	AND ej.id = $P{idEjercicio} 
+	AND CASE WHEN $P{idServicio} <>0 THEN s.id =  $P{idServicio}  ELSE 1=1 END
+	AND CASE WHEN $P{idCuenta} <>0 THEN cb.id = $P{idCuenta}  ELSE 1=1 END
+ORDER BY s.codigo::numeric,cb.numero, clase_fondo, m.fecha_comprobante, m.numero_pedido_fondo,e.codigo,e.anio,e.numero, m.numero_asiento]]>
+	</queryString>
+	<field name="numero_asiento" class="java.lang.Long"/>
+	<field name="importe" class="java.math.BigDecimal"/>
+	<field name="fecha_comprobante" class="java.sql.Timestamp"/>
+	<field name="fecha_alta" class="java.sql.Timestamp"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="numero_pedido_fondo" class="java.lang.Long"/>
+	<field name="numero_entrega_fondo" class="java.lang.Long"/>
+	<field name="nrocuenta" class="java.lang.Long"/>
+	<field name="cuenta" class="java.lang.String"/>
+	<field name="expediente" class="java.lang.String"/>
+	<field name="servicio" class="java.lang.String"/>
+	<field name="anio" class="java.lang.Integer"/>
+	<field name="clase_fondo" class="java.lang.Long"/>
+	<variable name="subtotalTipoFondo" class="java.math.BigDecimal" resetType="Group" resetGroup="tipoFondo" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe}]]></variableExpression>
+	</variable>
+	<variable name="totalCuenta" class="java.math.BigDecimal" resetType="Group" resetGroup="cuenta" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe}]]></variableExpression>
+	</variable>
+	<group name="servicio" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{servicio}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="572" height="15" uuid="45c3bd70-0c00-45e9-86f0-74cb7399ce2c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{servicio}!=null,$F{servicio},"")]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="cuenta" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{cuenta}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="572" height="15" uuid="571a8c3d-5e3f-41e9-ab88-f68b7d2ee281"/>
+					<box padding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{cuenta}!=null,
+"Cuenta Bancaria N° "+$F{cuenta},
+"LA CONSULTA NO DEVUELVE INFORMACIÓN PARA GENERAR EL REPORTE."
+)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<textField pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="477" y="5" width="95" height="15" uuid="199aab86-1608-4e67-bb21-35f71477c2a8"/>
+					<box rightPadding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalCuenta}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="186" y="5" width="291" height="15" uuid="b52d9a5f-ca53-43b3-8d30-32d86f113ae2">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{nrocuenta}!=null,
+	"CUENTA BANCARIA N° "+$F{nrocuenta}+" - TOTAL:",
+	""
+)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="tipoFondo" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{clase_fondo}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="572" height="15" uuid="250ab70f-3675-4777-8282-14cc3521aa7e"/>
+					<box padding="0">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Clase de Fondo: "+$F{clase_fondo}+" - "+
+($F{clase_fondo}==1 ? "Fondos Permanentes" :
+($F{clase_fondo}==2 ? "Fondos Especiales":
+($F{clase_fondo}==9 ? "Residuos Pasivos": "ERROR")))]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="48" y="15" width="58" height="25" uuid="1b406eb4-0eb6-4abc-9f38-4ce2fbb87f42">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box padding="0">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<text><![CDATA[Fecha del Comprobante]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="15" width="80" height="25" uuid="bffcc356-a172-43da-b0f4-1a0161fcb7f4">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box padding="1">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<text><![CDATA[Expediente]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="186" y="15" width="195" height="25" uuid="831fc4da-1ecf-4b5c-b20a-89aa965ffc30"/>
+					<box padding="1">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<text><![CDATA[Descripción]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="381" y="15" width="48" height="25" uuid="de901232-f7f7-49e0-aad6-43678b030f38">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box padding="1">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<text><![CDATA[N° Pedido de Fondo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="429" y="15" width="48" height="25" uuid="5b8c0d59-25fd-4077-8dbe-875eeb91a4e4">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box padding="1">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<text><![CDATA[Orden de Entrega]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="477" y="15" width="95" height="25" uuid="4a7f1230-92e5-47cb-9211-45a5ceaca772">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box padding="1">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<text><![CDATA[Importe]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="15" width="48" height="25" uuid="016a687f-3b2e-4ebf-af60-63b1eefb1588">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box padding="0">
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<text><![CDATA[N° Asiento]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<textField isBlankWhenNull="true">
+					<reportElement x="186" y="5" width="291" height="15" uuid="75693f50-a243-40cf-a28c-340b212af709">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["CLASE DE FONDO: "+$F{clase_fondo}+" - "+
+($F{clase_fondo}==1 ? "FONDOS PERMANENTES" :
+($F{clase_fondo}==2 ? "FONDOS ESPECIALES":
+($F{clase_fondo}==9 ? "RESIDUOS PASIVOS": "ERROR")))+ " - TOTAL REINTEGRO:"]]></textFieldExpression>
+				</textField>
+				<textField pattern="$#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="477" y="5" width="95" height="15" uuid="2bc809c1-1916-4ff2-b006-e3016d7147ae"/>
+					<box rightPadding="2">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subtotalTipoFondo}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="75">
+			<image>
+				<reportElement x="20" y="0" width="45" height="49" uuid="011842be-0e92-46ec-a081-234b15861e82">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{escudo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="52" width="85" height="12" uuid="eda61941-dfc8-4260-80c6-58ee6e3cc659">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Provincia de Misiones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="0" width="402" height="11" uuid="59b9ad1d-6883-4490-bb3f-f47ff9937f02"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Movimientos de Fondos y Valores]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="11" width="402" height="18" uuid="1f7c364f-14ee-4d37-ad5d-63632191f32b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REINTEGROS A TESORERÍA GENERAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="85" y="42" width="402" height="13" uuid="2c31e8d9-ac91-421e-9f7e-04fb24dfb628">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF(
+	EQUALS(DATEFORMAT($P{fechaDesde},"dd/MM/yyyy"),DATEFORMAT($P{fechaHasta},"dd/MM/yyyy")),
+	DATEFORMAT($P{fechaDesde},"dd/MM/yyyy"),
+	DATEFORMAT($P{fechaDesde},"dd/MM/yyyy")+" al "+DATEFORMAT($P{fechaHasta},"dd/MM/yyyy")
+)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="487" y="0" width="85" height="14" uuid="fe8a25af-3460-4a60-bbb9-820275c5d233">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página: "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="487" y="14" width="85" height="14" uuid="0fefb4e2-c14a-4929-887b-595a8486107c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ejercicio: "+IF($F{anio}!=null,$F{anio},"0")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="29" width="402" height="13" uuid="73fdc9e1-d529-4a48-a9b7-ad41419e8f6f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF(
+	EQUALS(DATEFORMAT($P{fechaDesde},"dd/MM/yyyy"),DATEFORMAT($P{fechaHasta},"dd/MM/yyyy")),
+	"Correspondientes al día",
+	"Correspondientes al periodo de"
+)]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<rectangle>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="572" height="15" backcolor="#F0F0F0" uuid="d08a3b2c-be32-47eb-bfad-3be60c6c2878">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="48" y="0" width="58" height="15" uuid="0968e33e-dcce-4b18-b49f-64de22383959"/>
+				<box padding="0">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{fecha_comprobante},"dd/MM/yyyy")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="106" y="0" width="80" height="15" uuid="ff96f08d-7099-4500-8a5c-e56b1bfad70b"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{expediente}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="186" y="0" width="195" height="15" uuid="042f4d78-d913-46cd-8b3d-140e9b7a24a4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="381" y="0" width="48" height="15" uuid="3ab9dccc-8348-4a0b-99f5-152a131ee50d"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_pedido_fondo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="429" y="0" width="48" height="15" uuid="d27e761f-5773-4c35-a2b8-cc9281b91e6e"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_entrega_fondo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="$#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="477" y="0" width="95" height="15" uuid="6af1cb70-1432-4347-8a31-21c7acb8a9f5"/>
+				<box rightPadding="2">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="48" height="15" uuid="d42102e9-e77c-4623-b088-40ca490c46b2"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_asiento}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="0" y="8" width="383" height="12" forecolor="#A6A6A6" uuid="b911e8e7-0fac-4fff-92b0-a0f9d99ae358">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha y Hora de impresión: "+DATEFORMAT (NOW(),"dd/MM/yyyy HH:mm:ss")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="383" y="8" width="147" height="12" forecolor="#A6A6A6" uuid="b3668696-05ca-421b-b200-12a7c65738eb"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="530" y="8" width="41" height="12" forecolor="#A6A6A6" uuid="e2b0e2fd-814e-4b6f-beb8-60d563d45cf2"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
