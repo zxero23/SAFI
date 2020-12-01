@@ -5,15 +5,16 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:icecore="http://www.icefaces.org/icefaces/core"
       xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:ace="http://www.icefaces.org/icefaces/components">
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <meta name="viewport" content="width=device-width,initial-scale=1"></meta>
-        <title>.: SAFI 2 :.</title>
+        <title>.: SAFI :.</title>
         <link rel="stylesheet" href="css/tema.css" type="text/css"/>
         <link rel="shortcut icon" href="images/favicon-misiones-rojo.png"/>
     </h:head>
     <h:body class="login-body ">
-        <f:loadBundle basename="com.safi.ui.labels" var="msg"/> 
+        <f:loadBundle basename="org.safi.ui.labels" var="msg"/> 
         <div class="layout-wrapper layout-menu-horizontal" >
             <div class="topbar">
                 <div class="topbar-main">
@@ -28,7 +29,22 @@
                 <div class="login-panel ui-fluid ui-shadow" >
                     <div class="ui-g" >
                         <h:form id="loginForm" >
-                            
+                            <ui:fragment rendered="#{webManagedBean.mostrarCartel}" >
+                                <div class="ui-g-12 logo-container" >
+                                    <h1 style="
+                                        color: red;
+                                        background-color: #f0d1d0;
+                                        border: solid 1px #e96d66;
+                                        padding-top: 15px;
+                                        padding-bottom: 15px;
+                                        "> <i class="fa fa-exclamation-triangle" style="
+                                          color: #000000;
+                                          " aria-hidden="true"></i> ENTORNO DE PRUEBAS <i class="fa fa-exclamation-triangle" style="
+                                          color: #000000;
+                                          " aria-hidden="true"></i></h1>
+                                    <h2> </h2>
+                                </div>
+                            </ui:fragment>
                             <div class="ui-g-12 logo-container">
                                 <h1>#{msg.ingreseCuenta}</h1>
                                 <h2> </h2>

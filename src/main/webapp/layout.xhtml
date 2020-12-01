@@ -9,17 +9,28 @@
         <title>.: SAFI :.</title>
         <link rel="stylesheet" href="css/tema.css" type="text/css"/>
         <link rel="shortcut icon" href="images/favicon-misiones-rojo.png"/>
+        
+        
     </h:head>
-    <h:body class="main-body" > 
+    <h:body class="main-body">        
         <div class="layout-wrapper layout-menu-horizontal" >
-            <f:loadBundle basename="com.safi.ui.labels" var="msg"/> 
+            <f:loadBundle basename="org.safi.ui.labels" var="msg"/>            
             <ui:include src="banner.xhtml"/>
             <div id="content" class="layout-content" title=" ">
                 <ui:insert name="content"/>
+                
             </div>
             <div class="footer clearfix footer-layout" >
                 <ui:include src="footer.xhtml"/>
             </div> 
         </div>
+        <div>
+             <ui:include src="notificaciones.xhtml"/>
+        </div>
+        
     </h:body>
+    
+    
+     
+    
 </html>

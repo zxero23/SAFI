@@ -5,10 +5,10 @@
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
     <application>
         <message-bundle>
-            com.safi.ui.fileEntryMessages
+            org.safi.ui.fileEntryMessages
         </message-bundle>
     </application>
     <factory>
-        <exception-handler-factory>com.safi.managedBeans.ViewExpiredExceptionHandlerFactory</exception-handler-factory>
+        <exception-handler-factory>org.safi.web.ViewExpiredExceptionHandlerFactory</exception-handler-factory>
     </factory>
 </faces-config>

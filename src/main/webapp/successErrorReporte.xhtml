@@ -30,7 +30,7 @@
                                                          resource="#{reporteManagedBean.generarReportePDF}"
                                                          fileName="#{reporteManagedBean.reporte}-#{reporteManagedBean.dateTime}.pdf"
                                                          attachment="true" 
-                                                         rendered="true" > 
+                                                         rendered="#{!reporteManagedBean.pagination}"> 
                                     </ace:dynamicResource> 
                                 </td>
                                 <td>
@@ -41,7 +41,7 @@
                                                          resource="#{reporteManagedBean.generarReporteXLS}"
                                                          fileName="#{reporteManagedBean.reporte}-#{reporteManagedBean.dateTime}.xls"
                                                          attachment="true" 
-                                                         rendered="true" >  
+                                                         rendered="#{reporteManagedBean.pagination}"> 
                                     </ace:dynamicResource> 
                                 </td>
                             </tr>

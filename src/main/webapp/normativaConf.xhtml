@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">      
+    <ui:composition template="./layout.xhtml">
+        <ui:define name="content">
+            <h:form id="formNormativa" title=" ">
+                <ace:panel id="normativaPanelPrincipal" header="#{msg.confNormativa}" class="panel-buttons">
+                    <h:panelGrid  columns="2" class="panel-buttons">
+                        <h:panelGroup>
+                            <span class="fa fa-refresh" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="normativaConf" actionListener="#{normativaManagedBean.actualizar}" value="#{msg.confNormativa}"/>
+                            |
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{normativaManagedBean.alta}">
+                            <span class="fa fa-plus" aria-hidden="true" style="margin-right: 5px;"/>
+                            <ace:linkButton action="nuevaNormativa" value="#{msg.newNormativa}"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <ace:panel id="normativaPanelBusqueda" header="#{msg.busqueda}" toggleable="true" toggleSpeed="200" collapsed="true"  class="panel-buttons">
+                        <table border="0" cellspacing="5" class="panel-buttons">
+                           <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.nombre}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:textEntry id="nombre" value="#{normativaManagedBean.nombreBsq}" />
+                                </td>                                
+                            </tr>
+
+                            <tr>
+                                <td align="right">
+                                    <h:outputLabel value="#{msg.tipoNormativa}:" />
+                                </td>
+                                <td align="left">
+                                    <ace:simpleSelectOneMenu id="selectTipoNormativa" value="#{normativaManagedBean.idTipoNormativaBuscar}" label="#{msg.tipoNormativa}" >
+                                        <f:selectItem  itemValue="0" noSelectionOption="true" itemLabel="#{msg.ninguno}" /> 
+                                        <f:selectItems value="#{normativaManagedBean.getSelectItemsTipoNormativa()}" /> 
+                                        <ace:ajax render="@this selectTipoNormativa selectTipoNormativaMsg" event="blur"/> 
+                                    </ace:simpleSelectOneMenu>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="selectTipoNormativaMsg" for="selectTipoNormativa" initEffect="slide" changeEffect="shake"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" class="td-label">
+                                    <h:outputLabel value="#{msg.fechaDesde}:" />
+                                </td>
+                                <td align="left" class="td-input">
+                                    <ace:maskedEntry mask="99/99/9999" value="#{normativaManagedBean.fechaDesde}" id="fechaVigenciaInicio" >
+                                        <ace:ajax execute="@this" render="@this fechaVigenciaInicio fechaVigenciaInicioMsg" event="blur"></ace:ajax>
+                                        <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                    </ace:maskedEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="fechaVigenciaInicioMsg" for="fechaVigenciaInicio" initEffect="slide" changeEffect="shake"/> 
+                                    <ace:ajax />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" class="td-label">
+                                    <h:outputLabel value="#{msg.fechaHasta}:" />
+                                </td>
+                                <td align="left" class="td-input">
+                                    <ace:maskedEntry mask="99/99/9999" value="#{normativaManagedBean.fechaHasta}" id="fechaVigenciaFin">
+                                        <ace:ajax execute="@this" render="@this fechaVigenciaFin fechaVigenciaFinMsg" event="blur"></ace:ajax>
+                                        <f:convertDateTime timeZone="America/Argentina/Buenos_Aires" pattern="dd/MM/yyyy" locale="es_AR"></f:convertDateTime>
+                                    </ace:maskedEntry>
+                                </td>
+                                <td align="left">
+                                    <ace:message id="fechaVigenciaFinMsg" for="fechaVigenciaFin" initEffect="slide" changeEffect="shake"/> 
+                                    <ace:ajax />
+                                </td>
+                            </tr>
+                        </table>
+                        <div align="right" class="panelBotonesBusqueda">
+                            <h:panelGrid  columns="2">
+                                <ace:pushButton id="find" value="#{msg.find}" actionListener="#{normativaManagedBean.aplicarFiltro}"/>
+                                <ace:pushButton id="actualizar" value="#{msg.actualizar}" actionListener="#{normativaManagedBean.actualizar}"/>
+                            </h:panelGrid>                            
+                        </div>                     
+                    </ace:panel>
+                    <ace:dataTable id="normativaPanelDataTable" value="#{normativaManagedBean.listElements}" var="item" page="#{normativaManagedBean.page}" 
+                                   lazy="true"
+                                   rows="10"
+                                   paginator="true"
+                                   paginatorAlwaysVisible="true"
+                                   paginatorPosition="bottom"
+                                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {CurrentPageReport}"
+                                   currentPageReportTemplate="#{msg.pageReportTemplate}"
+                                   rowIndexVar="row">
+                        <ace:column id="nombreCol" headerText="#{msg.nombre}" >
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellNombre" value="#{item.nombre}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="fechaVigencia" headerText="#{msg.fechaVigencia}">
+                            <div class="panel-column-data-center">
+                                <h:outputText id="cellFechaVigencia" value="#{item.fechaVigencia}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" locale="es_AR" timeZone="America/Argentina/Buenos_Aires"/>
+                                </h:outputText>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="resumen" headerText="#{msg.resumen}" >
+                            <div class="panel-column-data-left">
+                                <h:outputText id="cellResumen" value="#{item.resumen}"/>
+                            </div>                            
+                        </ace:column>
+                        <ace:column id="normativa" headerText="#{msg.action}" class="panelAcciones" >
+                            <h:panelGrid  columns="3">
+                                <ace:pushButton id="detalle"  action="detalleNormativa" p:title="#{msg.detalle}" actionListener="#{normativaManagedBean.verDetalle}" rendered="#{normativaManagedBean.detalle}">
+                                    <span class="fa fa-search-plus" aria-hidden="true" />    
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="editar"  action="editarNormativa" p:title="#{msg.editar}" actionListener="#{normativaManagedBean.prepararParaEditar()}" rendered="#{normativaManagedBean.modificacion}">
+                                    <span class="fa fa-pencil" aria-hidden="true" />  
+                                    <f:param name="id" value="#{item.id}"/>
+                                </ace:pushButton>
+                                <ace:pushButton id="eliminar" p:title="#{msg.eliminar}" rendered="#{normativaManagedBean.baja}" p:onclick="ice.ace.instance('#{confirmDialogNormativa.clientId}').show();return false;">
+                                    <span class="fa fa-trash-o" aria-hidden="true" /> 
+                                </ace:pushButton>
+                                <ace:confirmationDialog id="confirmDialogNormativa" binding="#{confirmDialogNormativa}"
+                                                        message="#{msg.msgDelete}"
+                                                        header="#{msg.confirm}"
+                                                        modal="true"
+                                                        width="300"
+                                                        height="155"
+                                                        position="center">
+                                    <h:panelGrid columns="2" class="panel-confirm-buttons">
+                                        <ace:pushButton id="yes" value="#{msg.acep}" p:onclick="ice.ace.instance('#{confirmDialogNormativa.clientId}').hide();" actionListener="#{normativaManagedBean.guardarBorrado()}">
+                                            <f:param name="id" value="#{item.id}" />
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                        <ace:pushButton id="no" value="#{msg.cancel}" p:onclick="ice.ace.instance('#{confirmDialogNormativa.clientId}').hide();">
+                                            <f:ajax execute="@this" render="@all"/>
+                                        </ace:pushButton>
+                                    </h:panelGrid>
+                                </ace:confirmationDialog>
+                            </h:panelGrid>
+                        </ace:column>                    
+                    </ace:dataTable>
+                </ace:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

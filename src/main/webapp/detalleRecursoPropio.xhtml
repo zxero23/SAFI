@@ -224,12 +224,18 @@
                         </ace:column>
                     </ace:dataTable>
                     <div align="center" style="padding-top: 10px;">  
-                        <ace:pushButton action="recursoPropioConf"  actionListener="#{recursoPropioManagedBean.limpiar()}" >
+                        <ace:pushButton id="pushButtonVolver" action="recursoPropioConf"  actionListener="#{recursoPropioManagedBean.limpiar()}" >
                             <i class="fa fa-arrow-left" aria-hidden="true"></i>
                             #{msg.volver}
                         </ace:pushButton>
                     </div>
-                </ace:panel>                
+                </ace:panel>
+                <ace:submitMonitor id="submitMonitorPage"
+                                   for=":formDetalleRecursoPropio:detalleRecursoPropio"
+                                   blockUI="@all"
+                                   autoCenter="true"
+                                   styleClass="submonitor"
+                                   />                
             </h:form>
         </ui:define>
     </ui:composition>
