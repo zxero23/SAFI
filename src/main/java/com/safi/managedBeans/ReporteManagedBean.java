@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import org.icefaces.ace.model.table.LazyDataModel;
 import com.safi.entity.CuentaBancaria;
 import com.safi.entity.Ejercicio;
+import com.safi.entity.Grupo;
 import com.safi.entity.Movimiento;
 import com.safi.entity.Organismo;
 import com.safi.entity.Servicio;
@@ -42,15 +43,23 @@ import com.safi.facade.CuentaBancariaFacadeLocal;
 import com.safi.facade.EjercicioFacadeLocal;
 import com.safi.facade.OrganismoFacadeLocal;
 import com.safi.facade.ServicioFacadeLocal;
-import com.safi.utilidad.ReporteJava;
-import com.safi.utilidad.SAFIReporteJava;
+
 import com.safi.utilidad.Utilidad;
+import com.safi.facade.MovimientoFacadeLocal;
+
+//enums
 import com.safi.enums.AccionEnum;
+import static com.safi.enums.GrupoUsuarioEnum.ADMIN;
+import static com.safi.enums.GrupoUsuarioEnum.DIRECCION_ANALISIS_INFORMATICA;
 import static com.safi.enums.GrupoUsuarioEnum.HTC;
 import static com.safi.enums.GrupoUsuarioEnum.REPORTES;
 import static com.safi.enums.GrupoUsuarioEnum.SERVICIO_ADMINISTRATIVO;
+import static com.safi.enums.GrupoUsuarioEnum.SUPER_ADMIN;
 import static com.safi.enums.TipoServicioEnum.SERVICIO;
-import com.safi.facade.MovimientoFacadeLocal;
+
+
+import com.safi.utilidad.ReporteJava;
+import com.safi.utilidad.SAFIReporteJava;
 
 /**
  *
@@ -106,10 +115,8 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
     private Boolean VerSoloLibroBancoExpedientes;
     private Boolean perteneceTipoServicioServicio;
     private Long idReporteLibroBancoOpcion = 1L;
+    private boolean pagination = false;
 
-    /**
-     * Creates a new instance of RendicionMensualManagedBean
-     */
     public ReporteManagedBean() {
     }
 
@@ -126,7 +133,12 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                     });
                 }
                 if (!(sessionBean.getUsuario().getGrupos().isEmpty())) {
-                    sessionBean.getUsuario().getGrupos().stream().filter((grupoAux) -> (grupoAux.getId().equals(SERVICIO_ADMINISTRATIVO.getId())) || grupoAux.getId().equals(REPORTES.getId())).forEach((_item) -> {
+                    sessionBean.getUsuario().getGrupos().stream().filter((grupoAux) -> (grupoAux.getId().equals(SERVICIO_ADMINISTRATIVO.getId())) || grupoAux.getId().equals(REPORTES.getId()) || grupoAux.getId().equals(DIRECCION_ANALISIS_INFORMATICA.getId()) || grupoAux.getId().equals(SUPER_ADMIN.getId()) || grupoAux.getId().equals(ADMIN.getId())).forEach((_item) -> {
+                        for (Grupo gru : sessionBean.getUsuario().getGrupos()) {
+                            if (gru.getId().equals(DIRECCION_ANALISIS_INFORMATICA.getId()) || gru.getId().equals(SUPER_ADMIN.getId()) || gru.getId().equals(ADMIN.getId())) {
+                                this.setPerteneceTipoServicioServicio(true);
+                            }
+                        }
                         if (sessionBean.getUsuario().getServicio().getTipoServicio().getId().equals(SERVICIO.getId())) {
                             this.setPerteneceTipoServicioServicio(true);
                         }
@@ -150,6 +162,14 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                 log.fatal("Error en init(): " + e.getMessage());
             }
         }
+    }
+
+    public boolean isPagination() {
+        return pagination;
+    }
+
+    public void setPagination(boolean pagination) {
+        this.pagination = pagination;
     }
 
     public String getCodigoServicio() {
@@ -416,7 +436,8 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                             this.getIdEjercicio(),
                             this.getIdServicio(),
                             this.getIdOrganismo(),
-                            this.getFechaDesde()));
+                            this.getFechaDesde(),
+                            this.isPagination()));
                     this.setAuditoriaActual(this.getAuditoriaActual()
                             + "Organismo: " + organismoElegido + "\n"
                             + "Fecha: " + formato.format(this.getFechaDesde()) + "\n"
@@ -431,7 +452,8 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                             this.getIdOrganismo(),
                             this.getFechaDesdeInicioAnio(),
                             this.getFechaDesde(),
-                            this.getFechaHasta()));
+                            this.getFechaHasta(),
+                            this.isPagination()));
                     this.setAuditoriaActual(this.getAuditoriaActual()
                             + "Organismo: " + organismoElegido + "\n"
                             + "Fecha Desde: " + formato.format(this.getFechaDesde()) + "\n"
@@ -445,7 +467,8 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                             this.getIdEjercicio(),
                             this.getFechaDesde(),
                             this.getFechaHasta(),
-                            this.getIdOrganismo()));
+                            this.getIdOrganismo(),
+                            this.isPagination()));
                     this.setAuditoriaActual(this.getAuditoriaActual()
                             + "Organismo: " + organismoElegido + "\n"
                             + "Fecha Desde: " + formato.format(this.getFechaDesde()) + "\n"
@@ -458,7 +481,8 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                             this.getIdEjercicio(),
                             this.getIdServicio(),
                             this.getFechaDesdeInicioAnio(),
-                            this.getFechaHasta()));
+                            this.getFechaHasta(),
+                            this.isPagination()));
                     this.setAuditoriaActual(this.getAuditoriaActual()
                             + "Fecha Desde: " + formato.format(this.getFechaDesdeInicioAnio()) + "\n"
                             + "Fecha Hasta: " + formato.format(this.getFechaHasta()) + "\n"
@@ -474,7 +498,8 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                             this.getIdEjercicio(),
                             this.getIdCuentaBancaria(),
                             this.getFechaDesde(),
-                            this.getFechaHasta()));
+                            this.getFechaHasta(),
+                            this.isPagination()));
                     this.setAuditoriaActual(this.getAuditoriaActual()
                             + "Cuenta Bancaria: " + cuentaElegida + "\n"
                             + "Fecha Desde: " + formato.format(this.getFechaDesde()) + "\n"
@@ -488,7 +513,8 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                             this.getIdServicio(),
                             this.getIdEjercicio(),
                             this.getIdCuentaBancaria(),
-                            this.getFecha()));
+                            this.getFecha(),
+                            this.isPagination()));
                     this.setAuditoriaActual(this.getAuditoriaActual()
                             + "Cuenta Bancaria: " + cuentaElegida + "\n"
                             + "Fecha: " + formato.format(this.getFecha()) + "\n"
@@ -503,7 +529,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                             this.getIdCuentaBancaria(),
                             this.getFechaDesdeInicioAnio(),
                             this.getFechaHasta(),
-                            this.getNroPedidoFondo()));
+                            this.getNroPedidoFondo(), this.isPagination()));
                     String pedidoFondo = this.getNroPedidoFondo() != null ? this.getNroPedidoFondo().toString() : "TODOS";
                     this.setAuditoriaActual(this.getAuditoriaActual()
                             + "Cuenta Bancaria: " + cuentaElegida + "\n"
@@ -518,7 +544,6 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
             //FIN AUDITORÍA       
         } catch (Exception e) {
             this.setMsgSuccessError("Error al generar el reporte: " + e.getMessage());
-            System.out.println(e.getMessage());
             log.error("Error en getGenerarReporte(): " + e.getMessage());
         }
     }
@@ -713,7 +738,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
         }
     }
 
-    public String verificarReporteEjecucionRecursos() {
+    public String verificarReporteEjecucionRecursos(boolean pagination) {
         try {
             if (this.getFechaDesde().equals(this.getFechaHasta())) {
                 this.setReporte("ejecucionRecursosDiario");
@@ -727,6 +752,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                 this.setFechaHasta(this.definirHoraHasta(this.getFechaHasta()));
                 this.setFecha(this.getFechaHasta());
             }
+            this.setPagination(pagination);
             this.getGenerarReporte();
             this.setTitle("Proceso Completo");
             this.setImages("fa fa-check-circle-o");
@@ -745,7 +771,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
         return this.getResultado();
     }
 
-    public String verificarReporteModificacionRecursos() {
+    public String verificarReporteModificacionRecursos(boolean pagination) {
         try {
             if (this.isPerteneceHTC()) {
                 this.definirTiempo();
@@ -755,6 +781,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
             }
             this.setReporte("modificacionRecursos");
             this.getGenerarReporte();
+            this.setPagination(pagination);
             this.setTitle("Proceso Completo");
             this.setImages("fa fa-check-circle-o");
             this.setResultado("successErrorReporte");
@@ -772,7 +799,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
         return this.getResultado();
     }
 
-    public String verificarReporteRango(String nombreReporte) {
+    public String verificarReporteRango(String nombreReporte, boolean pagination) {
         try {
             if (this.isPerteneceHTC()) {
                 this.definirTiempo();
@@ -781,6 +808,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                 this.setFecha(this.getFechaHasta());
             }
             this.setReporte(nombreReporte);
+            this.setPagination(pagination);
             this.getGenerarReporte();
             this.setTitle("Proceso Completo");
             this.setImages("fa fa-check-circle-o");
@@ -809,7 +837,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
         return cal.getTime();
     }
 
-    public String verificarReporteLibroBanco() {
+    public String verificarReporteLibroBanco(boolean pagination) {
         try {
             if (this.isPerteneceHTC()) {
                 this.definirTiempo();
@@ -823,6 +851,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
             } else {
                 this.setReporte("libroBanco");
             }
+            this.setPagination(pagination);
             this.getGenerarReporte();
             this.setTitle("Proceso Completo");
             this.setImages("fa fa-check-circle-o");
@@ -841,7 +870,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
         return this.getResultado();
     }
 
-    public String verificarReporteMovimientoBancario() {
+    public String verificarReporteMovimientoBancario(boolean pagination) {
         try {
             if (this.isPerteneceHTC()) {
                 this.definirTiempo();
@@ -849,6 +878,7 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                 this.setFechaHasta(this.definirHoraHasta(this.getFechaHasta()));
                 this.setFecha(this.getFechaHasta());
             }
+            this.setPagination(pagination);
             this.setReporte("movimiento_bancario");
             this.getGenerarReporte();
             this.setTitle("Proceso Completo");
@@ -868,9 +898,10 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
         return this.getResultado();
     }
 
-    public String verificarReporteParteDiario() {
+    public String verificarReporteParteDiario(boolean pagination) {
         try {
             this.setReporte("parteDiario");
+            this.setPagination(pagination);
             this.getGenerarReporte();
             this.setTitle("Proceso Completo");
             this.setImages("fa fa-check-circle-o");
