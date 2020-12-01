@@ -32,9 +32,9 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import org.apache.log4j.Logger;
 import org.icefaces.ace.model.table.LazyDataModel;
+import org.safi.entity.Grupo;
 import org.safi.entity.CuentaBancaria;
 import org.safi.entity.Ejercicio;
-import org.safi.entity.Grupo;
 import org.safi.entity.Movimiento;
 import org.safi.entity.Organismo;
 import org.safi.entity.Servicio;
@@ -43,22 +43,25 @@ import org.safi.facade.CuentaBancariaFacadeLocal;
 import org.safi.facade.EjercicioFacadeLocal;
 import org.safi.facade.OrganismoFacadeLocal;
 import org.safi.facade.ServicioFacadeLocal;
-
+import org.safi.utilidad.ReporteJava;
+import org.safi.utilidad.SAFIReporteJava;
 import org.safi.utilidad.Utilidad;
-import org.safi.facade.MovimientoFacadeLocal;
-
-//enums
-import org.safi.enums.AccionEnum;
+import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
+import org.safi.enums.AccionEnum;
 import static org.safi.enums.GrupoUsuarioEnum.ADMIN;
+import static org.safi.enums.GrupoUsuarioEnum.HTC;
+import static org.safi.enums.GrupoUsuarioEnum.REPORTES;
+import static org.safi.enums.GrupoUsuarioEnum.DIRECCION_ANALISIS_INFORMATICA;
+import static org.safi.enums.GrupoUsuarioEnum.SUPER_ADMIN;
 import static org.safi.enums.GrupoUsuarioEnum.DIRECCION_ANALISIS_INFORMATICA;
 import static org.safi.enums.GrupoUsuarioEnum.HTC;
 import static org.safi.enums.GrupoUsuarioEnum.REPORTES;
 import static org.safi.enums.GrupoUsuarioEnum.SERVICIO_ADMINISTRATIVO;
 import static org.safi.enums.GrupoUsuarioEnum.SUPER_ADMIN;
+import static org.safi.enums.TipoServicioEnum.DIR_ADM;
 import static org.safi.enums.TipoServicioEnum.SERVICIO;
-
-
+import org.safi.facade.MovimientoFacadeLocal;
 import org.safi.utilidad.ReporteJava;
 import org.safi.utilidad.SAFIReporteJava;
 
@@ -118,6 +121,9 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
     private Long idReporteLibroBancoOpcion = 1L;
     private boolean pagination = false;
 
+    /**
+     * Creates a new instance of RendicionMensualManagedBean
+     */
     public ReporteManagedBean() {
     }
 
@@ -135,9 +141,9 @@ public class ReporteManagedBean extends UtilManagedBean implements Serializable 
                 }
                 if (!(sessionBean.getUsuario().getGrupos().isEmpty())) {
                     sessionBean.getUsuario().getGrupos().stream().filter((grupoAux) -> (grupoAux.getId().equals(SERVICIO_ADMINISTRATIVO.getId())) || grupoAux.getId().equals(REPORTES.getId()) || grupoAux.getId().equals(DIRECCION_ANALISIS_INFORMATICA.getId()) || grupoAux.getId().equals(SUPER_ADMIN.getId()) || grupoAux.getId().equals(ADMIN.getId())).forEach((_item) -> {
-                        for (Grupo gru : sessionBean.getUsuario().getGrupos()) {
-                            if (gru.getId().equals(DIRECCION_ANALISIS_INFORMATICA.getId()) || gru.getId().equals(SUPER_ADMIN.getId()) || gru.getId().equals(ADMIN.getId())) {
-                                this.setPerteneceTipoServicioServicio(true);
+                        for(Grupo gru : sessionBean.getUsuario().getGrupos()){
+                            if (gru.getId().equals(DIRECCION_ANALISIS_INFORMATICA.getId()) || gru.getId().equals(SUPER_ADMIN.getId()) || gru.getId().equals(ADMIN.getId())){
+                                 this.setPerteneceTipoServicioServicio(true);
                             }
                         }
                         if (sessionBean.getUsuario().getServicio().getTipoServicio().getId().equals(SERVICIO.getId())) {

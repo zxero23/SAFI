@@ -16,7 +16,6 @@ import org.safi.entity.TipoOrdenGasto;
 import org.safi.facade.TipoOrdenGastoFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

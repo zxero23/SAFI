@@ -16,7 +16,6 @@ import org.safi.entity.ClasificadorOrganismo;
 import org.safi.facade.ClasificadorOrganismoFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *
@@ -42,7 +41,6 @@ public class ClasificadorOrganismoManagedBean extends UtilManagedBean implements
         WebManagedBean sessionBean = this.getSessionBean();
         if (sessionBean != null) {
             try {
-               
                 this.setLstActionItems(sessionBean.getLstActionItems());
                 if (!(getLstActionItems().isEmpty())) {
                     getLstActionItems().stream().map((accionAux) -> {

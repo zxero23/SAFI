@@ -26,7 +26,6 @@ import org.safi.facade.EjercicioFacadeLocal;
 import org.safi.facade.ServicioFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

@@ -23,7 +23,6 @@ import org.safi.entity.TipoServicio;
 import org.safi.facade.TipoServicioFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

@@ -17,7 +17,6 @@ import org.safi.entity.EstadoEjercicio;
 import org.safi.facade.EstadoEjercicioFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

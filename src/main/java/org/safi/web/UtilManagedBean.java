@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.icefaces.ace.model.table.LazyDataModel;
 import org.safi.entity.ActionItem;
-import org.safi.web.WebManagedBean;
 import org.safi.utilidad.Utilidad;
 
 /**

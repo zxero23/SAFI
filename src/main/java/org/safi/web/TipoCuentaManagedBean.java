@@ -19,7 +19,6 @@ import org.safi.entity.TipoCuenta;
 import org.safi.facade.TipoCuentaFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

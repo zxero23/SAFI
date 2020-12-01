@@ -16,7 +16,6 @@ import org.safi.entity.TipoImputacion;
 import org.safi.facade.TipoImputacionFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

@@ -17,7 +17,6 @@ import org.safi.entity.Departamento;
 import org.safi.entity.Provincia;
 import org.safi.facade.DepartamentoFacadeLocal;
 import org.safi.facade.ProvinciaFacadeLocal;
-import org.safi.web.WebManagedBean;
 
 /**
  *

@@ -36,7 +36,6 @@ import org.safi.facade.ServicioFacadeLocal;
 import org.safi.utilidad.Utilidad;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

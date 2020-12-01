@@ -12,7 +12,6 @@ import javax.faces.model.SelectItem;
 import org.icefaces.ace.model.table.LazyDataModel;
 import org.icefaces.util.JavaScriptRunner;
 import org.safi.enums.ManualEnum;
-import org.safi.web.WebManagedBean;
 
 /**
  * Controlador de vista para el manual de usuario.

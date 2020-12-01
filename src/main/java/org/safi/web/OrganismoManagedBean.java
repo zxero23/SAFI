@@ -511,6 +511,7 @@ public class OrganismoManagedBean extends UtilManagedBean implements Serializabl
         }
     }
 
+   
 
     public void validarCodigo(final FacesContext context, final UIComponent validate, final Object value) {
         if (Long.parseLong(value.toString()) < 0) {

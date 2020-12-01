@@ -19,7 +19,6 @@ import org.safi.entity.Banco;
 import org.safi.facade.BancoFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

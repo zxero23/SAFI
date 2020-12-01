@@ -15,7 +15,6 @@ import org.icefaces.ace.model.table.LazyDataModel;
 import org.icefaces.ace.model.table.SortCriteria;
 import org.safi.entity.Menu;
 import org.safi.facade.MenuFacadeLocal;
-import org.safi.web.WebManagedBean;
 
 /**
  *

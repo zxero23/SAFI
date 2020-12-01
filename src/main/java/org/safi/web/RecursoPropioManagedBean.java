@@ -51,7 +51,6 @@ import org.safi.facade.TipoMonedaFacadeLocal;
 import org.safi.utilidad.Utilidad;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

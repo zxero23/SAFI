@@ -17,7 +17,6 @@ import org.safi.entity.EstadoRepresentante;
 import org.safi.facade.EstadoRepresentanteFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

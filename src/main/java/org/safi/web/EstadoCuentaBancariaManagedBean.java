@@ -21,7 +21,6 @@ import org.safi.facade.AuditoriaFacadeLocal;
 import org.safi.facade.EstadoCuentaBancariaFacadeLocal;
 import org.safi.web.UtilManagedBean;
 import org.safi.web.WebManagedBean;
-import org.safi.web.WebManagedBean;
 
 /**
  *

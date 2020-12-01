@@ -1,8 +1,5 @@
 package org.safi.web;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import javax.faces.validator.ValidatorException;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -12,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.faces.context.FacesContext;
 import org.safi.entity.ClasificadorRecursoPropio;
 import javax.annotation.PostConstruct;
-import org.safi.web.WebManagedBean;
 import java.util.ArrayList;
 import java.util.List;
 import org.safi.facade.TipoClasificadorRecursoPropioFacadeLocal;
@@ -23,28 +19,23 @@ import javax.faces.bean.ManagedBean;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
+
 import org.icefaces.ace.model.table.LazyDataModel;
 import org.icefaces.ace.model.table.SortCriteria;
 import org.icefaces.ace.model.tree.NodeState;
 import org.icefaces.ace.model.tree.NodeStateCreationCallback;
 import org.icefaces.ace.model.tree.NodeStateMap;
 import org.icefaces.util.JavaScriptRunner;
+
 import org.safi.entity.Ejercicio;
 import org.safi.entity.RecursoPropio;
 import org.safi.entity.Servicio;
 import org.safi.facade.EjercicioFacadeLocal;
 import org.safi.facade.RecursoPropioFacadeLocal;
 import org.safi.facade.ServicioFacadeLocal;
-import org.safi.web.UtilManagedBean;
-import org.safi.web.WebManagedBean;
 /**
  *
  * @author Matias Zakowicz
@@ -495,7 +486,7 @@ public class ClasificadorRecursoPropioManagedBean extends UtilManagedBean implem
         }
     }
 
-
+   
     //Obtiene los recursos propios por ejercicio y servicio
     public List<RecursoPropio> obtenerRecusroPropioPorClasificadorRecurso(ClasificadorRecursoPropio unClasificadorRecursoPropio) {                  
             this.recursosPropios = this.recursoPropioFacade.obtenerRecursosPropios(unClasificadorRecursoPropio.getId(), this.getIdEjercicio(), this.getIdServicio());

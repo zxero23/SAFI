@@ -14,7 +14,6 @@ import org.icefaces.ace.model.table.LazyDataModel;
 import org.icefaces.ace.model.table.SortCriteria;
 import org.safi.entity.Grupo;
 import org.safi.facade.GrupoFacadeLocal;
-import org.safi.web.WebManagedBean;
 
 /**
  *

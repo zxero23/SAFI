@@ -627,7 +627,7 @@ public class WebManagedBean implements Serializable {
 
        //Controla que no existan notificaciones sin leer.
      public void listenerMsg(ActionEvent event) {
-        Long totalNotificacionesSinLeer=this.notificacionFacade.count(usuario.getServicio().getId(), 2, null, null);
+        Long totalNotificacionesSinLeer=this.notificacionFacade.count(this.usuario.getServicio()!=null?usuario.getServicio().getId():0L, 2, null, null);
         if (totalNotificacionesSinLeer>0) {        
              FacesContext facesContext = FacesContext.getCurrentInstance();      
              Iterator<FacesMessage> i = facesContext.getMessages();
